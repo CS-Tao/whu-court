@@ -1,0 +1,37 @@
+{
+  "name": "whu-court",
+  "private": true,
+  "scripts": {
+    "dev": "./packages/cli/bin/dev",
+    "start": "./packages/cli/bin/run",
+    "commit": "cz",
+    "prepare": "husky install",
+    "postinstall": "yarn prepare"
+  },
+  "devDependencies": {
+    "cz-customizable": "^6.3.0",
+    "husky": "^8.0.1",
+    "lerna": "^3.22.1",
+    "lint-staged": "^13.0.0",
+    "oclif": "^3.0.1"
+  },
+  "packageManager": "yarn@3.2.1",
+  "workspaces": [
+    "packages/*"
+  ],
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json}": [
+      "prettier --write",
+      "eslint",
+      "git add"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": "./.config/commitizen.js"
+    }
+  }
+}

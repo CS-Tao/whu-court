@@ -1,0 +1,7 @@
+{
+  "name": "@whu-court/mock",
+  "description": "Api Data Mock for WHU-Court",
+  "version": "0.0.0",
+  "author": "cstao.cn@icloud.com",
+  "main": "src/index.ts"
+}

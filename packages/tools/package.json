@@ -1,0 +1,7 @@
+{
+  "name": "@whu-court/tools",
+  "description": "Tools for WHU-Court",
+  "version": "0.0.0",
+  "author": "cstao.cn@icloud.com",
+  "main": "src/index.ts"
+}

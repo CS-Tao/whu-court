@@ -1,0 +1,16 @@
+{
+  "name": "@whu-court/tools",
+  "description": "Tools for WHU-Court",
+  "version": "0.0.0",
+  "author": "cstao.cn@icloud.com",
+  "main": "src/index.ts",
+  "scripts": {
+    "check:node-version": "FORCE_COLOR=1 node ./src/scripts/checkNodeVersion.js",
+    "getRemoreRef": "bash ./src/scripts/getRemoteRef.sh",
+    "processCommitMsg": "FORCE_COLOR=1 node ./src/scripts/processCommitMsg.js"
+  },
+  "devDependencies": {
+    "chalk": "4.1.2",
+    "semver": "^7.3.7"
+  }
+}

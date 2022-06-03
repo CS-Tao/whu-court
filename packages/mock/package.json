@@ -1,5 +1,6 @@
 {
   "name": "@whu-court/mock",
+  "private": true,
   "description": "Api Data Mock for WHU-Court",
   "version": "0.0.0",
   "author": "cstao.cn@icloud.com",

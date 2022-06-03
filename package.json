@@ -13,7 +13,8 @@
     "husky:prepare": "is-ci || husky install .config/.husky",
     "check:node-version": "lerna run --scope @whu-court/tools check:node-version -- $(pwd)",
     "prepare": "yarn check:node-version && yarn husky:prepare",
-    "postinstall": "yarn prepare"
+    "postinstall": "yarn prepare",
+    "version:lerna": "lerna version ${npm_config_lerna_version} --exact --force-publish --yes"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.27.0",
@@ -29,7 +30,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "husky": "^8.0.1",
     "is-ci": "^3.0.1",
-    "lerna": "^3.22.1",
+    "lerna": "5.0.0",
     "lint-staged": "^13.0.0",
     "mocha": "^9.2.2",
     "oclif": "^3.0.1",

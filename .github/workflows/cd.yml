@@ -18,6 +18,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
+      - name: Cache node modules
+        id: yarn-cache
+        with:
+          path: |
+            **/node_modules
+          key: ${{ matrix.os }}-${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ matrix.os }}-${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
@@ -29,12 +37,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Cache node modules
+        id: yarn-cache
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ runner.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
       - uses: actions/setup-node@v3
         with:
           node-version: 16
       - run: yarn
       - run: yarn cd:release
-      - run: yarn cd:build
-      - run: yarn cd:publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}

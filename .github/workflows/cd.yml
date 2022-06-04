@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [16， 18]
+        node: [16, 18]
         include:
           - os: windows-latest
             node: 16

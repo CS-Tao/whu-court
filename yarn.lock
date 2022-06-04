@@ -2407,6 +2407,7 @@ __metadata:
   dependencies:
     chalk: 4.1.2
     semver: ^7.3.7
+    shelljs: ^0.8.5
   languageName: unknown
   linkType: soft
 

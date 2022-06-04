@@ -9,6 +9,7 @@
   "homepage": "https://github.com/CS-Tao/whu-court",
   "license": "MIT",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": "CS-Tao/whu-court",
   "files": [
     "/bin",
@@ -79,6 +80,5 @@
   "bugs": "https://github.com/CS-Tao/whu-court/issues",
   "keywords": [
     "wcr"
-  ],
-  "types": "dist/index.d.ts"
+  ]
 }

@@ -14,7 +14,7 @@
     "check:node-version": "lerna run --scope @whu-court/tools check:node-version -- $(pwd)",
     "prepare": "yarn check:node-version && yarn husky:prepare",
     "postinstall": "yarn prepare",
-    "version:lerna": "lerna version ${npm_config_lerna_version} --exact --force-publish --yes"
+    "version:lerna": "lerna version $2 --preid $(git rev-parse --short HEAD) --no-commit-hooks --no-git-tag-version --exact --force-publish --yes"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.27.0",

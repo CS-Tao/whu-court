@@ -11,10 +11,11 @@ module.exports = function releaseVersion(bumpType) {
   if (currentBranch === mainBranch) {
     preid = 'beta'
     options = '--no-commit-hooks'
-    bump = bumpType || 'prepatch'
+    bump = bumpType || 'prerelease'
   } else {
     preid = currentCommitHash.slice(0, 8)
     options = '--no-commit-hooks --no-git-tag-version --no-push'
+    bump = 'prepatch'
   }
   shell.exec(`yarn lerna version ${bump} --preid ${preid} ${options} --yes`)
 }

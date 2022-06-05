@@ -1,8 +1,8 @@
 name: CD for WHU-Court
 
 on:
-  - push:
-  - workflow_dispatch:
+  push:
+  workflow_dispatch:
     inputs:
       release-type:
         type: choice

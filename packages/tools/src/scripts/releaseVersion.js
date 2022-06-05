@@ -4,7 +4,7 @@ const currentBranch = process.env.CI_COMMIT_REF_NAME
 const currentCommitHash = process.env.CI_COMMIT_SHA
 const mainBranch = 'master'
 
-module.exports = function releaseVersion(bumpType) {
+function releaseVersion(bumpType) {
   let preid
   let options
   let bump
@@ -24,3 +24,5 @@ module.exports = function releaseVersion(bumpType) {
   shell.exec('yarn build')
   shell.exec(`yarn lerna publish from-git ${publishOptions} --skip-git --yes`)
 }
+
+releaseVersion(process.env.CD_RELEASE_TYPE)

@@ -1,10 +1,16 @@
+/* eslint-disable no-console */
 const shell = require('shelljs')
+const chalk = require('chalk')
 
-const currentBranch = process.env.CI_COMMIT_REF_NAME
-const currentCommitHash = process.env.CI_COMMIT_SHA
+const currentBranch = process.env.GITHUB_REF_NAME
+const currentCommitHash = process.env.GITHUB_SHA
 const mainBranch = 'master'
 
 function releaseVersion(bumpType) {
+  if ([currentBranch, currentCommitHash].some((each) => !each)) {
+    console.log(chalk.red('releaseVersion: currentBranch or currentCommitHash is missing'))
+    process.exit(1)
+  }
   let preid
   let options
   let bump
@@ -25,4 +31,4 @@ function releaseVersion(bumpType) {
   shell.exec(`yarn lerna publish from-git ${publishOptions} --skip-git --yes`)
 }
 
-releaseVersion(process.env.CD_RELEASE_TYPE)
+releaseVersion(process.env.MANUAL_RELEASE_TYPE)

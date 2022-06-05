@@ -13,7 +13,7 @@ module.exports = function releaseVersion(bumpType) {
     preid = 'beta'
     options = '--no-commit-hooks'
     bump = bumpType || 'prerelease'
-    publishOptions = ['major', 'minor', 'patch'].includes(bumpType) ? '--dist-tag=beta' : '--dist-tag=latest'
+    publishOptions = ['major', 'minor', 'patch'].includes(bumpType) ? '--dist-tag=latest' : '--dist-tag=beta'
   } else {
     preid = currentCommitHash.slice(0, 8)
     options = '--no-commit-hooks --no-git-tag-version --no-push'

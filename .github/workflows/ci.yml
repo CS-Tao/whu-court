@@ -1,7 +1,7 @@
 name: CI for WHU-Court
 
 on:
-  - pull_request
+  pull_request
     branches:
       - master
 

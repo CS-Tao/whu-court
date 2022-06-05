@@ -31,9 +31,10 @@ function releaseVersion(bumpType) {
     'yarn build',
     `yarn  lerna publish from-git ${publishOptions} --skip-git --yes`,
   ]
-  const cwd = process.argv[2] || '.'
-  console.log(chalk.green('commands', commands))
+  const cwd = process.argv[2] || __dirname
+  console.log(chalk.green('cwd', cwd))
   commands.forEach((command) => {
+    console.log(chalk.green('command', command))
     shell.exec(command, {
       fatal: true,
       cwd,

@@ -42,6 +42,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
+      - run: export
       - run: yarn
       - run: yarn cd:check
 
@@ -57,12 +58,13 @@ jobs:
           path: |
             node_modules
             **/node_modules
-          key: ${{ runner.os }}-16-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ubuntu-latest-16-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-16-yarn-${{ hashFiles('**/yarn.lock') }}
+            ubuntu-latest-16-yarn-${{ hashFiles('**/yarn.lock') }}
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+      - run: export
       - run: yarn
       - run: yarn cd:release
         env:

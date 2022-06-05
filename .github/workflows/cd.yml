@@ -42,7 +42,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      - run: export
       - run: yarn
       - run: yarn cd:check
 
@@ -64,7 +63,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: export
       - run: yarn
       - run: yarn cd:release
         env:

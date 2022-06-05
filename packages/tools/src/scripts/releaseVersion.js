@@ -26,9 +26,16 @@ function releaseVersion(bumpType) {
     bump = 'prepatch'
     publishOptions = '--dist-tag=alpha'
   }
-  shell.exec(`yarn lerna version ${bump} --preid ${preid} ${options} --yes`)
-  shell.exec('yarn build')
-  shell.exec(`yarn lerna publish from-git ${publishOptions} --skip-git --yes`)
+  const cwdOptions = `--cwd ${process.argv[2]}`
+  shell.exec(`yarn ${cwdOptions} lerna version ${bump} --preid ${preid} ${options} --yes`, {
+    fatal: true,
+  })
+  shell.exec(`yarn ${cwdOptions} build`, {
+    fatal: true,
+  })
+  shell.exec(`yarn ${cwdOptions} lerna publish from-git ${publishOptions} --skip-git --yes`, {
+    fatal: true,
+  })
 }
 
 releaseVersion(process.env.MANUAL_RELEASE_TYPE)

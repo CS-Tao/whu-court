@@ -22,7 +22,7 @@
     "cd:test": "is-ci && yarn test",
     "cd:eslint": "is-ci && yarn eslint-all",
     "cd:check": "is-ci && npm-run-all -p -l cd:eslint cd:test",
-    "cd:release": "is-ci && lerna run --scope @whu-court/tools releaseVersion"
+    "cd:release": "is-ci && lerna run --scope @whu-court/tools releaseVersion -- $(pwd)"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.27.0",

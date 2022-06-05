@@ -1,7 +1,7 @@
 name: CD for WHU-Court
 
 on:
-  - push
+  - push:
   - workflow_dispatch:
     inputs:
       release-type:
@@ -55,9 +55,9 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: ${{ runner.os }}-${{ runner.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-16-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
+            ${{ runner.os }}-16-yarn-${{ hashFiles('**/yarn.lock') }}
       - uses: actions/setup-node@v3
         with:
           node-version: 16

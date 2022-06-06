@@ -2,11 +2,11 @@
   "name": "whu-court",
   "private": true,
   "scripts": {
+    "a": "git add -A && git commit --no-edit",
+    "c": "git commit --no-edit",
     "dev": "lerna run --scope @whu-court/cli dev",
     "start": "lerna run --scope @whu-court/cli start",
     "build": "lerna run --stream build",
-    "c": "git commit --no-edit",
-    "ca": "git add -A && git commit --no-edit",
     "eslint-all": "eslint packages/ --ext .js,.ts,.tsx",
     "eslint-all:fix": "yarn eslint-all --fix",
     "processCommitMsg": "lerna run --scope @whu-court/tools processCommitMsg -- $(pwd)",

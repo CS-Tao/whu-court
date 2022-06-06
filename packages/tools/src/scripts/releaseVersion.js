@@ -3,6 +3,7 @@ const shell = require('shelljs')
 const chalk = require('chalk')
 
 const currentBranch = process.env.GITHUB_REF_NAME
+const normalizedCurrentBranch = (currentBranch || '').replace(/\//g, '-')
 const currentCommitHash = process.env.GITHUB_SHA
 const mainBranch = 'master'
 
@@ -25,7 +26,7 @@ function releaseVersion(bumpType) {
 
     afterVersionCommands = []
   } else {
-    preid = currentCommitHash.slice(0, 8)
+    preid = `${normalizedCurrentBranch}-${currentCommitHash.slice(0, 8)}`
     options = '--no-commit-hooks --no-git-tag-version --no-push'
     bump = 'prepatch'
     publishOptions = '--dist-tag=alpha'

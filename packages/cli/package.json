@@ -80,5 +80,8 @@
   "bugs": "https://github.com/CS-Tao/whu-court/issues",
   "keywords": [
     "wcr"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

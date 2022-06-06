@@ -29,7 +29,7 @@ function releaseVersion(bumpType) {
   const commands = [
     `yarn lerna version ${bump} --preid ${preid} ${options} --yes`,
     'yarn build',
-    `yarn lerna publish from-git --registry https://registry.npmjs.org/ ${publishOptions} --no-git-tag-version --no-push --yes`,
+    `yarn lerna publish from-git --registry https://registry.npmjs.org/ --legacy-auth ${process.env.NPM_AUTH_TOKEN} ${publishOptions} --no-git-tag-version --no-push --yes`,
   ]
   const cwd = process.argv[2] || __dirname
   console.log(chalk.green('cwd', cwd))

@@ -9,7 +9,7 @@
     "build": "lerna run --stream build",
     "eslint-all": "eslint packages/ --ext .js,.ts,.tsx",
     "eslint-all:fix": "yarn eslint-all --fix",
-    "processCommitMsg": "lerna run --scope @whu-court/tools processCommitMsg -- $(pwd)",
+    "process-commit-msg": "lerna run --scope @whu-court/tools processCommitMsg -- $(pwd)",
     "test": "lerna run --stream test",
     "test:changed": "yarn test --since $(lerna run --scope @whu-court/tools getRemoreRef)",
     "husky:prepare": "is-ci || husky install .config/.husky",

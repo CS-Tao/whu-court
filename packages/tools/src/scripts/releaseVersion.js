@@ -43,10 +43,10 @@ function releaseVersion(bumpType) {
     })
     if (code === 0) {
       stdout && console.log(chalk.gray('stdout:\n', stdout))
-      stderr && console.log(chalk.gray('stderr:\n', stderr))
+      stderr && console.log(chalk.gray('stderr:', `\n${stderr}`))
     } else {
       console.log(chalk.red('exited with code', code))
-      stderr && console.log(chalk.red('stder:\n', stderr))
+      stderr && console.log(chalk.red('stder:', `\n${stderr}`))
       process.exit(code)
     }
   })

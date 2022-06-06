@@ -29,7 +29,7 @@ function releaseVersion(bumpType) {
     afterVersionCommands = [
       'git add .',
       'git commit -m "📦 chore: release version (will not be pushed)"',
-      'git tag -a $(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' lerna.json) -m $(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' lerna.json)',
+      'git tag -a v$(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' lerna.json) -m v$(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' lerna.json)',
     ]
     bump = 'prepatch'
     publishOptions = '--dist-tag=alpha'
@@ -43,7 +43,7 @@ function releaseVersion(bumpType) {
   const cwd = process.argv[2] || __dirname
   console.log(chalk.green('cwd', cwd))
   commands.forEach((command) => {
-    console.log(chalk.green('command', command))
+    console.log(chalk.green('[exec command]', command))
     const { code, stdout, stderr } = shell.exec(command, {
       silent: true,
       fatal: true,

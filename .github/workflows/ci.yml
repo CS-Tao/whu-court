@@ -10,14 +10,15 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [16, 18]
-        include:
-          - os: windows-latest
-            node: 16
-            npm: 6
-          - os: macos-latest
-            node: 16
-            npm: 6
+        node: [16]
+        # node: [16, 18]
+        # include:
+        #   - os: windows-latest
+        #     node: 16
+        #     npm: 6
+        #   - os: macos-latest
+        #     node: 16
+        #     npm: 6
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3

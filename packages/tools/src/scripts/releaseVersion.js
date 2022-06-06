@@ -20,19 +20,23 @@ function releaseVersion(bumpType) {
   if (isMainBranch) {
     preid = 'beta'
     options = '--no-commit-hooks'
-    afterVersionCommands = []
     bump = bumpType || 'prerelease'
     publishOptions = ['major', 'minor', 'patch'].includes(bumpType) ? '--dist-tag=latest' : '--dist-tag=beta'
+
+    afterVersionCommands = []
   } else {
     preid = currentCommitHash.slice(0, 8)
     options = '--no-commit-hooks --no-git-tag-version --no-push'
+    bump = 'prepatch'
+    publishOptions = '--dist-tag=alpha'
+
+    const workspaceVersion = '$(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' lerna.json)'
+    const simulateLernaTag = `git tag -a v${workspaceVersion} -m v${workspaceVersion}`
     afterVersionCommands = [
       'git add .',
       'git commit -m "📦 chore: release version (will not be pushed)"',
-      'git tag -a v$(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' lerna.json) -m v$(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' lerna.json)',
+      simulateLernaTag,
     ]
-    bump = 'prepatch'
-    publishOptions = '--dist-tag=alpha'
   }
   const commands = [
     `yarn lerna version ${bump} --preid ${preid} ${options} --yes`,

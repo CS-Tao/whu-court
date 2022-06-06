@@ -2,7 +2,7 @@
   "name": "@whu-court/mock",
   "private": true,
   "description": "Api Data Mock for WHU-Court",
-  "version": "0.0.1",
+  "version": "0.0.2-beta.7",
   "author": "cstao.cn@icloud.com",
   "main": "src/index.ts"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@whu-court/cli",
-  "version": "0.0.2-beta.6",
+  "version": "0.0.2-beta.7",
   "description": "CLI interface for WHU Court",
   "author": "cstao.cn@icloud.com",
   "bin": {

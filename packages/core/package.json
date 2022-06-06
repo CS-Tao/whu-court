@@ -1,0 +1,10 @@
+{
+  "name": "@whu-court/core",
+  "description": "Core library for the WHU-Court project",
+  "version": "0.0.3",
+  "author": "cstao.cn@icloud.com",
+  "main": "src/index.ts",
+  "publishConfig": {
+    "access": "public"
+  }
+}

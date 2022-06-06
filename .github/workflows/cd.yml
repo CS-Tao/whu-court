@@ -1,0 +1,80 @@
+name: CD for WHU-Court
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      release-type:
+        type: choice
+        description: Release Type
+        options:
+          - prerelease
+          - patch
+          - minor
+          - major
+
+jobs:
+  # check:
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest]
+  #       node: [16, 18]
+  #       include:
+  #         - os: windows-latest
+  #           node: 16
+  #           npm: 6
+  #         - os: macos-latest
+  #           node: 16
+  #           npm: 6
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/cache@v3
+  #       name: Cache node modules
+  #       id: yarn-cache
+  #       with:
+  #         path: |
+  #           .yarn/cache
+  #           **/node_modules
+  #         key: ${{ matrix.os }}-${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
+  #         restore-keys: |
+  #           ${{ matrix.os }}-${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: ${{ matrix.node }}
+  #     - run: yarn
+  #     - run: yarn cd:check
+
+  release:
+    # needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        name: Cache node modules
+        id: yarn-cache
+        with:
+          path: |
+            .yarn/cache
+            **/node_modules
+          key: ubuntu-latest-16-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ubuntu-latest-16-yarn-${{ hashFiles('**/yarn.lock') }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: yarn
+      - name: release packages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.npm_token }}
+          MANUAL_RELEASE_TYPE: ${{ github.event.inputs.release-type }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/$GITHUB_REPOSITORY
+          echo "@whu-court:registry=https://registry.npmjs.org/" > .npmrc
+          echo "registry=https://registry.npmjs.org/" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" >> .npmrc
+          npm whoami
+          yarn cd:release

@@ -1,0 +1,10 @@
+{
+  "name": "@whu-court/types",
+  "description": "Type Definitions for WHU-Court",
+  "version": "0.0.3",
+  "author": "cstao.cn@icloud.com",
+  "main": "src/index.ts",
+  "publishConfig": {
+    "access": "public"
+  }
+}

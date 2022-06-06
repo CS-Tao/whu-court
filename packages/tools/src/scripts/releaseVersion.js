@@ -38,6 +38,7 @@ function releaseVersion(bumpType) {
     const exitCode = shell.exec(command, {
       fatal: true,
       cwd,
+      env: process.env,
     }).code
     if (exitCode !== 0) {
       console.log(chalk.red('command exited with code', exitCode, command))

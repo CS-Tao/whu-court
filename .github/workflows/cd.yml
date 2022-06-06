@@ -34,7 +34,7 @@ jobs:
         id: yarn-cache
         with:
           path: |
-            node_modules
+            .yarn/cache
             **/node_modules
           key: ${{ matrix.os }}-${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
@@ -55,7 +55,7 @@ jobs:
         id: yarn-cache
         with:
           path: |
-            node_modules
+            .yarn/cache
             **/node_modules
           key: ubuntu-latest-16-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |

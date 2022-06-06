@@ -16,7 +16,7 @@
     "check:node-version": "lerna run --scope @whu-court/tools check:node-version -- $(pwd)",
     "prepare": "yarn check:node-version && yarn husky:prepare",
     "postinstall": "yarn prepare",
-    "ci:test": "is-ci && yarn test --since origin/master",
+    "ci:test": "is-ci && git fetch origin master && yarn test --since origin/master",
     "ci:eslint": "is-ci && yarn eslint-all",
     "ci:check": "is-ci && npm-run-all -p -l ci:eslint ci:test",
     "cd:test": "is-ci && yarn test",

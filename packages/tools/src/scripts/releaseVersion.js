@@ -15,19 +15,24 @@ function releaseVersion(bumpType) {
   let options
   let bump
   let publishOptions
-  if (currentBranch === mainBranch) {
+  let afterVersionCommands = []
+  const isMainBranch = currentBranch === mainBranch
+  if (isMainBranch) {
     preid = 'beta'
     options = '--no-commit-hooks'
+    afterVersionCommands = []
     bump = bumpType || 'prerelease'
     publishOptions = ['major', 'minor', 'patch'].includes(bumpType) ? '--dist-tag=latest' : '--dist-tag=beta'
   } else {
     preid = currentCommitHash.slice(0, 8)
     options = '--no-commit-hooks --no-git-tag-version --no-push'
+    afterVersionCommands = ['git add .', 'git commit -m "📦 chore: release version (will not be pushed)"']
     bump = 'prepatch'
     publishOptions = '--dist-tag=alpha'
   }
   const commands = [
     `yarn lerna version ${bump} --preid ${preid} ${options} --yes`,
+    ...afterVersionCommands,
     'yarn build',
     `yarn lerna publish from-git --registry https://registry.npmjs.org/ ${publishOptions} --no-git-tag-version --no-push --no-verify-access --yes`,
   ]

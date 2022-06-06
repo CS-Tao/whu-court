@@ -64,7 +64,12 @@ jobs:
         with:
           node-version: 16
       - run: yarn
-      - run: yarn cd:release
+      - name: release packages
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.npm_token }}
           MANUAL_RELEASE_TYPE: ${{ github.event.inputs.release-type }}
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor}}@users.noreply.github.com"
+          yarn cd:release

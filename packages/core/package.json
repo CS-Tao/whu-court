@@ -1,7 +1,7 @@
 {
   "name": "@whu-court/core",
   "description": "Core library for the WHU-Court project",
-  "version": "0.0.2-beta.17",
+  "version": "0.0.2-beta.18",
   "author": "cstao.cn@icloud.com",
   "main": "src/index.ts",
   "publishConfig": {

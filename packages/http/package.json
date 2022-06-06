@@ -3,5 +3,8 @@
   "description": "Http Client for WHU-Court",
   "version": "0.0.2-beta.17",
   "author": "cstao.cn@icloud.com",
-  "main": "src/index.ts"
+  "main": "src/index.ts",
+  "publishConfig": {
+    "access": "public"
+  }
 }

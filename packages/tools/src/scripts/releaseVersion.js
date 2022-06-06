@@ -36,16 +36,17 @@ function releaseVersion(bumpType) {
   commands.forEach((command) => {
     console.log(chalk.green('command', command))
     const { code, stdout, stderr } = shell.exec(command, {
+      silent: true,
       fatal: true,
       cwd,
       env: process.env,
     })
     if (code === 0) {
-      stdout && console.log(chalk.gray('stdout', stdout))
-      stderr && console.log(chalk.gray('stderr', stderr))
+      stdout && console.log(chalk.gray('stdout:\n', stdout))
+      stderr && console.log(chalk.gray('stderr:\n', stderr))
     } else {
       console.log(chalk.red('exited with code', code))
-      stderr && console.log(chalk.red('stderr', stderr))
+      stderr && console.log(chalk.red('stder:\n', stderr))
       process.exit(code)
     }
   })

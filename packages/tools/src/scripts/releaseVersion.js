@@ -29,7 +29,7 @@ function releaseVersion(bumpType) {
   const commands = [
     `yarn lerna version ${bump} --preid ${preid} ${options} --yes`,
     'yarn build',
-    `yarn  lerna publish from-git ${publishOptions} --skip-git --yes`,
+    `yarn lerna publish from-git ${publishOptions} --no-git-tag-version --no-push --yes`,
   ]
   const cwd = process.argv[2] || __dirname
   console.log(chalk.green('cwd', cwd))

@@ -26,7 +26,11 @@ function releaseVersion(bumpType) {
   } else {
     preid = currentCommitHash.slice(0, 8)
     options = '--no-commit-hooks --no-git-tag-version --no-push'
-    afterVersionCommands = ['git add .', 'git commit -m "📦 chore: release version (will not be pushed)"']
+    afterVersionCommands = [
+      'git add .',
+      'git commit -m "📦 chore: release version (will not be pushed)"',
+      'git tag -a $(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' package.json) -m $(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' package.json)',
+    ]
     bump = 'prepatch'
     publishOptions = '--dist-tag=alpha'
   }

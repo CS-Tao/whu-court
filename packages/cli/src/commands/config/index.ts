@@ -12,7 +12,7 @@ hello friend from oclif! (./src/commands/hello/index.ts)
   static flags = {
     from: Flags.string({
       char: 'f',
-      description: 'Whom1 is saying hello',
+      description: 'Whom is saying hello',
       required: true,
     }),
   }

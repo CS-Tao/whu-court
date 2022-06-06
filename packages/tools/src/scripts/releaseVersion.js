@@ -29,7 +29,7 @@ function releaseVersion(bumpType) {
     afterVersionCommands = [
       'git add .',
       'git commit -m "📦 chore: release version (will not be pushed)"',
-      'git tag -a $(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' package.json) -m $(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' package.json)',
+      'git tag -a $(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' lerna.json) -m $(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' lerna.json)',
     ]
     bump = 'prepatch'
     publishOptions = '--dist-tag=alpha'

@@ -31,7 +31,7 @@ hello friend from oclif! (./src/commands/hello/index.ts)
     // const data = manager.getBookingDay()
 
     // eslint-disable-next-line no-console
-    console.log('data', data)
+    // console.log('data', data)
 
     this.log(`hello ${args.person} from ${flags.from}! (./src/commands/hello/index.ts)`)
   }

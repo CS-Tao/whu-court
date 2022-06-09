@@ -1,6 +1,6 @@
 import { Command, Flags } from '@oclif/core'
 import http from '@whu-court/http'
-import { ReserveManager } from '@whu-court/runtime'
+// import { ReserveManager } from '@whu-court/runtime'
 
 export default class Config extends Command {
   static description = 'Say hello'
@@ -26,9 +26,9 @@ hello friend from oclif! (./src/commands/hello/index.ts)
 
     require('@whu-court/mock').mockAxios(http)
 
-    const manager = new ReserveManager(http)
+    // const manager = new ReserveManager(http)
 
-    const data = manager.getBookingDay()
+    // const data = manager.getBookingDay()
 
     // eslint-disable-next-line no-console
     console.log('data', data)

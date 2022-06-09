@@ -1,3 +1,1 @@
-const tools: any = null
-
-export default tools
+export default null

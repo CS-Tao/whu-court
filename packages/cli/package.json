@@ -20,7 +20,7 @@
   "dependencies": {
     "@oclif/core": "^1",
     "@oclif/plugin-help": "^5",
-    "@oclif/plugin-plugins": "^2.0.1"
+    "@whu-court/http": "0.0.4-beta.0"
   },
   "devDependencies": {
     "@oclif/test": "^2",
@@ -28,13 +28,14 @@
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.9.4",
     "chai": "^4",
+    "chalk": "4.1.2",
     "eslint": "^7.32.0",
     "eslint-config-oclif": "^4",
     "eslint-config-oclif-typescript": "^1.0.2",
     "globby": "^11",
     "mocha": "^9",
     "oclif": "^3",
-    "shx": "^0.3.3",
+    "shx": "^0.3.4",
     "ts-node": "^10.2.1",
     "tslib": "^2.3.1",
     "typescript": "^4.4.3"
@@ -44,8 +45,7 @@
     "dirname": "wcr",
     "commands": "./dist/commands",
     "plugins": [
-      "@oclif/plugin-help",
-      "@oclif/plugin-plugins"
+      "@oclif/plugin-help"
     ],
     "topicSeparator": " ",
     "topics": {
@@ -66,7 +66,8 @@
   "scripts": {
     "dev": "./bin/dev",
     "start": "./bin/run",
-    "build": "shx rm -rf dist tsconfig.tsbuildinfo && tsc -b",
+    "clean": "shx rm -rf dist",
+    "build": "yarn clean && tsc",
     "lint": "eslint . --ext .ts --config .eslintrc",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint",

@@ -1,6 +1,5 @@
 import { AxiosInstance } from 'axios'
 import { API_MAP } from '../../types'
-import 'reflect-metadata'
 
 class BaseManager {
   public constructor(http: AxiosInstance, apis: API_MAP) {

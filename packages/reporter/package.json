@@ -1,0 +1,25 @@
+{
+  "name": "@whu-court/reporter",
+  "description": "WHU-Court reporter",
+  "version": "0.0.4-beta.0",
+  "author": "cstao.cn@icloud.com",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "clean": "shx rm -rf dist",
+    "dev": "tsc -w",
+    "build": "yarn clean && tsc",
+    "prepack": "yarn build"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@sentry/node": "^7.1.1",
+    "@sentry/tracing": "^7.1.1",
+    "address": "^1.2.0"
+  }
+}

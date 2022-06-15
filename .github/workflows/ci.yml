@@ -36,4 +36,5 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: yarn
+      - run: yarn build
       - run: yarn ci:check

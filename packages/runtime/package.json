@@ -1,7 +1,7 @@
 {
   "name": "@whu-court/runtime",
   "description": "WHU-Court runtime",
-  "version": "0.0.4-beta.3",
+  "version": "0.0.4-beta.4",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -21,6 +21,7 @@
     "@oclif/core": "^1",
     "@oclif/plugin-help": "^5",
     "@whu-court/http": "0.0.4-beta.2",
+    "@whu-court/mock": "0.0.4-beta.2",
     "@whu-court/reporter": "0.0.4-beta.2",
     "@whu-court/runtime": "0.0.4-beta.2"
   },

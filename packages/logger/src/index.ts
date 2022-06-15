@@ -1,4 +1,6 @@
 /* eslint-disable no-console */
+import Reporter from '@whu-court/reporter'
+
 class Logger {
   constructor(module: string, tag?: string) {
     this.module = module
@@ -16,8 +18,9 @@ class Logger {
     console.warn(...data)
   }
 
-  public error(...data: any[]): void {
+  public error(...data: string[]): void {
     console.error(...data)
+    Reporter.report(new Error(data.join('\n')))
   }
 
   public group(...data: any[]): void {

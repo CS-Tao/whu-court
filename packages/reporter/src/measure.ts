@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/node'
 
-type EventKey = 'test'
+type EventKey = 'test' | string
 
 class Measure {
   constructor(event: EventKey) {

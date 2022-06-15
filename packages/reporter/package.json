@@ -1,6 +1,6 @@
 {
-  "name": "@whu-court/mock",
-  "description": "Api Data Mock for WHU-Court",
+  "name": "@whu-court/reporter",
+  "description": "WHU-Court reporter",
   "version": "0.0.4-beta.0",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
@@ -18,11 +18,14 @@
     "access": "public"
   },
   "dependencies": {
-    "@whu-court/logger": "0.0.4-beta.0",
-    "axios": "^0.27.2",
-    "chalk": "4.1.2"
+    "@sentry/node": "^7.1.1",
+    "@sentry/tracing": "^7.1.1",
+    "address": "^1.2.0",
+    "md5": "^2.3.0",
+    "semver": "^7.3.7"
   },
   "devDependencies": {
-    "axios-mock-adapter": "^1.21.1"
+    "@types/md5": "^2.3.2",
+    "@types/semver": "^7.3.9"
   }
 }

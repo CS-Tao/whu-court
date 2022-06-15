@@ -1,6 +1,7 @@
 {
-  "name": "@whu-court/mock",
-  "description": "Api Data Mock for WHU-Court",
+  "name": "@whu-court/scratch",
+  "private": true,
+  "description": "WHU-Court package scratch demo",
   "version": "0.0.4-beta.0",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
@@ -16,13 +17,5 @@
   ],
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {
-    "@whu-court/logger": "0.0.4-beta.0",
-    "axios": "^0.27.2",
-    "chalk": "4.1.2"
-  },
-  "devDependencies": {
-    "axios-mock-adapter": "^1.21.1"
   }
 }

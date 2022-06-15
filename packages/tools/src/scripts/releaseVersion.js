@@ -7,6 +7,8 @@ const normalizedCurrentBranch = (currentBranch || '').replace(/\//g, '-')
 const currentCommitHash = process.env.GITHUB_SHA
 const mainBranch = 'master'
 
+const getCurrentWorkspaceVersionCommand = '$(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' lerna.json)'
+
 function releaseVersion(bumpType, isManual) {
   if ([currentBranch, currentCommitHash].some((each) => !each)) {
     console.log(chalk.red('releaseVersion: currentBranch or currentCommitHash is missing'))
@@ -17,6 +19,7 @@ function releaseVersion(bumpType, isManual) {
   let options
   let bump
   let publishOptions
+  let environment
   let afterVersionCommands = []
   const isMainBranch = currentBranch === mainBranch
   if (isMainBranch) {
@@ -24,28 +27,35 @@ function releaseVersion(bumpType, isManual) {
     options = '--no-commit-hooks --exact' + (isManual ? ' --force-publish=.' : '')
     bump = bumpType || 'prerelease'
     publishOptions = ['major', 'minor', 'patch'].includes(bumpType) ? '--dist-tag=latest' : '--dist-tag=beta'
+    environment = ['major', 'minor', 'patch'].includes(bumpType) ? 'production' : 'gray'
 
     afterVersionCommands = []
   } else {
+    if (normalizedCurrentBranch === 'beta' || currentBranch === 'beta') {
+      console.log(chalk.red('branch name can not be `beta`'))
+      process.exit(1)
+    }
     preid = `${normalizedCurrentBranch}-${currentCommitHash.slice(0, 8)}`
     options = '--no-commit-hooks --no-git-tag-version --no-push --exact'
     bump = 'prepatch'
     publishOptions = '--dist-tag=alpha'
+    environment = 'staging'
 
-    const workspaceVersion = '$(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' lerna.json)'
-    const simulateLernaTag = `git tag -a v${workspaceVersion} -m v${workspaceVersion}`
     afterVersionCommands = [
       'git add .',
       'git commit -m "📦 chore: release version (will not be pushed)"',
-      simulateLernaTag,
+      `git tag -a v${getCurrentWorkspaceVersionCommand} -m v${getCurrentWorkspaceVersionCommand}`,
     ]
   }
+
   const commands = [
     `yarn lerna version ${bump} --preid ${preid} ${options} --yes`,
     ...afterVersionCommands,
-    'yarn build',
     `yarn lerna publish from-git --registry https://registry.npmjs.org/ ${publishOptions} --no-git-tag-version --no-push --no-verify-access --yes`,
+    `sentry-cli releases new "whu-court@v${getCurrentWorkspaceVersionCommand}" --org cs-tao --project whu-court`,
+    `sentry-cli releases --org cs-tao deploys whu-court@v${getCurrentWorkspaceVersionCommand} new -e ${environment}`,
   ]
+
   const cwd = process.argv[2] || __dirname
   console.log(chalk.green('cwd', cwd))
   commands.forEach((command) => {

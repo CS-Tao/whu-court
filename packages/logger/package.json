@@ -1,6 +1,6 @@
 {
-  "name": "@whu-court/mock",
-  "description": "Api Data Mock for WHU-Court",
+  "name": "@whu-court/logger",
+  "description": "Logger for the WHU-Court project",
   "version": "0.0.4-beta.0",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
@@ -18,11 +18,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@whu-court/logger": "0.0.4-beta.0",
-    "axios": "^0.27.2",
-    "chalk": "4.1.2"
-  },
-  "devDependencies": {
-    "axios-mock-adapter": "^1.21.1"
+    "@whu-court/reporter": "0.0.4-beta.0"
   }
 }

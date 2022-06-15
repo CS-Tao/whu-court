@@ -64,10 +64,11 @@ jobs:
         with:
           node-version: 16
       - run: yarn
-      - name: release packages
+      - name: Release packages
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_AUTH_TOKEN: ${{ secrets.npm_token }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           MANUAL_RELEASE_TYPE: ${{ github.event.inputs.release-type }}
         run: |
           git config user.name 'github-actions[bot]'

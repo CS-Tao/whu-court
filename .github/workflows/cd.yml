@@ -64,7 +64,7 @@ jobs:
         with:
           node-version: 16
       - run: yarn
-      - name: release packages
+      - name: Release packages
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

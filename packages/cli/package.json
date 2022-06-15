@@ -20,7 +20,8 @@
   "dependencies": {
     "@oclif/core": "^1",
     "@oclif/plugin-help": "^5",
-    "@whu-court/http": "0.0.4-beta.0"
+    "@whu-court/http": "0.0.4-beta.0",
+    "@whu-court/reporter": "0.0.4-beta.0"
   },
   "devDependencies": {
     "@oclif/test": "^2",

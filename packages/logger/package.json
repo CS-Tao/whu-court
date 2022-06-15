@@ -16,5 +16,8 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@whu-court/reporter": "0.0.4-beta.0"
   }
 }

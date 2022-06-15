@@ -1,7 +1,7 @@
 {
   "name": "@whu-court/http",
   "description": "Http Client for WHU-Court",
-  "version": "0.0.4-beta.0",
+  "version": "0.0.4-beta.1",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -18,7 +18,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@whu-court/logger": "0.0.4-beta.0",
+    "@whu-court/logger": "0.0.4-beta.1",
     "axios": "^0.27.2",
     "chalk": "4.1.2"
   }

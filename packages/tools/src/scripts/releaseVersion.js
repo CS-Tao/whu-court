@@ -52,6 +52,7 @@ function releaseVersion(bumpType, isManual) {
     `yarn lerna version ${bump} --preid ${preid} ${options} --yes`,
     ...afterVersionCommands,
     `yarn lerna publish from-git --registry https://registry.npmjs.org/ ${publishOptions} --no-git-tag-version --no-push --no-verify-access --yes`,
+    `sentry-cli releases new "whu-court@v${getCurrentWorkspaceVersionCommand}"`,
     `sentry-cli releases --org cs-tao deploys whu-court@v${getCurrentWorkspaceVersionCommand} new -e ${environment}`,
   ]
 

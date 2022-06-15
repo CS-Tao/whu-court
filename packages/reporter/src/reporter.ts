@@ -1,28 +1,9 @@
 import address from 'address'
-import { parse } from 'semver'
 import md5 from 'md5'
 import * as Sentry from '@sentry/node'
 import '@sentry/tracing'
+import { environment, version } from '@whu-court/env'
 import Measure from './measure'
-
-const currentVersion = process.env.npm_package_version
-const semverVersion = parse(currentVersion, {
-  includePrerelease: true,
-  loose: true,
-})
-
-const prerelease = semverVersion?.prerelease[0]
-let environment = 'local'
-
-if (process.env.NODE_ENV === 'production') {
-  if (prerelease) {
-    // 预发布
-    environment = prerelease === 'beta' ? 'gray' : 'staging'
-  } else {
-    // 线上
-    environment = 'production'
-  }
-}
 
 interface User {
   id: string
@@ -46,7 +27,7 @@ class Reporter {
       dsn: 'https://9f5715bdde344fbd8ee3fb3696edfd86@o1268975.ingest.sentry.io/6505233',
       tracesSampleRate: 1.0,
       integrations: [new Sentry.Integrations.Http({ tracing: true })], // TODO:
-      release: `whu-court@v${currentVersion}`,
+      release: `whu-court@v${version}`,
       environment,
       sendClientReports: false,
     })

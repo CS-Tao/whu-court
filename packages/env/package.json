@@ -1,14 +1,14 @@
 {
-  "name": "@whu-court/reporter",
-  "description": "WHU-Court reporter",
-  "version": "0.0.4-beta.4",
+  "name": "@whu-court/env",
+  "description": "WHU-Court envs",
+  "version": "0.0.4-beta.3",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "clean": "shx rm -rf dist",
     "dev": "tsc -w",
-    "build": "yarn clean && tsc",
+    "build": "yarn clean && tsc --build src",
     "prepack": "yarn build"
   },
   "files": [
@@ -18,13 +18,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@sentry/node": "^7.1.1",
-    "@sentry/tracing": "^7.1.1",
-    "@whu-court/env": "0.0.4-beta.3",
-    "address": "^1.2.0",
-    "md5": "^2.3.0"
+    "semver": "^7.3.7"
   },
   "devDependencies": {
-    "@types/md5": "^2.3.2"
+    "@types/semver": "^7.3.9"
   }
 }

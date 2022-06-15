@@ -1,7 +1,7 @@
 {
   "name": "@whu-court/reporter",
   "description": "WHU-Court reporter",
-  "version": "0.0.4-beta.2",
+  "version": "0.0.4-beta.3",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

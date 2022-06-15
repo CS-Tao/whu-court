@@ -5,7 +5,7 @@
     "outDir": "../dist/",
     "resolveJsonModule": true,
     "sourceMap": true,
-    "sourceRoot": "https://home.cs-tao.cc/whu-court/env"
+    "sourceRoot": "/whu-court/env/dist"
   },
   "references": [{ "path": "../" }]
 }

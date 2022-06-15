@@ -71,7 +71,7 @@
     "dev": "./bin/dev",
     "start": "./bin/run",
     "clean": "shx rm -rf dist",
-    "build": "yarn clean && tsc --sourcemap --mapRoot https://home.cs-tao.cc/$(echo $npm_package_name | sed 's/@//g')",
+    "build": "yarn clean && tsc --sourcemap --mapRoot /$(echo ${npm_package_name}/dist | sed 's/@//g')",
     "lint": "eslint . --ext .ts --config .eslintrc",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint",

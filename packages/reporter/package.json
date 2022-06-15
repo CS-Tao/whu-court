@@ -8,7 +8,7 @@
   "scripts": {
     "clean": "shx rm -rf dist",
     "dev": "tsc -w",
-    "build": "yarn clean && tsc --sourcemap --mapRoot https://home.cs-tao.cc/$(echo https://home.cs-tao.cc/$(echo $npm_package_name | sed 's/@//g') | sed 's/@//g')",
+    "build": "yarn clean && tsc --sourcemap --mapRoot /$(echo /$(echo ${npm_package_name}/dist | sed 's/@//g') | sed 's/@//g')",
     "prepack": "yarn build"
   },
   "files": [

@@ -2452,8 +2452,9 @@ __metadata:
     "@types/chai": ^4
     "@types/mocha": ^9.0.0
     "@types/node": ^16.9.4
-    "@whu-court/http": 0.0.4-beta.0
-    "@whu-court/reporter": 0.0.4-beta.0
+    "@whu-court/http": 0.0.4-beta.1
+    "@whu-court/reporter": 0.0.4-beta.1
+    "@whu-court/runtime": 0.0.4-beta.1
     chai: ^4
     chalk: 4.1.2
     eslint: ^7.32.0
@@ -2471,21 +2472,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@whu-court/http@0.0.4-beta.0, @whu-court/http@workspace:packages/http":
+"@whu-court/http@0.0.4-beta.1, @whu-court/http@workspace:packages/http":
   version: 0.0.0-use.local
   resolution: "@whu-court/http@workspace:packages/http"
   dependencies:
-    "@whu-court/logger": 0.0.4-beta.0
+    "@whu-court/logger": 0.0.4-beta.1
     axios: ^0.27.2
     chalk: 4.1.2
   languageName: unknown
   linkType: soft
 
-"@whu-court/logger@0.0.4-beta.0, @whu-court/logger@workspace:packages/logger":
+"@whu-court/logger@0.0.4-beta.1, @whu-court/logger@workspace:packages/logger":
   version: 0.0.0-use.local
   resolution: "@whu-court/logger@workspace:packages/logger"
   dependencies:
-    "@whu-court/reporter": 0.0.4-beta.0
+    "@whu-court/reporter": 0.0.4-beta.1
   languageName: unknown
   linkType: soft
 
@@ -2493,14 +2494,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@whu-court/mock@workspace:packages/mock"
   dependencies:
-    "@whu-court/logger": 0.0.4-beta.0
+    "@whu-court/logger": 0.0.4-beta.1
     axios: ^0.27.2
     axios-mock-adapter: ^1.21.1
     chalk: 4.1.2
   languageName: unknown
   linkType: soft
 
-"@whu-court/reporter@0.0.4-beta.0, @whu-court/reporter@workspace:packages/reporter":
+"@whu-court/reporter@0.0.4-beta.1, @whu-court/reporter@workspace:packages/reporter":
   version: 0.0.0-use.local
   resolution: "@whu-court/reporter@workspace:packages/reporter"
   dependencies:
@@ -2514,7 +2515,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@whu-court/runtime@workspace:packages/runtime":
+"@whu-court/runtime@0.0.4-beta.1, @whu-court/runtime@workspace:packages/runtime":
   version: 0.0.0-use.local
   resolution: "@whu-court/runtime@workspace:packages/runtime"
   languageName: unknown

@@ -2454,6 +2454,7 @@ __metadata:
     "@types/node": ^16.9.4
     "@whu-court/http": 0.0.4-beta.1
     "@whu-court/reporter": 0.0.4-beta.1
+    "@whu-court/runtime": 0.0.4-beta.1
     chai: ^4
     chalk: 4.1.2
     eslint: ^7.32.0
@@ -2514,7 +2515,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@whu-court/runtime@workspace:packages/runtime":
+"@whu-court/runtime@0.0.4-beta.1, @whu-court/runtime@workspace:packages/runtime":
   version: 0.0.0-use.local
   resolution: "@whu-court/runtime@workspace:packages/runtime"
   languageName: unknown

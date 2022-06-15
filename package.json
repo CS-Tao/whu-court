@@ -103,6 +103,7 @@
   },
   "resolutions": {
     "mocha": "^9.2.2",
-    "ts-node": "^10.8.0"
+    "ts-node": "^10.8.0",
+    "minimist": "^1.2.6"
   }
 }

@@ -48,12 +48,17 @@ function releaseVersion(bumpType, isManual) {
     ]
   }
 
+  const releaseSentryCommands = [
+    `sentry-cli releases new "whu-court@v${getCurrentWorkspaceVersionCommand}" --org cs-tao --project whu-court`,
+    `yarn lerna exec sentry-cli -- releases --org cs-tao --project whu-court files "whu-court@v${getCurrentWorkspaceVersionCommand}" upload-sourcemaps ./dist/ --url-prefix 'https://home.cs-tao.cc/$(echo $LERNA_PACKAGE_NAME | sed 's/@//g')'`,
+    `sentry-cli releases --org cs-tao deploys whu-court@v${getCurrentWorkspaceVersionCommand} new -e ${environment}`,
+  ]
+
   const commands = [
     `yarn lerna version ${bump} --preid ${preid} ${options} --yes`,
     ...afterVersionCommands,
     `yarn lerna publish from-git --registry https://registry.npmjs.org/ ${publishOptions} --no-git-tag-version --no-push --no-verify-access --yes`,
-    `sentry-cli releases new "whu-court@v${getCurrentWorkspaceVersionCommand}" --org cs-tao --project whu-court`,
-    `sentry-cli releases --org cs-tao deploys whu-court@v${getCurrentWorkspaceVersionCommand} new -e ${environment}`,
+    ...releaseSentryCommands,
   ]
 
   const cwd = process.argv[2] || __dirname

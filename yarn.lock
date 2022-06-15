@@ -2452,10 +2452,10 @@ __metadata:
     "@types/chai": ^4
     "@types/mocha": ^9.0.0
     "@types/node": ^16.9.4
-    "@whu-court/http": 0.0.4-beta.4
-    "@whu-court/mock": 0.0.4-beta.4
-    "@whu-court/reporter": 0.0.4-beta.4
-    "@whu-court/runtime": 0.0.4-beta.4
+    "@whu-court/http": 0.0.4-beta.5
+    "@whu-court/mock": 0.0.4-beta.5
+    "@whu-court/reporter": 0.0.4-beta.5
+    "@whu-court/runtime": 0.0.4-beta.5
     chai: ^4
     chalk: 4.1.2
     eslint: ^7.32.0
@@ -2473,7 +2473,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@whu-court/env@0.0.4-beta.3, @whu-court/env@workspace:packages/env":
+"@whu-court/env@0.0.4-beta.5, @whu-court/env@workspace:packages/env":
   version: 0.0.0-use.local
   resolution: "@whu-court/env@workspace:packages/env"
   dependencies:
@@ -2482,49 +2482,49 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@whu-court/http@0.0.4-beta.4, @whu-court/http@workspace:packages/http":
+"@whu-court/http@0.0.4-beta.5, @whu-court/http@workspace:packages/http":
   version: 0.0.0-use.local
   resolution: "@whu-court/http@workspace:packages/http"
   dependencies:
-    "@whu-court/logger": 0.0.4-beta.4
+    "@whu-court/logger": 0.0.4-beta.5
     axios: ^0.27.2
     chalk: 4.1.2
   languageName: unknown
   linkType: soft
 
-"@whu-court/logger@0.0.4-beta.4, @whu-court/logger@workspace:packages/logger":
+"@whu-court/logger@0.0.4-beta.5, @whu-court/logger@workspace:packages/logger":
   version: 0.0.0-use.local
   resolution: "@whu-court/logger@workspace:packages/logger"
   dependencies:
-    "@whu-court/reporter": 0.0.4-beta.4
+    "@whu-court/reporter": 0.0.4-beta.5
   languageName: unknown
   linkType: soft
 
-"@whu-court/mock@0.0.4-beta.4, @whu-court/mock@workspace:packages/mock":
+"@whu-court/mock@0.0.4-beta.5, @whu-court/mock@workspace:packages/mock":
   version: 0.0.0-use.local
   resolution: "@whu-court/mock@workspace:packages/mock"
   dependencies:
-    "@whu-court/logger": 0.0.4-beta.4
+    "@whu-court/logger": 0.0.4-beta.5
     axios: ^0.27.2
     axios-mock-adapter: ^1.21.1
     chalk: 4.1.2
   languageName: unknown
   linkType: soft
 
-"@whu-court/reporter@0.0.4-beta.4, @whu-court/reporter@workspace:packages/reporter":
+"@whu-court/reporter@0.0.4-beta.5, @whu-court/reporter@workspace:packages/reporter":
   version: 0.0.0-use.local
   resolution: "@whu-court/reporter@workspace:packages/reporter"
   dependencies:
     "@sentry/node": ^7.1.1
     "@sentry/tracing": ^7.1.1
     "@types/md5": ^2.3.2
-    "@whu-court/env": 0.0.4-beta.3
+    "@whu-court/env": 0.0.4-beta.5
     address: ^1.2.0
     md5: ^2.3.0
   languageName: unknown
   linkType: soft
 
-"@whu-court/runtime@0.0.4-beta.4, @whu-court/runtime@workspace:packages/runtime":
+"@whu-court/runtime@0.0.4-beta.5, @whu-court/runtime@workspace:packages/runtime":
   version: 0.0.0-use.local
   resolution: "@whu-court/runtime@workspace:packages/runtime"
   dependencies:
@@ -10968,6 +10968,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "whu-court@workspace:."
   dependencies:
+    "@sentry/cli": ^2.1.0
     "@types/node": ^17.0.41
     "@typescript-eslint/eslint-plugin": ^5.27.0
     commitizen: ^4.2.4

@@ -12,10 +12,11 @@
   "types": "dist/index.d.ts",
   "repository": "CS-Tao/whu-court",
   "files": [
-    "/bin",
-    "/dist",
-    "/npm-shrinkwrap.json",
-    "/oclif.manifest.json"
+    "bin",
+    "dist",
+    "!dist/**/*.map",
+    "npm-shrinkwrap.json",
+    "oclif.manifest.json"
   ],
   "dependencies": {
     "@oclif/core": "^1",
@@ -70,7 +71,7 @@
     "dev": "./bin/dev",
     "start": "./bin/run",
     "clean": "shx rm -rf dist",
-    "build": "yarn clean && tsc",
+    "build": "yarn clean && tsc --sourcemap --mapRoot https://home.cs-tao.cc/$(echo $npm_package_name | sed 's/@//g')",
     "lint": "eslint . --ext .ts --config .eslintrc",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint",

@@ -3,7 +3,7 @@ import md5 from 'md5'
 import * as Sentry from '@sentry/node'
 import { RewriteFrames } from '@sentry/integrations'
 import '@sentry/tracing'
-import { environment, version } from '@whu-court/env'
+import { environment, version, appRoot } from '@whu-court/env'
 import Measure from './measure'
 
 interface User {
@@ -23,14 +23,14 @@ const testUser: User = {
 class Reporter {
   static Measure = Measure
 
-  static init(scope: Scope, root: string) {
+  static init(scope: Scope) {
     Sentry.init({
       dsn: 'https://9f5715bdde344fbd8ee3fb3696edfd86@o1268975.ingest.sentry.io/6505233',
       tracesSampleRate: 1.0,
       integrations: [
         new Sentry.Integrations.Http({ tracing: true }), // TODO:
         new RewriteFrames({
-          root,
+          root: appRoot,
         }),
       ],
       release: `whu-court@v${version}`,

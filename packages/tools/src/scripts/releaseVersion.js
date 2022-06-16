@@ -52,8 +52,8 @@ function releaseVersion(bumpType, isManual) {
 
   const releaseSentryCommands = [
     `sentry-cli releases new "whu-court@v${getCurrentWorkspaceVersionCommand}" --org cs-tao --project whu-court`,
-    `yarn lerna exec --ignore ${mainPackage} sentry-cli -- releases --org cs-tao --project whu-court files "whu-court@v${getCurrentWorkspaceVersionCommand}" upload-sourcemaps ./dist/ --url-prefix '/node_modules/$LERNA_PACKAGE_NAME/dist'`,
-    `yarn lerna exec --scope ${mainPackage} sentry-cli -- releases --org cs-tao --project whu-court files "whu-court@v${getCurrentWorkspaceVersionCommand}" upload-sourcemaps ./dist/ --url-prefix '/dist'`,
+    `yarn lerna exec --ignore ${mainPackage} sentry-cli -- releases --org cs-tao --project whu-court files "whu-court@v${getCurrentWorkspaceVersionCommand}" upload-sourcemaps ./dist/ --url-prefix '\\~/node_modules/$LERNA_PACKAGE_NAME/dist'`,
+    `yarn lerna exec --scope ${mainPackage} sentry-cli -- releases --org cs-tao --project whu-court files "whu-court@v${getCurrentWorkspaceVersionCommand}" upload-sourcemaps ./dist/ --url-prefix '\\~/dist'`,
     `sentry-cli releases --org cs-tao deploys whu-court@v${getCurrentWorkspaceVersionCommand} new -e ${environment}`,
   ]
 

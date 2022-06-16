@@ -8,7 +8,7 @@
   "scripts": {
     "clean": "shx rm -rf dist",
     "dev": "tsc -w",
-    "build": "yarn clean && tsc --sourcemap --sourceRoot /${npm_package_name}/dist",
+    "build": "yarn clean && tsc --sourcemap --sourceRoot /node_modules/${npm_package_name}/dist",
     "prepack": "yarn build"
   },
   "files": [

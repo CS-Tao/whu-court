@@ -1,3 +1,4 @@
+import path from 'path'
 import { Command, Flags } from '@oclif/core'
 import http from '@whu-court/http'
 import { ReserveManager } from '@whu-court/runtime'
@@ -10,7 +11,7 @@ Reporter.init(
       username: 'test_name',
     },
   },
-  __dirname || process.cwd(),
+  path.join(__dirname, '..', '..', '..'),
 )
 
 export default class Config extends Command {

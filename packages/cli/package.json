@@ -71,7 +71,7 @@
     "dev": "./bin/dev",
     "start": "./bin/run",
     "clean": "shx rm -rf dist",
-    "build": "yarn clean && tsc --sourcemap --mapRoot /${npm_package_name}/dist",
+    "build": "yarn clean && tsc --sourcemap --sourceRoot /${npm_package_name}/dist",
     "lint": "eslint . --ext .ts --config .eslintrc",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint",

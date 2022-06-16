@@ -3,12 +3,15 @@ import http from '@whu-court/http'
 import { ReserveManager } from '@whu-court/runtime'
 import Reporter from '@whu-court/reporter'
 
-Reporter.init({
-  user: {
-    id: 'test_id',
-    username: 'test_name',
+Reporter.init(
+  {
+    user: {
+      id: 'test_id',
+      username: 'test_name',
+    },
   },
-})
+  __dirname || process.cwd(),
+)
 
 export default class Config extends Command {
   static description = 'Say hello'

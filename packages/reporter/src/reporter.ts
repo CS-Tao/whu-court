@@ -1,4 +1,3 @@
-import path from 'path'
 import address from 'address'
 import md5 from 'md5'
 import * as Sentry from '@sentry/node'
@@ -24,14 +23,14 @@ const testUser: User = {
 class Reporter {
   static Measure = Measure
 
-  static init(scope: Scope) {
+  static init(scope: Scope, root: string) {
     Sentry.init({
       dsn: 'https://9f5715bdde344fbd8ee3fb3696edfd86@o1268975.ingest.sentry.io/6505233',
       tracesSampleRate: 1.0,
       integrations: [
         new Sentry.Integrations.Http({ tracing: true }), // TODO:
         new RewriteFrames({
-          root: path.join('..', '..', process.cwd()),
+          root,
         }),
       ],
       release: `whu-court@v${version}`,

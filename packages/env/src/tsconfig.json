@@ -4,8 +4,7 @@
     "rootDir": ".",
     "outDir": "../dist/",
     "resolveJsonModule": true,
-    "sourceMap": true,
-    "sourceRoot": "/whu-court/env/dist"
+    "sourceRoot": "/@whu-court/env/dist"
   },
   "references": [{ "path": "../" }]
 }

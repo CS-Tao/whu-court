@@ -1,14 +1,14 @@
 {
-  "name": "@whu-court/env",
-  "description": "WHU-Court envs",
+  "name": "@whu-court/auto-update",
+  "description": "WHU-Court auto update manager",
   "version": "0.0.4-beta.6",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "clean": "shx rm -rf dist",
-    "dev": "tsc --build src -w",
-    "build": "yarn clean && tsc --build src",
+    "dev": "tsc -w",
+    "build": "yarn clean && tsc --sourcemap --sourceRoot /node_modules/${npm_package_name}/dist",
     "prepack": "yarn build"
   },
   "files": [
@@ -19,9 +19,10 @@
     "access": "public"
   },
   "dependencies": {
-    "semver": "^7.3.7"
+    "@whu-court/env": "0.0.4-beta.6",
+    "update-notifier": "^5.1.0"
   },
   "devDependencies": {
-    "@types/semver": "^7.3.9"
+    "@types/update-notifier": "^5.1.0"
   }
 }

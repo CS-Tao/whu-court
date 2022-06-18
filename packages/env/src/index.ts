@@ -7,6 +7,10 @@ export interface Envs {
   version: string
   prerelease?: 'alpha' | 'beta' | string
   appRoot: string
+  mainPkg: {
+    name: string
+    version: string
+  }
 }
 
 const version = pkg.version
@@ -30,12 +34,18 @@ if (process.env.NODE_ENV === 'production') {
 
 const appRoot = path.join(__dirname, '..', '..', '..', '..')
 
+const mainPkg: Envs['mainPkg'] = {
+  name: '@whu-court/cli',
+  version,
+}
+
 const envs: Envs = {
   environment,
   version,
   prerelease,
   appRoot,
+  mainPkg,
 }
 
-export { environment, version, prerelease, appRoot }
+export { environment, version, prerelease, appRoot, mainPkg }
 export default envs

@@ -2,6 +2,7 @@ import { Command, Flags } from '@oclif/core'
 import http from '@whu-court/http'
 import { ReserveManager } from '@whu-court/runtime'
 import Reporter from '@whu-court/reporter'
+import UpdateManager from '@whu-court/auto-update'
 
 Reporter.init({
   user: {
@@ -46,5 +47,6 @@ hello friend from oclif! (./src/commands/hello/index.ts)
     Reporter.report(new Error('test error: ' + data))
 
     this.log(`hello ${args.person} from ${flags.from}! (./src/commands/hello/index.ts)`)
+    new UpdateManager().notify()
   }
 }

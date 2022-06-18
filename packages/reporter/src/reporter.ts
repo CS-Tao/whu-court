@@ -52,6 +52,9 @@ class Reporter {
   }
 
   static report(error: Error, context?: Record<string, unknown>) {
+    if (environment === 'local') {
+      return
+    }
     Sentry.captureException(error, context)
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "@whu-court/logger",
   "description": "Logger for the WHU-Court project",
-  "version": "0.0.4-beta.5",
+  "version": "0.0.4-beta.6",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,6 +19,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@whu-court/reporter": "0.0.4-beta.5"
+    "@whu-court/reporter": "0.0.4-beta.6"
   }
 }

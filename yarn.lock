@@ -2558,12 +2558,12 @@ __metadata:
   resolution: "@whu-court/auto-update@workspace:packages/auto-update"
   dependencies:
     "@types/update-notifier": ^5.1.0
-    "@whu-court/cli": 0.0.4-beta.5
+    "@whu-court/env": 0.0.4-beta.5
     update-notifier: ^5.1.0
   languageName: unknown
   linkType: soft
 
-"@whu-court/cli@0.0.4-beta.5, @whu-court/cli@workspace:packages/cli":
+"@whu-court/cli@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "@whu-court/cli@workspace:packages/cli"
   dependencies:
@@ -2601,7 +2601,6 @@ __metadata:
   resolution: "@whu-court/env@workspace:packages/env"
   dependencies:
     "@types/semver": ^7.3.9
-    "@whu-court/cli": 0.0.4-beta.5
     semver: ^7.3.7
   languageName: unknown
   linkType: soft

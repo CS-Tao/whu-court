@@ -11,7 +11,7 @@ export default class AutoUpdateManager {
     this.mainPkg = mainPkg
     this.notifier = UpdateNotifier({
       pkg: this.mainPkg,
-      updateCheckInterval: environment === 'staging' ? CHECK_INTERVAL.ALWAYS : CHECK_INTERVAL.ONE_DAY,
+      updateCheckInterval: environment === 'production' ? CHECK_INTERVAL.ONE_DAY : CHECK_INTERVAL.ALWAYS,
     })
     AutoUpdateManager.instance = this
     return AutoUpdateManager.instance

@@ -1,7 +1,7 @@
 {
   "name": "@whu-court/scratch",
   "private": true,
-  "description": "WHU-Court package scratch demo",
+  "description": "WHU-Court scratch package demo",
   "version": "0.0.4-beta.5",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
@@ -9,11 +9,12 @@
   "scripts": {
     "clean": "shx rm -rf dist",
     "dev": "tsc -w",
-    "build": "yarn clean && tsc",
+    "build": "yarn clean && tsc --sourcemap --sourceRoot /node_modules/${npm_package_name}/dist",
     "prepack": "yarn build"
   },
   "files": [
-    "dist"
+    "dist",
+    "!dist/**/*.map"
   ],
   "publishConfig": {
     "access": "public"

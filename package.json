@@ -28,6 +28,7 @@
     "cd:release": "is-ci && lerna run --scope @whu-court/tools releaseVersion -- $(pwd)"
   },
   "devDependencies": {
+    "@sentry/cli": "^2.1.0",
     "@types/node": "^17.0.41",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "commitizen": "^4.2.4",

@@ -12,10 +12,11 @@
   "types": "dist/index.d.ts",
   "repository": "CS-Tao/whu-court",
   "files": [
-    "/bin",
-    "/dist",
-    "/npm-shrinkwrap.json",
-    "/oclif.manifest.json"
+    "bin",
+    "dist",
+    "!dist/**/*.map",
+    "npm-shrinkwrap.json",
+    "oclif.manifest.json"
   ],
   "dependencies": {
     "@oclif/core": "^1",

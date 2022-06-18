@@ -1,3 +1,4 @@
+import path from 'path'
 import { parse } from 'semver'
 import pkg from '../package.json'
 
@@ -5,6 +6,7 @@ export interface Envs {
   environment: 'local' | 'staging' | 'gray' | 'production'
   version: string
   prerelease?: 'alpha' | 'beta' | string
+  appRoot: string
 }
 
 const version = pkg.version
@@ -26,11 +28,14 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
+const appRoot = path.join(__dirname, '..', '..', '..', '..')
+
 const envs: Envs = {
   environment,
   version,
   prerelease,
+  appRoot,
 }
 
-export { environment, version, prerelease }
+export { environment, version, prerelease, appRoot }
 export default envs

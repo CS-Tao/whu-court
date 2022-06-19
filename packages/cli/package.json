@@ -1,6 +1,6 @@
 {
   "name": "@whu-court/cli",
-  "version": "0.0.4-beta.6",
+  "version": "0.0.4-beta.7",
   "description": "CLI interface for WHU Court",
   "author": "cstao.cn@icloud.com",
   "bin": {
@@ -22,11 +22,11 @@
     "@oclif/core": "^1",
     "@oclif/plugin-autocomplete": "^1.3.0",
     "@oclif/plugin-help": "^5",
-    "@whu-court/auto-update": "0.0.4-beta.6",
-    "@whu-court/http": "0.0.4-beta.6",
-    "@whu-court/mock": "0.0.4-beta.6",
-    "@whu-court/reporter": "0.0.4-beta.6",
-    "@whu-court/runtime": "0.0.4-beta.6"
+    "@whu-court/auto-update": "0.0.4-beta.7",
+    "@whu-court/http": "0.0.4-beta.7",
+    "@whu-court/mock": "0.0.4-beta.7",
+    "@whu-court/reporter": "0.0.4-beta.7",
+    "@whu-court/runtime": "0.0.4-beta.7"
   },
   "devDependencies": {
     "@oclif/test": "^2",

@@ -8,6 +8,9 @@ const CHECK_INTERVAL = {
 
 export default class AutoUpdateManager {
   constructor() {
+    if (AutoUpdateManager.instance) {
+      return AutoUpdateManager.instance
+    }
     this.mainPkg = mainPkg
     this.notifier = UpdateNotifier({
       pkg: this.mainPkg,
@@ -19,10 +22,10 @@ export default class AutoUpdateManager {
 
   static instance: AutoUpdateManager
 
-  private mainPkg: UpdateNotifier.Package
-  private notifier: UpdateNotifier.UpdateNotifier
+  private mainPkg?: UpdateNotifier.Package
+  private notifier?: UpdateNotifier.UpdateNotifier
 
   notify() {
-    this.notifier.notify()
+    this.notifier?.notify()
   }
 }

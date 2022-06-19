@@ -6,6 +6,13 @@ const CHECK_INTERVAL = {
   ALWAYS: 1,
 }
 
+const DIST_TAG_MAP: Record<typeof environment, string> = {
+  local: 'latest',
+  staging: 'alpha',
+  gray: 'beta',
+  production: 'latest',
+}
+
 export default class AutoUpdateManager {
   constructor() {
     if (AutoUpdateManager.instance) {
@@ -15,6 +22,8 @@ export default class AutoUpdateManager {
     this.notifier = UpdateNotifier({
       pkg: this.mainPkg,
       updateCheckInterval: environment === 'production' ? CHECK_INTERVAL.ONE_DAY : CHECK_INTERVAL.ALWAYS,
+      distTag: DIST_TAG_MAP[environment],
+      shouldNotifyInNpmScript: true,
     })
     AutoUpdateManager.instance = this
     return AutoUpdateManager.instance

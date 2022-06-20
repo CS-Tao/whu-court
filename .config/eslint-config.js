@@ -37,5 +37,6 @@ module.exports = {
         asyncArrow: 'always',
       },
     ],
+    'generator-star-spacing': 0,
   },
 }

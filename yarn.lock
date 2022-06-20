@@ -2600,7 +2600,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@whu-court/config-manager@workspace:packages/config-manager"
   dependencies:
-    "@whu-court/env": 0.0.4-beta.6
+    "@whu-court/env": 0.0.4-beta.9
     conf: ^10.1.2
   languageName: unknown
   linkType: soft
@@ -2613,15 +2613,6 @@ __metadata:
     semver: ^7.3.7
   languageName: unknown
   linkType: soft
-
-"@whu-court/env@npm:0.0.4-beta.6":
-  version: 0.0.4-beta.6
-  resolution: "@whu-court/env@npm:0.0.4-beta.6"
-  dependencies:
-    semver: ^7.3.7
-  checksum: 3aa25a73e599a9120016ab687f9a712107049d2e0a755f6f9be10fa4b6eda5f5d72572a310117d22d6fb67322f7f8aad73d4d0b0cf4e57d7c75f76731ef06041
-  languageName: node
-  linkType: hard
 
 "@whu-court/http@0.0.4-beta.9, @whu-court/http@workspace:packages/http":
   version: 0.0.0-use.local

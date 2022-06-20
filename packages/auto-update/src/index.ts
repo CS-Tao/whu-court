@@ -7,7 +7,7 @@ const CHECK_INTERVAL = {
 }
 
 const DIST_TAG_MAP: Record<typeof environment, string> = {
-  local: 'latest',
+  local: 'alpha',
   staging: 'alpha',
   gray: 'beta',
   production: 'latest',
@@ -23,7 +23,7 @@ export default class AutoUpdateManager {
       pkg: this.mainPkg,
       updateCheckInterval: environment === 'production' ? CHECK_INTERVAL.ONE_DAY : CHECK_INTERVAL.ALWAYS,
       distTag: DIST_TAG_MAP[environment],
-      shouldNotifyInNpmScript: true,
+      shouldNotifyInNpmScript: Boolean(process.env.DEBUG_UPDATE_NOTIFIER),
     })
     AutoUpdateManager.instance = this
     return AutoUpdateManager.instance

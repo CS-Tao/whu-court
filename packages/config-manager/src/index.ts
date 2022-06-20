@@ -1,0 +1,54 @@
+import Conf from 'conf'
+import { mainPkg } from '@whu-court/env'
+import { ConfigKey, ConfigTypes } from './types'
+import { defaultValues, rules } from './const'
+
+type ErrMsg = string | void
+
+// prettier-ignore
+class ConfigManager implements Iterable<[keyof ConfigTypes, ConfigTypes[keyof ConfigTypes]]> {
+  constructor() {
+    this.conf = new Conf<ConfigTypes>({
+      configName: mainPkg.name,
+      projectName: mainPkg.name,
+      projectVersion: mainPkg.version,
+    })
+  }
+
+  private conf: Conf<ConfigTypes>;
+
+  *[Symbol.iterator](): IterableIterator<[keyof ConfigTypes, ConfigTypes[keyof ConfigTypes]]> {
+    for (const [key, value] of Object.entries(this.conf.store)) {
+      yield [key as keyof ConfigTypes, value]
+    }
+  }
+
+  get(key: ConfigKey) {
+    return this.conf.get<ConfigKey>(key, defaultValues[key])
+  }
+
+  set<Key extends ConfigKey>(key: Key, value: ConfigTypes[Key]): ErrMsg {
+    const validateErrMsg = rules[key](value)
+    if (validateErrMsg) {
+      return validateErrMsg
+    }
+    this.conf.set<ConfigKey>(key, value)
+  }
+
+  has(key: ConfigKey) {
+    return this.conf.has<ConfigKey>(key)
+  }
+
+  delete(key: ConfigKey) {
+    this.conf.delete<ConfigKey>(key)
+  }
+
+  clear() {
+    this.conf.clear()
+  }
+}
+
+const configManager = new ConfigManager()
+
+export { ConfigKey, ConfigTypes }
+export default configManager

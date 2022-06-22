@@ -1,6 +1,6 @@
 {
   "name": "@whu-court/http",
-  "description": "Http Client for WHU-Court",
+  "description": "WHU-Court Http Client",
   "version": "0.0.4-beta.9",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",

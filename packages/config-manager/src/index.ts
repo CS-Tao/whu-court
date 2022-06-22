@@ -24,7 +24,10 @@ class ConfigManager implements Iterable<[keyof ConfigTypes, ConfigTypes[keyof Co
   }
 
   get(key: ConfigKey) {
-    return this.conf.get<ConfigKey>(key, defaultValues[key])
+    if (defaultValues[key]) {
+      return this.conf.get<ConfigKey>(key, defaultValues[key] as ConfigTypes[ConfigKey])
+    }
+    return this.conf.get<ConfigKey>(key)
   }
 
   set<Key extends ConfigKey>(key: Key, value: ConfigTypes[Key]): ErrMsg {

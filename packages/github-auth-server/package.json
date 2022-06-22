@@ -1,0 +1,27 @@
+{
+  "name": "@whu-court/github-auth-server",
+  "description": "WHU-Court GitHub Auth Server",
+  "private": true,
+  "version": "0.0.4-beta.9",
+  "author": "cstao.cn@icloud.com",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "clean": "shx rm -rf dist",
+    "dev": "tsc -w",
+    "build": "yarn clean && tsc --sourcemap --sourceRoot /node_modules/${npm_package_name}/dist",
+    "prepack": "yarn build"
+  },
+  "files": [
+    "dist",
+    "!dist/**/*.map"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "open": "^8.4.0",
+    "socket.io-client": "^4.5.1"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "@whu-court/logger",
-  "description": "Logger for the WHU-Court project",
+  "description": " WHU-Court Logger",
   "version": "0.0.4-beta.9",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",

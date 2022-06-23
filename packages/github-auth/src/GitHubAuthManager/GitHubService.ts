@@ -1,13 +1,27 @@
-import axios, { AxiosInstance } from 'axios'
+import Axios, { AxiosInstance } from 'axios'
 import { CheckIfStaredRes, GitHubUserInfoRes } from './types'
 
 class GitHubService {
   constructor() {
-    this.githubApiService = axios.create({
+    this.githubApiService = Axios.create({
       baseURL: 'https://api.github.com',
       timeout: 6000,
       withCredentials: true,
     })
+
+    this.githubApiService.interceptors.response.use(
+      (res) => res,
+      (error) => {
+        const status = error.response.status
+        if (status === 401) {
+          return Promise.reject(Error('GitHub token 无效'))
+        }
+        if (status !== 200) {
+          return Promise.reject(Error('验证失败'))
+        }
+        return Promise.reject(error)
+      },
+    )
   }
 
   private readonly githubApiService: AxiosInstance
@@ -26,7 +40,10 @@ class GitHubService {
   /**
    * 检查是否点星
    */
-  checkStared = async (authToken: string, cursor: string | null): Promise<[string, string | null, boolean]> => {
+  protected checkStared = async (
+    authToken: string,
+    cursor: string | null,
+  ): Promise<[string, string | null, boolean]> => {
     const repoName = 'whu-library-seat'
     const firstUserCount = 10
     const maxUserCount = 100
@@ -73,19 +90,14 @@ class GitHubService {
       },
       data: JSON.stringify({ query }),
     })
-    if (response.status === 200) {
-      const viewer = response.data.data.viewer
-      const stargazers = response.data.data.repository.stargazers.edges
-      if (stargazers.length === 0) {
-        return [authToken, null, false]
-      } else {
-        const haveStared = stargazers.find((stargazer) => stargazer.node.id === viewer.id) !== undefined
-        const lastCursor = stargazers[stargazers.length - 1].cursor
-        return [authToken, lastCursor, haveStared]
-      }
+    const viewer = response.data.data.viewer
+    const stargazers = response.data.data.repository.stargazers.edges
+    if (stargazers.length === 0) {
+      return [authToken, null, false]
     } else {
-      // TODO:
-      throw new Error('数据加载失败，请重新尝试')
+      const haveStared = stargazers.find((stargazer) => stargazer.node.id === viewer.id) !== undefined
+      const lastCursor = stargazers[stargazers.length - 1].cursor
+      return [authToken, lastCursor, haveStared]
     }
   }
 }

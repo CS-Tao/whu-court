@@ -1,9 +1,7 @@
 import Axios from 'axios'
 import chalk from 'chalk'
-import Logger from '@whu-court/logger'
+import logger from '@whu-court/logger'
 import { ServerData } from './types'
-
-const logger = Logger.getLogger('@whu-court/http')
 
 const commonHeaders = {
   Host: 'miniapp.whu.edu.cn',

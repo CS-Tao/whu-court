@@ -1,5 +1,10 @@
 export enum ConfigKey {
   /**
+   * 是否已完成配置
+   */
+  configured = 'configured',
+
+  /**
    * GitHub 用户名
    */
   githubUserName = 'githubUserName',
@@ -55,6 +60,8 @@ export enum ConfigKey {
 }
 
 export interface ConfigTypes {
+  [ConfigKey.configured]: boolean
+
   [ConfigKey.githubUserName]: string
   [ConfigKey.githubNickName]: string
   [ConfigKey.githubToken]: string

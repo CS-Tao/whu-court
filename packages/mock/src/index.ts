@@ -1,11 +1,9 @@
 import MockAdapter from 'axios-mock-adapter'
 import { AxiosInstance } from 'axios'
 import chalk from 'chalk'
-import Logger from '@whu-court/logger'
+import logger from '@whu-court/logger'
 import { MockData } from './type'
 import apis from './apis'
-
-const logger = Logger.getLogger('@whu-court/mock')
 
 export const mockAxios = (axios: AxiosInstance) => {
   logger.warn(chalk.yellow(`mock axios enabled for ${apis.length} apis`))

@@ -2194,6 +2194,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/inquirer@npm:^8.2.1":
+  version: 8.2.1
+  resolution: "@types/inquirer@npm:8.2.1"
+  dependencies:
+    "@types/through": "*"
+    rxjs: ^7.2.0
+  checksum: 5362d0b1cbec3887c9d5a671a0b19c58cf54066456c8967dd7ee799dfcc242cc8cd8959440c0f2fe7768becaf721b45fd30c222e6b9bcca378f45c68af43bab5
+  languageName: node
+  linkType: hard
+
 "@types/json-schema@npm:^7.0.7, @types/json-schema@npm:^7.0.9":
   version: 7.0.11
   resolution: "@types/json-schema@npm:7.0.11"
@@ -2323,6 +2333,15 @@ __metadata:
   version: 8.1.2
   resolution: "@types/sinonjs__fake-timers@npm:8.1.2"
   checksum: bbc73a5ab6c0ec974929392f3d6e1e8db4ebad97ec506d785301e1c3d8a4f98a35b1aa95b97035daef02886fd8efd7788a2fa3ced2ec7105988bfd8dce61eedd
+  languageName: node
+  linkType: hard
+
+"@types/through@npm:*":
+  version: 0.0.30
+  resolution: "@types/through@npm:0.0.30"
+  dependencies:
+    "@types/node": "*"
+  checksum: 9578470db0b527c26e246a1220ae9bffc6bf47f20f89c54aac467c083ab1f7e16c00d9a7b4bb6cb4e2dfae465027270827e5908a6236063f6214625e50585d78
   languageName: node
   linkType: hard
 
@@ -2572,10 +2591,14 @@ __metadata:
     "@oclif/plugin-help": ^5
     "@oclif/test": ^2
     "@types/chai": ^4
+    "@types/inquirer": ^8.2.1
     "@types/mocha": ^9.0.0
     "@types/node": ^16.9.4
     "@whu-court/auto-update": 0.0.4-beta.9
+    "@whu-court/config-manager": 0.0.4-beta.9
+    "@whu-court/github-auth": 0.0.4-beta.9
     "@whu-court/http": 0.0.4-beta.9
+    "@whu-court/logger": 0.0.4-beta.9
     "@whu-court/mock": 0.0.4-beta.9
     "@whu-court/reporter": 0.0.4-beta.9
     "@whu-court/runtime": 0.0.4-beta.9
@@ -2585,6 +2608,7 @@ __metadata:
     eslint-config-oclif: ^4
     eslint-config-oclif-typescript: ^1.0.2
     globby: ^11
+    inquirer: ^8.2.3
     mocha: ^9
     oclif: ^3
     shx: ^0.3.4
@@ -2596,7 +2620,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@whu-court/config-manager@workspace:packages/config-manager":
+"@whu-court/config-manager@0.0.4-beta.9, @whu-court/config-manager@workspace:packages/config-manager":
   version: 0.0.0-use.local
   resolution: "@whu-court/config-manager@workspace:packages/config-manager"
   dependencies:
@@ -2614,7 +2638,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@whu-court/github-auth@workspace:packages/github-auth":
+"@whu-court/github-auth@0.0.4-beta.9, @whu-court/github-auth@workspace:packages/github-auth":
   version: 0.0.0-use.local
   resolution: "@whu-court/github-auth@workspace:packages/github-auth"
   dependencies:
@@ -6758,7 +6782,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inquirer@npm:^8.0.0":
+"inquirer@npm:^8.0.0, inquirer@npm:^8.2.3":
   version: 8.2.4
   resolution: "inquirer@npm:8.2.4"
   dependencies:
@@ -10171,7 +10195,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:^7.5.5":
+"rxjs@npm:^7.2.0, rxjs@npm:^7.5.5":
   version: 7.5.5
   resolution: "rxjs@npm:7.5.5"
   dependencies:

@@ -1,3 +1,6 @@
 import GitHubAuthManager from './GitHubAuthManager'
 
-export default GitHubAuthManager
+const githubAuthManager = new GitHubAuthManager()
+
+export { GitHubAuthManager }
+export default githubAuthManager

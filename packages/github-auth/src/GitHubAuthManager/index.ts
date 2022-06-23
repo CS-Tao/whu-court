@@ -9,20 +9,15 @@ class GitHubAuthManager extends GitHubService {
   }
 
   private checkIfStaredCore = async (token: string, cursor: string | null): Promise<boolean> => {
-    try {
-      const data = await this.checkStared(token, cursor).then(([token, lastCursor, haveStarted]) => {
-        return {
-          continue: !haveStarted && !!lastCursor,
-          token,
-          haveStarted,
-          lastCursor,
-        }
-      })
-      return data.continue ? this.checkIfStaredCore(data.token, data.lastCursor) : data.haveStarted
-    } catch (error) {
-      // TODO:
-      throw new Error('todo')
-    }
+    const data = await this.checkStared(token, cursor).then(([token, lastCursor, haveStarted]) => {
+      return {
+        continue: !haveStarted && !!lastCursor,
+        token,
+        haveStarted,
+        lastCursor,
+      }
+    })
+    return data.continue ? this.checkIfStaredCore(data.token, data.lastCursor) : data.haveStarted
   }
 }
 

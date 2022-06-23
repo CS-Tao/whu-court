@@ -1,18 +1,20 @@
 /* eslint-disable no-console */
 import Reporter from '@whu-court/reporter'
 
+interface Options {
+  report?: boolean
+}
+
 class Logger {
-  constructor(module: string, tag?: string) {
-    this.module = module
-    this.tag = tag
+  constructor(options?: Options) {
+    this.options = options || {}
   }
 
-  static getLogger(module: string, tag?: string): Logger {
-    return new Logger(module, tag)
-  }
+  options: Options
 
-  module: string
-  tag?: string
+  static getLogger(options?: Options): Logger {
+    return new Logger(options)
+  }
 
   public warn(...data: any[]): void {
     console.warn(...data)
@@ -20,7 +22,9 @@ class Logger {
 
   public error(...data: string[]): void {
     console.error(...data)
-    Reporter.report(new Error(data.join('\n')))
+    if (this.options.report) {
+      Reporter.report(new Error(data.join('\n')))
+    }
   }
 
   public group(...data: any[]): void {
@@ -48,4 +52,7 @@ class Logger {
   }
 }
 
-export default Logger
+const logger = Logger.getLogger({ report: true })
+
+export { Logger }
+export default logger

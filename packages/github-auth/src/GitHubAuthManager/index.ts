@@ -1,13 +1,13 @@
+import configManager, { ConfigKey } from '@whu-court/config-manager'
 import GitHubService from './GitHubService'
 
+interface UserInfo {
+  nickName: string
+  name: string
+  avatar: string
+}
+
 class GitHubAuthManager extends GitHubService {
-  isAuthed: boolean = false
-
-  checkIfStared = async (token: string) => {
-    this.isAuthed = await this.checkIfStaredCore(token, null)
-    return this.isAuthed
-  }
-
   private checkIfStaredCore = async (token: string, cursor: string | null): Promise<boolean> => {
     const data = await this.checkStared(token, cursor).then(([token, lastCursor, haveStarted]) => {
       return {
@@ -18,6 +18,57 @@ class GitHubAuthManager extends GitHubService {
       }
     })
     return data.continue ? this.checkIfStaredCore(data.token, data.lastCursor) : data.haveStarted
+  }
+
+  checkIfStared = async (token: string) => {
+    const isAuthed = await this.checkIfStaredCore(token, null)
+    if (isAuthed) {
+      await this.saveInfos(token)
+    } else {
+      this.clearInfos()
+    }
+    return isAuthed
+  }
+
+  private saveInfos = async (token: string) => {
+    const userInfo = await this.getUserInfo(token)
+    if (userInfo.avatar_url && userInfo.login) {
+      configManager.set(ConfigKey.githubToken, token)
+      configManager.set(ConfigKey.githubAvatar, userInfo.avatar_url)
+      configManager.set(ConfigKey.githubUserName, userInfo.login)
+      userInfo.name && configManager.set(ConfigKey.githubNickName, userInfo.name)
+    }
+  }
+
+  clearInfos = () => {
+    configManager.delete(ConfigKey.githubToken)
+    configManager.delete(ConfigKey.githubAvatar)
+    configManager.delete(ConfigKey.githubUserName)
+    configManager.delete(ConfigKey.githubNickName)
+  }
+
+  checkIfConfigured() {
+    const token = configManager.get(ConfigKey.githubToken)
+    if (token && typeof token === 'string') {
+      // async
+      this.checkIfStared(token)
+      return true
+    }
+    return false
+  }
+
+  get userInfo(): UserInfo | null {
+    const nickName = configManager.get(ConfigKey.githubNickName)
+    const name = configManager.get(ConfigKey.githubUserName)
+    const avatar = configManager.get(ConfigKey.githubAvatar)
+    if ([name, avatar].every((each) => each && typeof each === 'string')) {
+      return {
+        nickName,
+        name,
+        avatar,
+      } as UserInfo
+    }
+    return null
   }
 }
 

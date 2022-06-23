@@ -1,7 +1,7 @@
 {
   "name": "@whu-court/cli",
   "version": "0.0.4-beta.9",
-  "description": "WHU-Court CLI Interface",
+  "description": "场馆预约助手",
   "author": "cstao.cn@icloud.com",
   "bin": {
     "wcr": "./bin/run"
@@ -30,7 +30,10 @@
     "@whu-court/mock": "0.0.4-beta.9",
     "@whu-court/reporter": "0.0.4-beta.9",
     "@whu-court/runtime": "0.0.4-beta.9",
-    "inquirer": "^8.2.3"
+    "cfonts": "^3.1.0",
+    "chalk": "4.1.2",
+    "inquirer": "^8.2.3",
+    "loading-cli": "^1.1.0"
   },
   "devDependencies": {
     "@oclif/test": "^2",
@@ -39,7 +42,6 @@
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.9.4",
     "chai": "^4",
-    "chalk": "4.1.2",
     "eslint": "^7.32.0",
     "eslint-config-oclif": "^4",
     "eslint-config-oclif-typescript": "^1.0.2",
@@ -55,31 +57,26 @@
     "bin": "wcr",
     "dirname": "wcr",
     "commands": "./dist/commands",
+    "additionalHelpFlags": [
+      "-h"
+    ],
+    "additionalVersionFlags": [
+      "-v"
+    ],
+    "helpClass": "./dist/lib/help",
+    "hooks": {
+      "init": [
+        "./dist/hooks/printLogo"
+      ]
+    },
     "plugins": [
       "@oclif/plugin-help",
       "@oclif/plugin-autocomplete"
     ],
-    "topicSeparator": " ",
-    "topics": {
-      "setup": {
-        "description": "初始化应用"
-      },
-      "config": {
-        "description": "管理配置项"
-      },
-      "login": {
-        "description": "登录"
-      },
-      "logout": {
-        "description": "注销"
-      },
-      "run": {
-        "description": "开始预约"
-      }
-    }
+    "topicSeparator": " "
   },
   "scripts": {
-    "dev": "./bin/dev",
+    "dev": "tsc -w",
     "start": "./bin/run",
     "clean": "shx rm -rf dist",
     "build": "yarn clean && tsc",

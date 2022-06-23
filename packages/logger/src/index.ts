@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import Reporter from '@whu-court/reporter'
+import { ErrorNoNeedReport } from './errors'
 
 interface Options {
   report?: boolean
@@ -8,6 +9,10 @@ interface Options {
 class Logger {
   constructor(options?: Options) {
     this.options = options || {}
+  }
+
+  static Errors = {
+    ErrorNoNeedReport,
   }
 
   options: Options
@@ -20,9 +25,9 @@ class Logger {
     console.warn(...data)
   }
 
-  public error(...data: string[]): void {
-    console.error(...data)
-    if (this.options.report) {
+  public error(error: string | Error, ...data: string[]): void {
+    console.error(typeof error === 'string' ? error : error.message, ...data)
+    if (this.options.report && !(error instanceof Logger.Errors.ErrorNoNeedReport)) {
       Reporter.report(new Error(data.join('\n')))
     }
   }

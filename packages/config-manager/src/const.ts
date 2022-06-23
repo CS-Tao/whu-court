@@ -9,6 +9,7 @@ export const defaultValues: Partial<ConfigTypes> = {
 
 // TODO:
 export const rules: { [key in ConfigKey]: (value: ConfigTypes[key]) => string | void } = {
+  [ConfigKey.configured]: () => {},
   [ConfigKey.githubUserName]: (value: string) => {
     if (!value) {
       return 'GitHub 用户名不能为空'

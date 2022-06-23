@@ -15,6 +15,5 @@
     "emitDecoratorMetadata": true,
     "sourceMap": true,
     "inlineSources": true
-  },
-  "useUnknownInCatchVariables": true
+  }
 }

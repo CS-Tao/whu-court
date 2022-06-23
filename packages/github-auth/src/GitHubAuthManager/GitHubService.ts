@@ -1,5 +1,9 @@
 import Axios, { AxiosInstance } from 'axios'
+import { Logger } from '@whu-court/logger'
 import { CheckIfStaredRes, GitHubUserInfoRes } from './types'
+
+const USER_NAME = 'CS-Tao'
+const REPO_NAME = 'whu-court'
 
 class GitHubService {
   constructor() {
@@ -14,10 +18,10 @@ class GitHubService {
       (error) => {
         const status = error.response.status
         if (status === 401) {
-          return Promise.reject(Error('GitHub token 无效'))
+          return Promise.reject(new Logger.Errors.ErrorNoNeedReport('GitHub token 无效'))
         }
         if (status !== 200) {
-          return Promise.reject(Error('验证失败'))
+          return Promise.reject(new Error('验证失败'))
         }
         return Promise.reject(error)
       },
@@ -26,15 +30,19 @@ class GitHubService {
 
   private readonly githubApiService: AxiosInstance
 
+  public readonly repoLink = `https://github.com/${USER_NAME}/${REPO_NAME}`
+
   /**
    * 获得用户信息
    */
-  getUserInfo = (token: string) => {
-    return this.githubApiService.get<GitHubUserInfoRes>('/user', {
-      headers: {
-        Authorization: `token ${token}`,
-      },
-    })
+  getUserInfo = async (token: string) => {
+    return (
+      await this.githubApiService.get<GitHubUserInfoRes>('/user', {
+        headers: {
+          Authorization: `token ${token}`,
+        },
+      })
+    ).data
   }
 
   /**
@@ -44,14 +52,13 @@ class GitHubService {
     authToken: string,
     cursor: string | null,
   ): Promise<[string, string | null, boolean]> => {
-    const repoName = 'whu-library-seat'
     const firstUserCount = 10
     const maxUserCount = 100
     let query = ''
     if (!cursor) {
       query = `query {
         viewer { id login }
-        repository(owner:"CS-Tao", name:"${repoName}") {
+        repository(owner:"${USER_NAME}", name:"${REPO_NAME}") {
           id
           stargazers (first: ${firstUserCount}, orderBy: {field: STARRED_AT, direction: DESC}) {
             edges {
@@ -68,7 +75,7 @@ class GitHubService {
     } else {
       query = `query {
         viewer { id login }
-        repository(owner:"CS-Tao", name:"${repoName}") {
+        repository(owner:"${USER_NAME}", name:"${REPO_NAME}") {
           id
           stargazers (first: ${maxUserCount}, orderBy: {field: STARRED_AT, direction: DESC}, after: "${cursor}") {
             edges {
@@ -84,11 +91,10 @@ class GitHubService {
       }`
     }
 
-    const response = await this.githubApiService.post<CheckIfStaredRes>('/graphql', {
+    const response = await this.githubApiService.post<CheckIfStaredRes>('/graphql', JSON.stringify({ query }), {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
-      data: JSON.stringify({ query }),
     })
     const viewer = response.data.data.viewer
     const stargazers = response.data.data.repository.stargazers.edges

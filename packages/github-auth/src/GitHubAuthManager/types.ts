@@ -5,7 +5,7 @@ export interface GitHubUserInfoRes {
   avatar_url: string
   html_url: 'https://github.com/GIS-Hacker'
   type: 'User' | unknown
-  name: string
+  name?: string
   company: string
   blog: string
   location: string

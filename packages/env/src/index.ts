@@ -10,6 +10,7 @@ export interface Envs {
   mainPkg: {
     name: string
     version: string
+    description: string
   }
 }
 
@@ -37,6 +38,7 @@ const appRoot = path.join(__dirname, '..', '..', '..', '..')
 const mainPkg: Envs['mainPkg'] = {
   name: '@whu-court/cli',
   version,
+  description: pkg.description,
 }
 
 const envs: Envs = {

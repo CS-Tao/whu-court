@@ -5,9 +5,9 @@
   "scripts": {
     "a": "git add -A && git commit --no-edit",
     "c": "git commit --no-edit",
-    "dev": "lerna run --no-private --ignore @whu-court/cli --parallel dev",
-    "start": "./node_modules/@whu-court/cli/bin/dev",
-    "start:prod": "./node_modules/@whu-court/cli/bin/run",
+    "dev": "lerna run --no-private --parallel dev",
+    "start": "./node_modules/@whu-court/cli/bin/run",
+    "start:debug": "./node_modules/@whu-court/cli/bin/dev",
     "clean": "lerna run --no-private --stream clean",
     "build": "lerna run --no-private --stream build",
     "eslint-all": "eslint packages/ --ext .js,.ts,.tsx",

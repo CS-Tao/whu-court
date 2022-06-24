@@ -1,14 +1,20 @@
 import { Help } from '@oclif/core'
+import { mainPkg } from '@whu-court/env'
+import githubAuthManager from '@whu-court/github-auth'
 import chalk from 'chalk'
-
-const desc = '场馆预约助手'
 
 export default class CustomHelp extends Help {
   async showHelp(args: string[]) {
     if (args.length) {
-      await super.showHelp(args)
+      return await super.showHelp(args)
+    }
+    if (githubAuthManager.confgured) {
+      this.log(chalk.bold(mainPkg.description), chalk.gray(`\n\nRun ${chalk.green('wcr -h')} see more usages`))
     } else {
-      this.log(`${desc}\n\nRun ${chalk.green('wcr -h')} see more usages`)
+      this.log(
+        chalk.bold(mainPkg.description),
+        chalk.gray(`\n\nYou are not authed. Run ${chalk.green('wcr setup')} to continue`),
+      )
     }
   }
 }

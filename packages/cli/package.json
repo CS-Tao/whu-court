@@ -30,6 +30,7 @@
     "@whu-court/mock": "0.0.4-beta.9",
     "@whu-court/reporter": "0.0.4-beta.9",
     "@whu-court/runtime": "0.0.4-beta.9",
+    "@whu-court/env": "0.0.4-beta.9",
     "cfonts": "^3.1.0",
     "chalk": "4.1.2",
     "inquirer": "^8.2.3",
@@ -66,8 +67,14 @@
     "helpClass": "./dist/lib/help",
     "hooks": {
       "init": [
-        "./dist/hooks/printLogo"
-      ]
+        "./dist/hooks/init/printLogo",
+        "./dist/hooks/init/report"
+      ],
+      "prerun": [
+        "./dist/hooks/prerun/check",
+        "./dist/hooks/prerun/report"
+      ],
+      "postrun": "./dist/hooks/postrun/update"
     },
     "plugins": [
       "@oclif/plugin-help",
@@ -85,7 +92,7 @@
     "posttest": "yarn lint",
     "prepack": "yarn build && oclif manifest && oclif readme",
     "test": "mocha --forbid-only \"test/**/*.test.ts\"",
-    "version": "oclif readme && git add README.md"
+    "version:tmp": "oclif readme && git add README.md"
   },
   "engines": {
     "node": ">=16.0.0"

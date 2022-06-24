@@ -70,6 +70,10 @@ class GitHubAuthManager extends GitHubService {
     }
     return null
   }
+
+  get confgured() {
+    return !!this.userInfo
+  }
 }
 
 export default GitHubAuthManager

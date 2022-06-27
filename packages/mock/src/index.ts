@@ -1,12 +1,12 @@
-import MockAdapter from 'axios-mock-adapter'
 import { AxiosInstance } from 'axios'
+import MockAdapter from 'axios-mock-adapter'
 import chalk from 'chalk'
 import logger from '@whu-court/logger'
-import { MockData } from './type'
 import apis from './apis'
+import { MockData } from './type'
 
 export const mockAxios = (axios: AxiosInstance) => {
-  logger.warn(chalk.yellow(`mock axios enabled for ${apis.length} apis`))
+  logger.warn(chalk.gray('[MOCK]'), chalk.yellow(`Mock axios enabled for ${apis.length} apis`))
   const mock = new MockAdapter(axios, { delayResponse: 2000 })
   apis.forEach((each) => {
     const mockTypeMap: Record<MockData['method'], typeof mock.onGet> = {

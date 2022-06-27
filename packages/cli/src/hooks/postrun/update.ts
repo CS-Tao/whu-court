@@ -1,8 +1,8 @@
 import { Hook } from '@oclif/core'
+import chalk from 'chalk'
 import UpdateManager from '@whu-court/auto-update'
 import { environment } from '@whu-court/env'
 import logger from '@whu-court/logger'
-import chalk from 'chalk'
 
 const hook: Hook<'postrun'> = async function () {
   if (environment === 'local') {

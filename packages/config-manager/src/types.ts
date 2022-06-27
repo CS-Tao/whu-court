@@ -29,6 +29,10 @@ export enum ConfigKey {
    * 预约系统 Token
    */
   courtToken = 'courtToken',
+  /**
+   * 预约系统 Sid
+   */
+  courtSid = 'courtSid',
 
   /**
    * 开始抢场地的时间。
@@ -69,6 +73,7 @@ export interface ConfigTypes {
 
   [ConfigKey.courtAccount]: string
   [ConfigKey.courtToken]: string
+  [ConfigKey.courtSid]: string
 
   [ConfigKey.openTime]: string
   [ConfigKey.checkOpenInterval]: number

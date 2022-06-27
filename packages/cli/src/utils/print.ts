@@ -11,9 +11,7 @@ export const printLogo = (enableColor: boolean) => {
     lineHeight: 1,
     space: true,
     maxLength: '0',
-    gradient: enableColor ? ['red', 'blue'] : false,
-    independentGradient: false,
-    transitionGradient: false,
-    env: 'node',
+    gradient: enableColor ? ['#006bb6', '#00a850'] : false,
+    transitionGradient: true,
   })
 }

@@ -1,13 +1,13 @@
-import chalk from 'chalk'
 import { Command, Flags } from '@oclif/core'
-import logger from '@whu-court/logger'
+import chalk from 'chalk'
 import githubAuthManager from '@whu-court/github-auth'
+import logger from '@whu-court/logger'
 import { askGitHubToken } from '../../utils/ask'
-import { printLogo } from '../../utils/print'
 import Loading from '../../utils/loading'
+import { printLogo } from '../../utils/print'
 
 export default class Setup extends Command {
-  static description = '初始化应用'
+  static description = 'Setup wcr cli'
 
   static examples = ['$ wcr setup', '$ wcr setup --github-token=<***>']
 
@@ -48,8 +48,9 @@ export default class Setup extends Command {
       if (error instanceof Error) {
         githubAuthManager.clearInfos()
         printLogo(false)
-        logger.error(error.message)
+        logger.log(chalk.red('🙁 配置失败'))
       }
+      throw error
     }
   }
 }

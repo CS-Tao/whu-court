@@ -7,7 +7,5 @@
       "message": "📦 chore: publish %s\n\n[ci skip]"
     }
   },
-  "packages": [
-    "packages/*"
-  ]
+  "packages": ["packages/*"]
 }

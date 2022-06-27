@@ -14,4 +14,10 @@ require('ts-node').register({ project })
 oclif.settings.debug = true
 
 // Start the CLI
-oclif.run().then(oclif.flush).catch(oclif.Errors.handle)
+oclif
+  .run()
+  .then(oclif.flush)
+  .catch((error) => {
+    const logger = require('@whu-court/logger').default
+    logger.error(error)
+  })

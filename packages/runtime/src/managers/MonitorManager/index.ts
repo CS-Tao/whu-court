@@ -1,9 +1,9 @@
-import { AxiosInstance } from 'axios'
-import BaseManager from '../BaseManager'
+import http from '@whu-court/http'
 import { getApiMap } from '../../apis'
+import BaseManager from '../BaseManager'
 
 class MonitorManager extends BaseManager {
-  constructor(http: AxiosInstance) {
+  constructor() {
     super(http, getApiMap(http))
   }
 }

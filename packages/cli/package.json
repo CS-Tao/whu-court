@@ -20,17 +20,15 @@
   ],
   "dependencies": {
     "@oclif/core": "^1",
-    "@oclif/plugin-autocomplete": "^1.3.0",
     "@oclif/plugin-help": "^5",
     "@whu-court/auto-update": "0.0.4-beta.9",
     "@whu-court/config-manager": "0.0.4-beta.9",
+    "@whu-court/env": "0.0.4-beta.9",
     "@whu-court/github-auth": "0.0.4-beta.9",
     "@whu-court/http": "0.0.4-beta.9",
     "@whu-court/logger": "0.0.4-beta.9",
-    "@whu-court/mock": "0.0.4-beta.9",
     "@whu-court/reporter": "0.0.4-beta.9",
     "@whu-court/runtime": "0.0.4-beta.9",
-    "@whu-court/env": "0.0.4-beta.9",
     "cfonts": "^3.1.0",
     "chalk": "4.1.2",
     "inquirer": "^8.2.3",
@@ -77,8 +75,7 @@
       "postrun": "./dist/hooks/postrun/update"
     },
     "plugins": [
-      "@oclif/plugin-help",
-      "@oclif/plugin-autocomplete"
+      "@oclif/plugin-help"
     ],
     "topicSeparator": " "
   },

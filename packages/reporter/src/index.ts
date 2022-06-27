@@ -1,5 +1,6 @@
-import Reporter from './reporter'
 import Measure from './measure'
+import Reporter from './reporter'
+import { EventKey } from './type'
 
 export default Reporter
-export { Measure }
+export { Measure, EventKey }

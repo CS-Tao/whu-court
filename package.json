@@ -7,7 +7,9 @@
     "c": "git commit --no-edit",
     "dev": "lerna run --no-private --parallel dev",
     "start": "./node_modules/@whu-court/cli/bin/run",
+    "start:mock": "ENABLE_MOCK=true ./node_modules/@whu-court/cli/bin/run",
     "start:debug": "./node_modules/@whu-court/cli/bin/dev",
+    "start:debug-mock": "ENABLE_MOCK=true ./node_modules/@whu-court/cli/bin/run",
     "clean": "lerna run --no-private --stream clean",
     "build": "lerna run --no-private --stream build",
     "eslint-all": "eslint packages/ --ext .js,.ts,.tsx",
@@ -30,6 +32,7 @@
   },
   "devDependencies": {
     "@sentry/cli": "^2.1.0",
+    "@trivago/prettier-plugin-sort-imports": "^3.2.0",
     "@types/node": "^17.0.41",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "commitizen": "^4.2.4",
@@ -98,7 +101,12 @@
     "semi": false,
     "singleQuote": true,
     "printWidth": 120,
-    "trailingComma": "all"
+    "trailingComma": "all",
+    "importOrder": [
+      "^@whu-court/(.*)$",
+      "^[./]"
+    ],
+    "importOrderSortSpecifiers": true
   },
   "engines": {
     "node": ">=16.0.0"

@@ -14,12 +14,14 @@ class AuthManager extends BaseManager {
   }
 
   private readonly tokenConfigKey = ConfigKey.courtToken
+  private readonly sidConfigKey = ConfigKey.courtSid
   private readonly accountConfigKey = ConfigKey.courtAccount
   private userInfo: UserInfo | null = null
 
   async login(token: string, sid: string) {
     this.userInfo = this.userInfo || (await this.getUserInfo(token, sid))
     configManager.set(this.tokenConfigKey, token)
+    configManager.set(this.sidConfigKey, sid)
     configManager.set(this.accountConfigKey, this.userInfo.account)
     return this.userInfo.account
   }
@@ -27,6 +29,7 @@ class AuthManager extends BaseManager {
   async logout() {
     this.userInfo = null
     configManager.delete(this.tokenConfigKey)
+    configManager.delete(this.sidConfigKey)
     configManager.delete(this.accountConfigKey)
   }
 
@@ -47,7 +50,7 @@ class AuthManager extends BaseManager {
   }
 
   get logined() {
-    return !!configManager.get(this.tokenConfigKey)
+    return !!configManager.get(this.tokenConfigKey) && configManager.get(this.sidConfigKey)
   }
 
   private async getUserInfo(token: string, sid: string): Promise<UserInfo> {

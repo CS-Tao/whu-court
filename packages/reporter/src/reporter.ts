@@ -1,9 +1,9 @@
+import { RewriteFrames } from '@sentry/integrations'
+import * as Sentry from '@sentry/node'
+import '@sentry/tracing'
 import address from 'address'
 import md5 from 'md5'
-import * as Sentry from '@sentry/node'
-import { RewriteFrames } from '@sentry/integrations'
-import '@sentry/tracing'
-import { environment, version, appRoot } from '@whu-court/env'
+import { appRoot, environment, version } from '@whu-court/env'
 import Measure from './measure'
 
 interface User {

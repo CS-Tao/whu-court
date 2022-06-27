@@ -1,5 +1,5 @@
 import UpdateNotifier from 'update-notifier'
-import { mainPkg, environment } from '@whu-court/env'
+import { environment, mainPkg } from '@whu-court/env'
 
 const CHECK_INTERVAL = {
   ONE_DAY: 1000 * 60 * 60 * 24,

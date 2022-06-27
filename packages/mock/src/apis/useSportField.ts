@@ -1,5 +1,5 @@
-import { MockData } from '../type'
 import data from '../data/useSportField.json'
+import { MockData } from '../type'
 
 const queryReservePlaceDetail: MockData = {
   path: '/v1.0.0/ballBooking/useSportField',

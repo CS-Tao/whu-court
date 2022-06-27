@@ -1,23 +1,13 @@
-import { Command, Flags } from '@oclif/core'
+import { Command } from '@oclif/core'
+import http from '@whu-court/http'
+import { AuthManager } from '@whu-court/runtime'
 
 export default class Logout extends Command {
-  static description = 'Say hello'
+  static description = 'Logout from court'
 
-  static examples = [
-    `$ oex hello friend --from oclif
-hello friend from oclif! (./src/commands/hello/index.ts)
-`,
-  ]
-
-  static flags = {
-    from: Flags.string({ char: 'f', description: 'Whom is saying hello', required: true }),
-  }
-
-  static args = [{ name: 'person', description: 'Person to say hello to', required: true }]
+  static examples = ['$ wcr logout']
 
   async run(): Promise<void> {
-    const { args, flags } = await this.parse(Logout)
-
-    this.log(`hello ${args.person} from ${flags.from}! (./src/commands/hello/index.ts)`)
+    await new AuthManager(http).logout()
   }
 }

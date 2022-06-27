@@ -19,6 +19,10 @@
     "access": "public"
   },
   "dependencies": {
+    "@whu-court/config-manager": "0.0.4-beta.9",
+    "@whu-court/http": "0.0.4-beta.9",
+    "@whu-court/logger": "0.0.4-beta.9",
+    "@whu-court/mock": "0.0.4-beta.9",
     "@whu-court/reporter": "0.0.4-beta.9",
     "axios": "^0.27.2"
   }

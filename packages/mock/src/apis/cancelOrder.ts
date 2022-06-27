@@ -1,5 +1,5 @@
-import { MockData } from '../type'
 import data from '../data/cancelOrder.json'
+import { MockData } from '../type'
 
 const cancelOrder: MockData = {
   path: /\/v1.0.0\/order\/cancel\/.+/,

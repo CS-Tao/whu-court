@@ -1,5 +1,6 @@
 import Axios from 'axios'
 import chalk from 'chalk'
+import configManager, { ConfigKey } from '@whu-court/config-manager'
 import logger from '@whu-court/logger'
 import { ServerData } from './types'
 
@@ -20,13 +21,13 @@ const http = Axios.create({
 })
 
 http.interceptors.request.use((config) => {
-  const token = 'mock-token'
-  const sid = 'mock-sid'
-  if (token) {
-    config.headers = config.headers || {}
-    config.headers['x-outh-token'] = token
-    config.headers.token = ''
-    config.headers['x-outh-sid'] = sid
+  logger.debug(chalk.gray('[HTTP]'), 'Request:', config.method, config.url)
+  config.headers = config.headers || {}
+  const token = config.headers['x-outh-token'] || (configManager.get(ConfigKey.courtToken) as string)
+  const sid = config.headers['x-outh-sid'] || (configManager.get(ConfigKey.courtSid) as string)
+  config.headers.token = config.headers.token || ''
+  if (!token || !sid) {
+    throw new Error('请先登录')
   }
   return config
 })

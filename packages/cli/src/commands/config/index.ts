@@ -1,7 +1,6 @@
 import { Command, Flags } from '@oclif/core'
-import http from '@whu-court/http'
-import { ReserveManager } from '@whu-court/runtime'
 import Reporter from '@whu-court/reporter'
+import { ReserveManager } from '@whu-court/runtime'
 
 Reporter.init({
   user: {
@@ -32,9 +31,7 @@ hello friend from oclif! (./src/commands/hello/index.ts)
   async run(): Promise<void> {
     const { args, flags } = await this.parse(Config)
 
-    require('@whu-court/mock').mockAxios(http)
-
-    const manager = new ReserveManager(http)
+    const manager = new ReserveManager()
 
     const data = await manager.getBookingDay()
 

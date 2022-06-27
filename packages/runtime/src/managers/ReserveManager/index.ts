@@ -1,10 +1,10 @@
-import { AxiosInstance } from 'axios'
+import http from '@whu-court/http'
 import Reporter from '@whu-court/reporter'
-import BaseManager from '../BaseManager'
 import { getApiMap } from '../../apis'
+import BaseManager from '../BaseManager'
 
 class ReserveManager extends BaseManager {
-  constructor(http: AxiosInstance) {
+  constructor() {
     super(http, getApiMap(http))
   }
 

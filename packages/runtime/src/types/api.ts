@@ -1,3 +1,5 @@
+import { AxiosRequestConfig } from 'axios'
+
 export namespace RouterPathParams {
   export interface CancelOrderParams {
     orderId: string
@@ -100,6 +102,14 @@ export namespace RequestData {
     collegeName: string
     collegeId: string
     code: string
+  }
+
+  export interface MyOrderData {
+    currentPage: number
+    pageSize: number
+    userId: string
+    status: [1, 2, 3, 4, 5, 6]
+    search: ''
   }
 }
 
@@ -322,24 +332,163 @@ export namespace ResponseData {
     orderNumber: string
     status: 1 | unknown
   }
+
+  export interface MyOrderData {
+    totalRows: number
+    pageSize: number
+    currentPage: number
+    totalPages: number
+    startRow: number
+    forceStartRow: boolean
+    formNumber: number
+    pageData: [
+      {
+        id: number
+        orderNumber: string
+        transactionId: string
+        refundNumber: null | unknown
+        refundId: null | unknown
+        /**
+         * @example '2022-05-31 21:37:32'
+         */
+        createTime: string
+        /**
+         * @example '2022-05-31 21:37:32'
+         */
+        expiresTime: string
+        /**
+         * @example '2022-05-31 21:37:32'
+         */
+        payTime: string
+        cancelTime: null | unknown
+        cancelChannel: null | unknown
+        status: 3 | unknown
+        creatorId: string
+        creatorIdentity: '2' | unknown
+        placeType: 1 | unknown
+        /**
+         * @example 20.0
+         */
+        amount: number
+        /**
+         * @example '16:00-17:00,17:00-18:00'
+         */
+        period: string
+        /**
+         * @example '2022-05-31'
+         */
+        appointmentDate: string
+        duration: '2' | unknown
+        placeId: string
+        motionTypeId: string
+        fieldId: string
+        /**
+         * @example 20.0
+         */
+        lightingAmount: number
+        isEvaluate: number
+        payChannel: 'WxPay' | unknown
+        /**
+         * @example 20.0
+         */
+        fieldAmount: number
+        /**
+         * @example 0.0
+         */
+        discount: number
+        applyRefundTime: null | unknown
+        refundTime: null | unknown
+        /**
+         * @example '2022-05-31 21:37:32'
+         */
+        updateTime: string
+        /**
+         * @example '2022-05-31 21:37:32'
+         */
+        finishTime: string
+        comfortScore: null | unknown
+        hygieneScore: null | unknown
+        serviceScore: null | unknown
+        evaluateDesc: null | unknown
+        evaluateTime: null | unknown
+        /**
+         * @example '乒乓球'
+         */
+        typeName: string
+        placeUrl: string
+        /**
+         * @example '武汉大学竹园体育馆'
+         */
+        placeAddress: string
+        /**
+         * @example 竹园体育馆（信部东区体育馆）'
+         */
+        placeName: string
+        /**
+         * @example '8'
+         */
+        fieldNum: string
+        isDel: 0 | unknown
+        /**
+         * @example 20.0
+         */
+        payAmount: number
+        /**
+         * @example '0'
+         */
+        discountDuration: string
+        collegeId: string
+        /**
+         * @example '信息学部'
+         */
+        collegeName: string
+        openId: string
+        expiresMillisecond: null | unknown
+        isPay: 0 | unknown
+        code: null | unknown
+        orderType: 0 | unknown
+        cancelReason: null | unknown
+        payNumber: null | unknown
+        activityField: null | unknown
+        isRefField: null | unknown
+        activityBeginTime: null | unknown
+        activityEndTime: null | unknown
+        payType: null | unknown
+        activityName: null | unknown
+      },
+    ]
+  }
 }
 
 export interface API_MAP {
-  getBookingDay: () => Promise<ResponseData.GetBookingDayData>
+  getBookingDay: (config?: AxiosRequestConfig) => Promise<ResponseData.GetBookingDayData>
 
   queryPlaceListByTypeId: (
     data: RequestData.QueryPlaceListByTypeIdData,
+    config?: AxiosRequestConfig,
   ) => Promise<ResponseData.QueryPlaceListByTypeIdData>
 
   queryReservePlaceDetail: (
     data: RequestData.QueryReservePlaceDetailData,
+    config?: AxiosRequestConfig,
   ) => Promise<ResponseData.QueryReservePlaceDetailData>
 
-  useSportField: (data: RequestData.UseSportFieldData) => Promise<ResponseData.UseSportFieldData>
+  useSportField: (
+    data: RequestData.UseSportFieldData,
+    config?: AxiosRequestConfig,
+  ) => Promise<ResponseData.UseSportFieldData>
 
-  cancelOrder: (params: RouterPathParams.CancelOrderParams) => Promise<ResponseData.CancelOrderData>
+  cancelOrder: (
+    params: RouterPathParams.CancelOrderParams,
+    config?: AxiosRequestConfig,
+  ) => Promise<ResponseData.CancelOrderData>
 
-  getOrderDetails: (params: RouterPathParams.GetOrderDetailsParams) => Promise<ResponseData.GetOrderDetailsData>
+  getOrderDetails: (
+    params: RouterPathParams.GetOrderDetailsParams,
+    config?: AxiosRequestConfig,
+  ) => Promise<ResponseData.GetOrderDetailsData>
 
-  createOrder: (data: RequestData.CreateOrderData) => Promise<ResponseData.CreateOrderData>
+  createOrder: (data: RequestData.CreateOrderData, config?: AxiosRequestConfig) => Promise<ResponseData.CreateOrderData>
+
+  myOrder: (params: RequestData.MyOrderData, config?: AxiosRequestConfig) => Promise<ResponseData.MyOrderData>
 }

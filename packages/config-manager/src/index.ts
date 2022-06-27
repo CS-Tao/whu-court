@@ -1,7 +1,7 @@
 import Conf from 'conf'
 import { mainPkg } from '@whu-court/env'
-import { ConfigKey, ConfigTypes } from './types'
 import { defaultValues, rules } from './const'
+import { ConfigKey, ConfigTypes } from './types'
 
 type ErrMsg = string | void
 

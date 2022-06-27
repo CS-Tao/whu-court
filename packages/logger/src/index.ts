@@ -53,7 +53,9 @@ class Logger {
   }
 
   public debug(...data: any[]): void {
-    console.debug(...data)
+    if (process.env.DEBUG) {
+      console.debug(...data)
+    }
   }
 }
 

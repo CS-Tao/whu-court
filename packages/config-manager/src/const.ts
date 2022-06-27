@@ -38,7 +38,12 @@ export const rules: { [key in ConfigKey]: (value: ConfigTypes[key]) => string | 
   },
   [ConfigKey.courtToken]: (value: string) => {
     if (!value) {
-      return '预约系统 Token不能为空'
+      return '预约系统 Token 不能为空'
+    }
+  },
+  [ConfigKey.courtSid]: (value: string) => {
+    if (!value) {
+      return '预约系统 Sid 不能为空'
     }
   },
 

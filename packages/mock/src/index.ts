@@ -6,7 +6,8 @@ import apis from './apis'
 import { MockData } from './type'
 
 export const mockAxios = (axios: AxiosInstance) => {
-  logger.warn(chalk.gray('[MOCK]'), chalk.yellow(`Mock axios enabled for ${apis.length} apis`))
+  process.env.NODE_ENV !== 'development' &&
+    logger.warn(chalk.gray('[MOCK]'), chalk.yellow(`Mock axios enabled for ${apis.length} apis`))
   const mock = new MockAdapter(axios, { delayResponse: 2000 })
   apis.forEach((each) => {
     const mockTypeMap: Record<MockData['method'], typeof mock.onGet> = {

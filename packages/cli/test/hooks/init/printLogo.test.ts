@@ -4,6 +4,6 @@ describe('hooks', () => {
   test
     .stdout()
     .hook('init')
-    .do((output) => expect(output.stdout).to.contain(''))
-    .it('shows a message')
+    .do((output) => expect(output.stdout).to.contain('██'))
+    .it('print logo')
 })

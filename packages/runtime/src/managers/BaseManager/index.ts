@@ -7,7 +7,7 @@ class BaseManager {
   public constructor(http: AxiosInstance, apis: API_MAP) {
     this.http = http
     this.apis = apis
-    if (process.env.ENABLE_MOCK) {
+    if (process.env.ENABLE_MOCK || process.env.NODE_ENV === 'development') {
       mockAxios(http)
     }
   }

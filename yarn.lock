@@ -354,6 +354,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@colors/colors@npm:1.5.0":
+  version: 1.5.0
+  resolution: "@colors/colors@npm:1.5.0"
+  checksum: d64d5260bed1d5012ae3fc617d38d1afc0329fec05342f4e6b838f46998855ba56e0a73833f4a80fa8378c84810da254f76a8a19c39d038260dc06dc4e007425
+  languageName: node
+  linkType: hard
+
 "@commitlint/cli@npm:^17.0.2":
   version: 17.0.2
   resolution: "@commitlint/cli@npm:17.0.2"
@@ -2330,6 +2337,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node-notifier@npm:^8.0.2":
+  version: 8.0.2
+  resolution: "@types/node-notifier@npm:8.0.2"
+  dependencies:
+    "@types/node": "*"
+  checksum: eb380e7d6188f3883d7dce75e87f8237474074743f15977f513e25ab9d3a4def6562ee5ce26af71820ef950e32d3804af8e5edee540ada33d223f4c37e1d6528
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*, @types/node@npm:>=12":
   version: 17.0.39
   resolution: "@types/node@npm:17.0.39"
@@ -2661,6 +2677,7 @@ __metadata:
     "@types/inquirer": ^8.2.1
     "@types/mocha": ^9.0.0
     "@types/node": ^16.9.4
+    "@types/node-notifier": ^8.0.2
     "@whu-court/auto-update": 0.0.4-beta.9
     "@whu-court/config-manager": 0.0.4-beta.9
     "@whu-court/env": 0.0.4-beta.9
@@ -2672,6 +2689,7 @@ __metadata:
     cfonts: ^3.1.0
     chai: ^4
     chalk: 4.1.2
+    cli-table3: ^0.6.2
     eslint: ^7.32.0
     eslint-config-oclif: ^4
     eslint-config-oclif-typescript: ^1.0.2
@@ -2679,6 +2697,7 @@ __metadata:
     inquirer: ^8.2.3
     loading-cli: ^1.1.0
     mocha: ^9
+    node-notifier: ^10.0.1
     oclif: ^3
     shx: ^0.3.4
     ts-node: ^10.2.1
@@ -3815,6 +3834,19 @@ __metadata:
   version: 2.6.1
   resolution: "cli-spinners@npm:2.6.1"
   checksum: 423409baaa7a58e5104b46ca1745fbfc5888bbd0b0c5a626e052ae1387060839c8efd512fb127e25769b3dc9562db1dc1b5add6e0b93b7ef64f477feb6416a45
+  languageName: node
+  linkType: hard
+
+"cli-table3@npm:^0.6.2":
+  version: 0.6.2
+  resolution: "cli-table3@npm:0.6.2"
+  dependencies:
+    "@colors/colors": 1.5.0
+    string-width: ^4.2.0
+  dependenciesMeta:
+    "@colors/colors":
+      optional: true
+  checksum: 2f82391698b8a2a2a5e45d2adcfea5d93e557207f90455a8d4c1aac688e9b18a204d9eb4ba1d322fa123b17d64ea3dc5e11de8b005529f3c3e7dbeb27cb4d9be
   languageName: node
   linkType: hard
 
@@ -6425,6 +6457,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"growly@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "growly@npm:1.3.0"
+  checksum: 53cdecd4c16d7d9154a9061a9ccb87d602e957502ca69b529d7d1b2436c2c0b700ec544fc6b3e4cd115d59b81e62e44ce86bd0521403b579d3a2a97d7ce72a44
+  languageName: node
+  linkType: hard
+
 "handlebars@npm:^4.7.7":
   version: 4.7.7
   resolution: "handlebars@npm:4.7.7"
@@ -8671,6 +8710,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-notifier@npm:^10.0.1":
+  version: 10.0.1
+  resolution: "node-notifier@npm:10.0.1"
+  dependencies:
+    growly: ^1.3.0
+    is-wsl: ^2.2.0
+    semver: ^7.3.5
+    shellwords: ^0.1.1
+    uuid: ^8.3.2
+    which: ^2.0.2
+  checksum: ac09456152e433462dd3ca277048de7a60c6d63fc657e00ac72805841baf9bb2573e8d3f64c4b64af73546d1ed39733af6b0036c38b57a83c883aa33fff35a2e
+  languageName: node
+  linkType: hard
+
 "node-releases@npm:^2.0.3":
   version: 2.0.5
   resolution: "node-releases@npm:2.0.5"
@@ -10536,6 +10589,13 @@ __metadata:
   bin:
     shjs: bin/shjs
   checksum: 7babc46f732a98f4c054ec1f048b55b9149b98aa2da32f6cf9844c434b43c6251efebd6eec120937bd0999e13811ebd45efe17410edb3ca938f82f9381302748
+  languageName: node
+  linkType: hard
+
+"shellwords@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "shellwords@npm:0.1.1"
+  checksum: 8d73a5e9861f5e5f1068e2cfc39bc0002400fe58558ab5e5fa75630d2c3adf44ca1fac81957609c8320d5533e093802fcafc72904bf1a32b95de3c19a0b1c0d4
   languageName: node
   linkType: hard
 

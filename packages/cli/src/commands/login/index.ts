@@ -1,15 +1,14 @@
 import { Command, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import http from '@whu-court/http'
-import logger from '@whu-court/logger'
 import { AuthManager } from '@whu-court/runtime'
 import { askCourtSid, askCourtToken } from '../../utils/ask'
 import Loading from '../../utils/loading'
 
 export default class Login extends Command {
-  static description = 'Login to court'
+  static description = 'Login to court.'
 
-  static examples = ['$ wcr login', '$ wcr login --token=<***>']
+  static examples = ['$ wcr login', '$ wcr login --token=<***> --sid=<***>']
 
   static flags = {
     token: Flags.string({
@@ -17,8 +16,8 @@ export default class Login extends Command {
       description: 'Court token',
     }),
     sid: Flags.string({
-      char: 'i',
-      description: 'Court sid',
+      char: 's',
+      description: 'Court session id',
     }),
   }
 
@@ -34,12 +33,12 @@ export default class Login extends Command {
     try {
       const account = await authManager.login(token, sid)
       load.stop()
-      logger.log(chalk.green('🎉 登录成功'), '账号', chalk.gray(account))
+      this.log(chalk.green('🎉 登录成功'), '账号', chalk.gray(account))
     } catch (error) {
       load.stop()
       if (error instanceof Error) {
         authManager.logout()
-        logger.log(chalk.red('🙁 登录失败'))
+        this.log(chalk.red('🙁 登录失败'))
       }
       throw error
     }

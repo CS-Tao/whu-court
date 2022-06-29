@@ -5,7 +5,7 @@
   "scripts": {
     "a": "git add -A && git commit --no-edit",
     "c": "git commit --no-edit",
-    "dev": "lerna run --no-private --parallel dev",
+    "dev": "yarn build && lerna run --no-private --parallel dev",
     "start": "./node_modules/@whu-court/cli/bin/run",
     "start:mock": "ENABLE_MOCK=true ./node_modules/@whu-court/cli/bin/run",
     "start:debug": "./node_modules/@whu-court/cli/bin/dev",

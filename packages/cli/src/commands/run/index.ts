@@ -1,7 +1,7 @@
 import { Command, Flags } from '@oclif/core'
 
 export default class Run extends Command {
-  static description = 'Say hello'
+  static description = 'Say hello.'
 
   static examples = [
     `$ oex hello friend --from oclif

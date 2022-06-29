@@ -7,8 +7,9 @@ import { appRoot, environment, version } from '@whu-court/env'
 import Measure from './measure'
 
 interface User {
-  id: string
+  id: number | string
   username: string
+  account?: string
 }
 
 interface Scope {
@@ -16,8 +17,9 @@ interface Scope {
 }
 
 const testUser: User = {
-  id: 'test_id',
+  id: 12345,
   username: 'cs-tao',
+  account: '12345',
 }
 
 class Reporter {
@@ -44,8 +46,9 @@ class Reporter {
     }
     Sentry.configureScope((_scope) => {
       _scope.setUser({
-        id: md5(user.id),
+        id: md5(String(user.id)),
         username: md5(user.username),
+        account: user.account && md5(user.account),
         ip_address: user.ip_address,
       })
     })

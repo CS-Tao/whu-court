@@ -5,6 +5,10 @@ export enum ConfigKey {
   configured = 'configured',
 
   /**
+   * GitHub id
+   */
+  githubId = 'githubId',
+  /**
    * GitHub 用户名
    */
   githubUserName = 'githubUserName',
@@ -33,6 +37,10 @@ export enum ConfigKey {
    * 预约系统 Sid
    */
   courtSid = 'courtSid',
+  /**
+   * 登录时间
+   */
+  loginTime = 'loginTime',
 
   /**
    * 开始抢场地的时间。
@@ -66,6 +74,7 @@ export enum ConfigKey {
 export interface ConfigTypes {
   [ConfigKey.configured]: boolean
 
+  [ConfigKey.githubId]: number
   [ConfigKey.githubUserName]: string
   [ConfigKey.githubNickName]: string
   [ConfigKey.githubToken]: string
@@ -74,6 +83,7 @@ export interface ConfigTypes {
   [ConfigKey.courtAccount]: string
   [ConfigKey.courtToken]: string
   [ConfigKey.courtSid]: string
+  [ConfigKey.loginTime]: number
 
   [ConfigKey.openTime]: string
   [ConfigKey.checkOpenInterval]: number

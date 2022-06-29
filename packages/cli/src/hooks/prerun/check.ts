@@ -8,6 +8,7 @@ const hook: Hook<'prerun'> = async function (opts) {
     this.log(chalk.gray(`You are not authed. Run ${chalk.green('wcr setup')} to continue`))
     process.exit(0)
   }
+  githubAuthManager.checkIfConfigured()
   Reporter.Measure.shared(opts.Command.id, 'run').start()
 }
 

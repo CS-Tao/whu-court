@@ -7,7 +7,7 @@ import Loading from '../../utils/loading'
 import { printLogo } from '../../utils/print'
 
 export default class Setup extends Command {
-  static description = 'Setup wcr cli'
+  static description = 'Setup wcr cli.'
 
   static examples = ['$ wcr setup', '$ wcr setup --github-token=<***>']
 
@@ -29,7 +29,7 @@ export default class Setup extends Command {
       if (!(await githubAuthManager.checkIfStared(githubToken))) {
         load.stop()
         printLogo(false)
-        logger.log(chalk.red('你还没有 star 应用，请先 star 应用:'), chalk.gray(githubAuthManager.repoLink))
+        logger.log(chalk.red('为了方便管理员统计使用量，请先 star 应用:'), chalk.gray(githubAuthManager.repoLink))
         return
       }
       load.stop()

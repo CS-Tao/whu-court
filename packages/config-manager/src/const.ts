@@ -10,6 +10,11 @@ export const defaultValues: Partial<ConfigTypes> = {
 // TODO:
 export const rules: { [key in ConfigKey]: (value: ConfigTypes[key]) => string | void } = {
   [ConfigKey.configured]: () => {},
+  [ConfigKey.githubId]: (value) => {
+    if (!value) {
+      return 'GitHub id 不能为空'
+    }
+  },
   [ConfigKey.githubUserName]: (value: string) => {
     if (!value) {
       return 'GitHub 用户名不能为空'
@@ -44,6 +49,11 @@ export const rules: { [key in ConfigKey]: (value: ConfigTypes[key]) => string | 
   [ConfigKey.courtSid]: (value: string) => {
     if (!value) {
       return '预约系统 Sid 不能为空'
+    }
+  },
+  [ConfigKey.loginTime]: (value: number) => {
+    if (!value) {
+      return '登录时间不能为空'
     }
   },
 

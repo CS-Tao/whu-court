@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
-import logger from '@whu-court/logger'
+import Reporter from '@whu-court/reporter'
 import { getApiMap } from '../../apis'
 import BaseManager from '../BaseManager'
 
@@ -16,13 +16,16 @@ class AuthManager extends BaseManager {
   private readonly tokenConfigKey = ConfigKey.courtToken
   private readonly sidConfigKey = ConfigKey.courtSid
   private readonly accountConfigKey = ConfigKey.courtAccount
-  private userInfo: UserInfo | null = null
+  private readonly loginTimeKey = ConfigKey.loginTime
+  public userInfo: UserInfo | null = null
 
   async login(token: string, sid: string) {
     this.userInfo = this.userInfo || (await this.getUserInfo(token, sid))
     configManager.set(this.tokenConfigKey, token)
     configManager.set(this.sidConfigKey, sid)
     configManager.set(this.accountConfigKey, this.userInfo.account)
+    configManager.set(this.accountConfigKey, this.userInfo.account)
+    configManager.set(this.loginTimeKey, new Date().getTime())
     return this.userInfo.account
   }
 
@@ -31,19 +34,22 @@ class AuthManager extends BaseManager {
     configManager.delete(this.tokenConfigKey)
     configManager.delete(this.sidConfigKey)
     configManager.delete(this.accountConfigKey)
+    configManager.delete(this.loginTimeKey)
   }
 
-  async validate(token: string, sid: string) {
+  async validate(
+    token = configManager.get(this.tokenConfigKey) as string,
+    sid = configManager.get(this.sidConfigKey) as string,
+  ) {
     try {
       this.userInfo = await this.getUserInfo(token, sid)
       if (this.userInfo) {
         return true
       }
-      return 'Token 无效'
+      return false
     } catch (error) {
       if (error instanceof Error) {
-        logger.error(error)
-        return error.message
+        Reporter.report(error)
       }
       return false
     }
@@ -62,6 +68,24 @@ class AuthManager extends BaseManager {
       account,
     }
     return userInfo
+  }
+
+  public getToken(plainText = false) {
+    const token = configManager.get(this.tokenConfigKey) as string
+    return plainText ? token : new Array(token.length).fill('*').join('')
+  }
+
+  public getSid(plainText = false) {
+    const sid = configManager.get(this.sidConfigKey) as string
+    return plainText ? sid : new Array(sid.length).fill('*').join('')
+  }
+
+  public getAccount() {
+    return configManager.get(this.accountConfigKey) as string
+  }
+
+  public getLoginTime() {
+    return configManager.get(this.loginTimeKey) as number
   }
 }
 

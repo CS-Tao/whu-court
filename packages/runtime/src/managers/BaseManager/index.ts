@@ -15,7 +15,7 @@ class BaseManager {
   protected http: AxiosInstance
   protected apis: API_MAP
 
-  private getToken() {
+  private getCourtToken() {
     return configManager.get(ConfigKey.courtToken) as string
   }
 
@@ -24,7 +24,7 @@ class BaseManager {
       {
         currentPage: 1,
         pageSize: 5,
-        userId: token || this.getToken(),
+        userId: token || this.getCourtToken(),
         status: [1, 2, 3, 4, 5, 6],
         search: '',
       },

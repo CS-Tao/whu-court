@@ -2,7 +2,6 @@ import { Command, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import Table from 'cli-table3'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
-import logger from '@whu-court/logger'
 
 const table = new Table({
   head: ['Key', 'Value', 'Description'],
@@ -11,7 +10,6 @@ const table = new Table({
   style: {
     head: ['green', 'bold'],
   },
-  truncate: 'hhh',
 })
 
 const configs: Array<{
@@ -52,7 +50,7 @@ const configs: Array<{
 ]
 
 export default class Config extends Command {
-  static description = 'Manage court config'
+  static description = 'Manage court configs.'
 
   static examples = ['$ wcr config -l', '$ wcr config time', '$ wcr config time 15-17,18-21,!8-12']
 
@@ -118,12 +116,12 @@ export default class Config extends Command {
     const configValue = args.configValue
 
     if (!configName) {
-      logger.error('missing config name')
+      this.error('missing config name')
       return
     }
 
     if (!config) {
-      logger.error(`'${configName}' not a valid config name`)
+      this.error(`'${configName}' not a valid config name`)
       return
     }
 

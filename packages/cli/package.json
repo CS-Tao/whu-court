@@ -35,7 +35,9 @@
     "cli-table3": "^0.6.2",
     "inquirer": "^8.2.3",
     "loading-cli": "^1.1.0",
-    "node-notifier": "^10.0.1"
+    "moment": "^2.29.3",
+    "node-notifier": "^10.0.1",
+    "open": "^8.4.0"
   },
   "devDependencies": {
     "@oclif/test": "^2",

@@ -1,6 +1,7 @@
 import Axios, { AxiosInstance } from 'axios'
 import { Logger } from '@whu-court/logger'
-import { CheckIfStaredRes, GitHubUserInfoRes } from './types'
+import Reporter from '@whu-court/reporter'
+import { AppConfig, CheckIfStaredRes, GitHubUserInfoRes } from './types'
 
 const USER_NAME = 'CS-Tao'
 const REPO_NAME = 'whu-court'
@@ -26,9 +27,16 @@ class GitHubService {
         return Promise.reject(error)
       },
     )
+
+    this.githubContentService = Axios.create({
+      baseURL: 'https://raw.githubusercontent.com/CS-Tao/github-content/master/contents/github/whu-court',
+      timeout: 8000,
+      withCredentials: true,
+    })
   }
 
   private readonly githubApiService: AxiosInstance
+  private readonly githubContentService: AxiosInstance
 
   public readonly repoLink = `https://github.com/${USER_NAME}/${REPO_NAME}`
 
@@ -104,6 +112,19 @@ class GitHubService {
       const haveStared = stargazers.find((stargazer) => stargazer.node.id === viewer.id) !== undefined
       const lastCursor = stargazers[stargazers.length - 1].cursor
       return [authToken, lastCursor, haveStared]
+    }
+  }
+
+  protected getConfig = async (): Promise<AppConfig> => {
+    try {
+      const configData = (await this.githubContentService.get<AppConfig>('/config.json', { params: { t: Date.now() } }))
+        .data
+      return configData
+    } catch (error) {
+      if (error instanceof Error) {
+        Reporter.report(error)
+      }
+      return { available: true }
     }
   }
 }

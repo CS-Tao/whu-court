@@ -33,3 +33,10 @@ export interface CheckIfStaredRes {
     }
   }
 }
+
+export interface AppConfig {
+  available: boolean
+  prohibitMsg?: string
+  announcement?: string
+  blackList?: Array<string>
+}

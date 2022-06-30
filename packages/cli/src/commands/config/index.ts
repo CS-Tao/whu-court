@@ -1,7 +1,8 @@
 import { Command, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import Table from 'cli-table3'
-import configManager, { ConfigKey } from '@whu-court/config-manager'
+import configManager from '@whu-court/config-manager'
+import { configs } from '../../const'
 
 const table = new Table({
   head: ['Key', 'Value', 'Description'],
@@ -11,43 +12,6 @@ const table = new Table({
     head: ['green', 'bold'],
   },
 })
-
-const configs: Array<{
-  name: string
-  key: ConfigKey
-  desc: string
-  serialize: (value: number | string | string[] | boolean) => string | number
-  deserialize: (value: string) => number | string | string[]
-}> = [
-  {
-    name: 'time',
-    key: ConfigKey.time,
-    desc: '希望预约的时间段，加!排除时间段',
-    serialize: (value) => value as string,
-    deserialize: (value) => value,
-  },
-  {
-    name: 'checkOpenInterval',
-    key: ConfigKey.checkOpenInterval,
-    desc: '检查是否可以开始抢场地的时间间隔',
-    serialize: (value) => value as number,
-    deserialize: (value) => +value,
-  },
-  {
-    name: 'openTime',
-    key: ConfigKey.openTime,
-    desc: '开始抢场地的时间',
-    serialize: (value) => value as string,
-    deserialize: (value) => value,
-  },
-  {
-    name: 'courts',
-    key: ConfigKey.courts,
-    desc: '预约时按顺序考虑的场馆列表',
-    serialize: (value) => (typeof value === 'object' && value.length ? value.join(',') : String(value)),
-    deserialize: (value) => value.split(','),
-  },
-]
 
 export default class Config extends Command {
   static description = 'Manage court configs.'

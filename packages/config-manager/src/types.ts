@@ -1,8 +1,20 @@
 export enum ConfigKey {
   /**
-   * 是否已完成配置
+   * 软件是否可用
    */
-  configured = 'configured',
+  available = 'available',
+  /**
+   * 软件停用原因
+   */
+  prohibitMsg = 'prohibitMsg',
+  /**
+   * 软件内公告
+   */
+  announcement = 'announcement',
+  /**
+   * 黑名单 github id or github name or court account
+   */
+  blackList = 'blackList',
 
   /**
    * GitHub id
@@ -65,14 +77,41 @@ export enum ConfigKey {
    * gr 国软
    * gt 工体
    * yxb 医学部
-   * sq 宋卿
-   * @default ['ze','xb','fy','gr','gt','yxb','sq']
+   * @default ['ze','xb','fy','gr','gt','yxb']
    */
   courts = 'courts',
+
+  /**
+   * 卓尔场地顺序
+   */
+  zeOrder = 'zeOrder',
+  /**
+   * 信部场地顺序
+   */
+  xbOrder = 'xbOrder',
+  /**
+   * 风雨场地顺序
+   */
+  fyOrder = 'fyOrder',
+  /**
+   * 国软场地顺序
+   */
+  grOrder = 'grOrder',
+  /**
+   * 工体场地顺序
+   */
+  gtOrder = 'gtOrder',
+  /**
+   * 医学部场地顺序
+   */
+  yxbOrder = 'yxbOrder',
 }
 
 export interface ConfigTypes {
-  [ConfigKey.configured]: boolean
+  [ConfigKey.available]: boolean
+  [ConfigKey.prohibitMsg]: string
+  [ConfigKey.announcement]: string
+  [ConfigKey.blackList]: string[]
 
   [ConfigKey.githubId]: number
   [ConfigKey.githubUserName]: string
@@ -89,4 +128,11 @@ export interface ConfigTypes {
   [ConfigKey.checkOpenInterval]: number
   [ConfigKey.time]: string
   [ConfigKey.courts]: string[]
+
+  [ConfigKey.zeOrder]: string[]
+  [ConfigKey.xbOrder]: string[]
+  [ConfigKey.fyOrder]: string[]
+  [ConfigKey.grOrder]: string[]
+  [ConfigKey.gtOrder]: string[]
+  [ConfigKey.yxbOrder]: string[]
 }

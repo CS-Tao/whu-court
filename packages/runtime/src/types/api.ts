@@ -135,6 +135,9 @@ export namespace ResponseData {
        * @example '08:00-21:00'
        */
       bookingTimeArea: '08:00-21:00'
+      /**
+       * '0' 为正常，'1' 为闭馆
+       */
       placeStatus: IsEnable
       morningCanReserve: IsEnable
       afternoonCanReserve: IsEnable
@@ -153,11 +156,17 @@ export namespace ResponseData {
       }>
       placeFieldInfoList: Array<{
         fieldId: string
-        fieldNum: IsEnable
+        /**
+         * 场地号
+         */
+        fieldNum: string
         fieldCloseStatus: IsEnable
         fieldReserveStatus: IsEnable
         reserveTimeInfoList: [
           {
+            /**
+             * '0' 为可预约，'1' 为不可预约
+             */
             canReserve: IsEnable
             isReserve: IsEnable
             /**
@@ -172,7 +181,10 @@ export namespace ResponseData {
             fieldPrice: number
             lightPrice: number
             isSelfUseField: null | 'N' | unknown
-            isStudent: null | 0 | unknown
+            /**
+             * 1 为学生专场，0 为非学生
+             */
+            isStudent: 1 | 0
           },
         ]
       }>
@@ -226,7 +238,10 @@ export namespace ResponseData {
       fieldPrice: number
       lightPrice: number
       isSelfUseField: null | 'N' | unknown
-      isStudent: null | 0 | unknown
+      /**
+       * 1 为学生专场，0 为非学生
+       */
+      isStudent: 1 | 0
     }>
   }
 

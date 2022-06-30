@@ -1,5 +1,6 @@
 import configManager, { ConfigKey } from '@whu-court/config-manager'
 import GitHubService from './GitHubService'
+import { AppConfig } from './types'
 
 interface UserInfo {
   id: number
@@ -21,17 +22,23 @@ class GitHubAuthManager extends GitHubService {
     return data.continue ? this.checkIfStaredCore(data.token, data.lastCursor) : data.haveStarted
   }
 
+  checkIfInBlackList(additionalAccounts: string[] = []) {
+    const userInfo = this.userInfo
+    const userId = String(userInfo?.id || -1)
+    const userName = userInfo?.name ?? ''
+    const blackList = this.appConfig.blackList || []
+    return [userId, userName, ...additionalAccounts].some((each) => blackList.includes(each))
+  }
+
   checkIfStared = async (token: string) => {
     const isAuthed = await this.checkIfStaredCore(token, null)
-    if (isAuthed) {
-      await this.saveInfos(token)
-    } else {
-      this.clearInfos()
+    if (!isAuthed) {
+      this.clearUserInfos()
     }
     return isAuthed
   }
 
-  private saveInfos = async (token: string) => {
+  public saveUserInfos = async (token: string) => {
     const userInfo = await this.getUserInfo(token)
     if (userInfo.avatar_url && userInfo.login) {
       configManager.set(ConfigKey.githubId, userInfo.id)
@@ -42,7 +49,7 @@ class GitHubAuthManager extends GitHubService {
     }
   }
 
-  clearInfos = () => {
+  clearUserInfos = () => {
     configManager.delete(ConfigKey.githubId)
     configManager.delete(ConfigKey.githubToken)
     configManager.delete(ConfigKey.githubAvatar)
@@ -58,6 +65,15 @@ class GitHubAuthManager extends GitHubService {
       return true
     }
     return false
+  }
+
+  checkConfig = async () => {
+    const config = await this.getConfig()
+    configManager.set(ConfigKey.available, config.available)
+    config.prohibitMsg && configManager.set(ConfigKey.prohibitMsg, config.prohibitMsg)
+    config.announcement && configManager.set(ConfigKey.announcement, config.announcement)
+    config.blackList && configManager.set(ConfigKey.blackList, config.blackList)
+    return config
   }
 
   get userInfo(): UserInfo | null {
@@ -78,6 +94,15 @@ class GitHubAuthManager extends GitHubService {
 
   get confgured() {
     return !!this.userInfo
+  }
+
+  get appConfig(): AppConfig {
+    return {
+      available: configManager.get(ConfigKey.available) as boolean,
+      prohibitMsg: configManager.get(ConfigKey.prohibitMsg) as string,
+      announcement: configManager.get(ConfigKey.announcement) as string,
+      blackList: configManager.get(ConfigKey.blackList) as string[],
+    }
   }
 }
 

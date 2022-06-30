@@ -34,7 +34,7 @@ export default class Check extends Command {
       return this.log(chalk.red(`🙁 你尚未登陆，请运行 ${chalk.green('wcr login')} 登录`))
     }
 
-    const load = new Loading('检查中...').start()
+    const load = new Loading('检查中').start()
 
     const { flags } = await this.parse(Check)
 

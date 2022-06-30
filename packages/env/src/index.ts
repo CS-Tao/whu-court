@@ -12,6 +12,7 @@ export interface Envs {
     version: string
     description: string
   }
+  vips: string[]
 }
 
 const version = pkg.version
@@ -43,13 +44,16 @@ const mainPkg: Envs['mainPkg'] = {
   description,
 }
 
+const vips = ['lsq210', 'CS-Tao']
+
 const envs: Envs = {
   environment,
   version,
   prerelease,
   appRoot,
   mainPkg,
+  vips,
 }
 
-export { environment, version, prerelease, appRoot, mainPkg }
+export { environment, version, prerelease, appRoot, mainPkg, vips }
 export default envs

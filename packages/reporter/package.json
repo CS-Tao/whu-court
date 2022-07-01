@@ -19,7 +19,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@sentry/integrations": "^7.1.1",
+    "@sentry/integrations": "^7.4.1",
     "@sentry/node": "^7.1.1",
     "@sentry/tracing": "^7.1.1",
     "@whu-court/env": "0.0.4-beta.9",

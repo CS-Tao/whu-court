@@ -13,6 +13,7 @@ export interface Envs {
     description: string
   }
   vips: string[]
+  loverGitHubName: string
 }
 
 const version = pkg.version
@@ -45,6 +46,7 @@ const mainPkg: Envs['mainPkg'] = {
 }
 
 const vips = ['lsq210', 'CS-Tao']
+const loverGitHubName = 'lsq210'
 
 const envs: Envs = {
   environment,
@@ -53,7 +55,8 @@ const envs: Envs = {
   appRoot,
   mainPkg,
   vips,
+  loverGitHubName,
 }
 
-export { environment, version, prerelease, appRoot, mainPkg, vips }
+export { environment, version, prerelease, appRoot, mainPkg, vips, loverGitHubName }
 export default envs

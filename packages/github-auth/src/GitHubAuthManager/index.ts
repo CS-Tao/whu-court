@@ -22,11 +22,22 @@ class GitHubAuthManager extends GitHubService {
     return data.continue ? this.checkIfStaredCore(data.token, data.lastCursor) : data.haveStarted
   }
 
-  checkIfInBlackList(additionalAccounts: string[] = []) {
+  checkIfInWhiteList(additionalAccounts: string[] = []) {
+    const whiteList = this.appConfig.whiteList || []
+    if (whiteList.length === 0) {
+      return true
+    }
     const userInfo = this.userInfo
     const userId = String(userInfo?.id || -1)
     const userName = userInfo?.name ?? ''
+    return [userId, userName, ...additionalAccounts].some((each) => whiteList.includes(each))
+  }
+
+  checkIfInBlackList(additionalAccounts: string[] = []) {
     const blackList = this.appConfig.blackList || []
+    const userInfo = this.userInfo
+    const userId = String(userInfo?.id || -1)
+    const userName = userInfo?.name ?? ''
     return [userId, userName, ...additionalAccounts].some((each) => blackList.includes(each))
   }
 
@@ -73,6 +84,7 @@ class GitHubAuthManager extends GitHubService {
     config.prohibitMsg && configManager.set(ConfigKey.prohibitMsg, config.prohibitMsg)
     config.announcement && configManager.set(ConfigKey.announcement, config.announcement)
     config.blackList && configManager.set(ConfigKey.blackList, config.blackList)
+    config.whiteList && configManager.set(ConfigKey.blackList, config.whiteList)
     return config
   }
 
@@ -102,6 +114,7 @@ class GitHubAuthManager extends GitHubService {
       prohibitMsg: configManager.get(ConfigKey.prohibitMsg) as string,
       announcement: configManager.get(ConfigKey.announcement) as string,
       blackList: configManager.get(ConfigKey.blackList) as string[],
+      whiteList: configManager.get(ConfigKey.whiteList) as string[],
     }
   }
 }

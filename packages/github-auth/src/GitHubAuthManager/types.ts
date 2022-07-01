@@ -39,4 +39,5 @@ export interface AppConfig {
   prohibitMsg?: string
   announcement?: string
   blackList?: Array<string>
+  whiteList?: Array<string>
 }

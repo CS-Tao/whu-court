@@ -15,7 +15,7 @@
     "releaseVersion": "FORCE_COLOR=1 node ./src/scripts/releaseVersion.js"
   },
   "devDependencies": {
-    "@sentry/cli": "^2.1.0",
+    "@sentry/cli": "^2.3.0",
     "chalk": "4.1.2",
     "semver": "^7.3.7",
     "shelljs": "^0.8.5"

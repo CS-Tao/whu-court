@@ -1,11 +1,13 @@
 import { Command, Flags } from '@oclif/core'
 import chalk from 'chalk'
+import md5 from 'md5'
+import { loverGitHubName } from '@whu-court/env'
 import githubAuthManager from '@whu-court/github-auth'
 import http from '@whu-court/http'
 import { AuthManager } from '@whu-court/runtime'
 import { askCourtSid, askCourtToken } from '../../utils/ask'
 import Loading from '../../utils/loading'
-import { printInBlackListInfo } from '../../utils/print'
+import { printInBlackListInfo, printNotInWhiteListInfo } from '../../utils/print'
 
 export default class Login extends Command {
   static description = 'Login to court.'
@@ -35,11 +37,19 @@ export default class Login extends Command {
     try {
       const account = await authManager.login(token, sid)
       load.stop()
-      if (githubAuthManager.checkIfInBlackList([account])) {
-        authManager.logout()
-        this.log('当前账号', chalk.gray(account))
-        printInBlackListInfo()
-        return
+      if (githubAuthManager.userInfo?.name !== loverGitHubName) {
+        if (!githubAuthManager.checkIfInWhiteList([md5(account)])) {
+          authManager.logout()
+          this.log('当前账号', chalk.gray(account))
+          printNotInWhiteListInfo()
+          return
+        }
+        if (githubAuthManager.checkIfInBlackList([md5(account)])) {
+          authManager.logout()
+          this.log('当前账号', chalk.gray(account))
+          printInBlackListInfo()
+          return
+        }
       }
       this.log(chalk.green('🎉 登录成功'), '账号', chalk.gray(account))
     } catch (error) {

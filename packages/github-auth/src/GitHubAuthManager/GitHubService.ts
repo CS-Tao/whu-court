@@ -124,7 +124,7 @@ class GitHubService {
       if (error instanceof Error) {
         Reporter.report(error)
       }
-      return { available: true }
+      return { available: true, blackList: [], whiteList: [] }
     }
   }
 }

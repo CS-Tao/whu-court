@@ -36,8 +36,14 @@ export const printInBlackListInfo = (noLog = false) => {
   return msgs.join(' ')
 }
 
+export const printNotInWhiteListInfo = (noLog = false) => {
+  const msgs = ['🚫', chalk.red(`你未在 wcr 软件白名单中，请运行 ${chalk.green('wcr feedback')} 联系管理员`)]
+  !noLog && logger.log(...msgs)
+  return msgs.join(' ')
+}
+
 export const printNotAuthedInfo = (noLog = false) => {
-  const msgs = [chalk.gray(`尚未完成授权. 运行 ${chalk.green('wcr setup')} 以继续`)]
+  const msgs = [chalk.gray(`你尚未完成授权，运行 ${chalk.green('wcr setup')} 以继续`)]
   !noLog && logger.log(...msgs)
   return msgs.join(' ')
 }

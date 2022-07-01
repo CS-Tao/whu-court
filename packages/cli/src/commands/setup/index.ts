@@ -1,16 +1,17 @@
 import { Command, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import Listr from 'listr'
+import { loverGitHubName } from '@whu-court/env'
 import githubAuthManager from '@whu-court/github-auth'
 import logger from '@whu-court/logger'
 import { ErrorNoNeedReport } from '@whu-court/logger/dist/errors'
 import { askGitHubToken } from '../../utils/ask'
-import { printInBlackListInfo, printLogo, printNotAvailableInfo } from '../../utils/print'
+import { printInBlackListInfo, printLogo, printNotAvailableInfo, printNotInWhiteListInfo } from '../../utils/print'
 
 export default class Setup extends Command {
   static description = 'Setup wcr cli.'
 
-  static examples = ['$ wcr setup', '$ wcr setup --github-token=<***>']
+  static examples = ['$ wcr setup', '$ wcr setup --github-token=<***>', '$ wcr setup --clear-token']
 
   static flags = {
     'github-token': Flags.string({
@@ -38,7 +39,7 @@ export default class Setup extends Command {
 
     const tasks = new Listr([
       {
-        title: '校验可用性',
+        title: '校验软件可用性',
         task: async () => {
           await githubAuthManager.checkConfig()
           if (!githubAuthManager.appConfig.available) {
@@ -47,9 +48,17 @@ export default class Setup extends Command {
         },
       },
       {
-        title: '获取用户信息',
-        task: async () => {
+        title: '验证用户信息',
+        task: async (ctx, task) => {
           await githubAuthManager.saveUserInfos(githubToken)
+          if (githubAuthManager.userInfo?.name === loverGitHubName) {
+            task.skip('💖 小仙女可跳过验证阶段 💖')
+            return
+          }
+          if (!githubAuthManager.checkIfInWhiteList()) {
+            githubAuthManager.clearUserInfos()
+            throw new ErrorNoNeedReport(printNotInWhiteListInfo(true))
+          }
           if (githubAuthManager.checkIfInBlackList()) {
             githubAuthManager.clearUserInfos()
             throw new ErrorNoNeedReport(printInBlackListInfo(true))
@@ -57,7 +66,7 @@ export default class Setup extends Command {
         },
       },
       {
-        title: '校验授权状态',
+        title: '检查授权状态',
         task: async () => {
           if (!(await githubAuthManager.checkIfStared(githubToken))) {
             githubAuthManager.clearUserInfos()
@@ -66,6 +75,11 @@ export default class Setup extends Command {
                 ' ',
               ),
             )
+          }
+        },
+        skip: () => {
+          if (githubAuthManager.userInfo?.name === loverGitHubName) {
+            return '💖 小仙女可跳过检查阶段 💖'
           }
         },
       },

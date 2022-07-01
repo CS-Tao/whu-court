@@ -48,6 +48,7 @@ export const defaultValues: Partial<ConfigTypes> = {
   [ConfigKey.prohibitMsg]: '',
   [ConfigKey.announcement]: '',
   [ConfigKey.blackList]: [],
+  [ConfigKey.whiteList]: [],
 
   [ConfigKey.openTime]: '18:00:00',
   [ConfigKey.checkOpenInterval]: 400,
@@ -82,6 +83,11 @@ export const rules: { [key in ConfigKey]: (value: ConfigTypes[key]) => string | 
   [ConfigKey.blackList]: (value: string[]) => {
     if (!Array.isArray(value)) {
       return '黑名单必须是数组'
+    }
+  },
+  [ConfigKey.whiteList]: (value: string[]) => {
+    if (!Array.isArray(value)) {
+      return '白名单必须是数组'
     }
   },
 

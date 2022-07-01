@@ -15,6 +15,11 @@ export enum ConfigKey {
    * 黑名单 github id or github name or court account
    */
   blackList = 'blackList',
+  /**
+   * 白名单 github id or github name or court account
+   * 如果配置了白名单，黑名单将被忽略
+   */
+  whiteList = 'blackList',
 
   /**
    * GitHub id
@@ -112,6 +117,7 @@ export interface ConfigTypes {
   [ConfigKey.prohibitMsg]: string
   [ConfigKey.announcement]: string
   [ConfigKey.blackList]: string[]
+  [ConfigKey.whiteList]: string[]
 
   [ConfigKey.githubId]: number
   [ConfigKey.githubUserName]: string

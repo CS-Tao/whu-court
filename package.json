@@ -29,7 +29,7 @@
     "cd:check": "is-ci && npm-run-all -p -l cd:eslint cd:test",
     "cd:release": "is-ci && lerna run --scope @whu-court/tools releaseVersion -- $(pwd)",
     "version": "yarn install --no-immutable && git add yarn.lock",
-    "update-deps": "rm -f yarn.lock && yarn"
+    "update-deps": "rm -f yarn.lock && CI='' yarn"
   },
   "devDependencies": {
     "@sentry/cli": "^2.1.0",

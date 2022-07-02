@@ -9,7 +9,7 @@ import { askGitHubToken } from '../../utils/ask'
 import { printInBlackListInfo, printLogo, printNotAvailableInfo, printNotInWhiteListInfo } from '../../utils/print'
 
 export default class Setup extends Command {
-  static description = 'Setup wcr cli.'
+  static description = 'Setup app.'
 
   static examples = ['$ wcr setup', '$ wcr setup --github-token=<***>', '$ wcr setup --clear-token']
 

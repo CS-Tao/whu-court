@@ -68,11 +68,11 @@ class GitHubAuthManager extends GitHubService {
     configManager.delete(ConfigKey.githubNickName)
   }
 
-  checkIfConfigured() {
+  async checkIfConfigured(useAsyncCheck = true) {
     const token = configManager.get(ConfigKey.githubToken)
     if (token && typeof token === 'string') {
       // async
-      this.checkIfStared(token)
+      useAsyncCheck ? this.checkIfStared(token) : await this.checkIfStared(token)
       return true
     }
     return false

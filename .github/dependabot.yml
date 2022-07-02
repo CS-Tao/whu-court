@@ -1,9 +1,12 @@
 version: 2
 updates:
   - package-ecosystem: 'npm'
+    open-pull-requests-limit: 0 # disable
     versioning-strategy: increase
     directory: '/'
-    commit-message: '📦 chore: update dependencies'
+    commit-message:
+      prefix: '📦 chore'
+      include: 'scope'
     assignees:
       - 'CS-Tao'
     schedule:

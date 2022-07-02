@@ -53,14 +53,15 @@ const hook: Hook<'prerun'> = async function (opts) {
     // 异步校验
     githubAuthManager.checkIfConfigured()
     githubAuthManager.checkConfig()
-  } else {
-    // 同步校验
-    const loading = new Loading('校验软件可用性').start()
-    await githubAuthManager.checkIfConfigured()
-    await githubAuthManager.checkConfig()
-    loading.succeed(chalk.gray('校验软件可用性完成'))
-    check(true) || process.exit(0)
+    return
   }
+
+  // 同步校验
+  const loading = new Loading('校验软件可用性').start()
+  await githubAuthManager.checkIfConfigured()
+  await githubAuthManager.checkConfig()
+  loading.succeed(chalk.gray('校验软件可用性完成'))
+  check(true) || process.exit(0)
 }
 
 export default hook

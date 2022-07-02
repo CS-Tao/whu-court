@@ -11,10 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - run:
-        export
-        rm -f yarn.lock
-        yarn install
+      - name: Update yarn.lock
+        run: |
+          export
+          rm -f yarn.lock
+          yarn install
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v4

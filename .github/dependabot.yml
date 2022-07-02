@@ -3,6 +3,9 @@ updates:
   - package-ecosystem: 'npm'
     versioning-strategy: increase
     directory: '/'
+    commit-message: '📦 chore: update dependencies'
+    assignees:
+      - 'CS-Tao'
     schedule:
       interval: 'monthly'
     labels:

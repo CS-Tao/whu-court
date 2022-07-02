@@ -38,7 +38,7 @@
     "commitizen": "^4.2.4",
     "commitlint": "^17.0.2",
     "commitlint-config-cz": "^0.13.3",
-    "cz-customizable": "^6.3.0",
+    "cz-customizable": "^6.8.0",
     "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^17.0.0",

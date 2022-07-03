@@ -1,4 +1,5 @@
 import { Command, Flags } from '@oclif/core'
+import inquirer from 'inquirer'
 import { openAnnouncement, printAnnouncementUrl } from '../../utils/announcement'
 
 export default class Announcement extends Command {
@@ -20,6 +21,13 @@ export default class Announcement extends Command {
 
     if (flags['no-open']) return
 
-    await openAnnouncement()
+    const { open } = await inquirer.prompt({
+      type: 'confirm',
+      name: 'open',
+      message: '打开公告页面？',
+      default: true,
+    })
+
+    open && (await openAnnouncement())
   }
 }

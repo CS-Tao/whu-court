@@ -81,4 +81,11 @@ export const configs: Array<{
     serialize: serializeStringArray,
     deserialize: deserializeStringArray,
   },
+  {
+    name: 'statsKey',
+    key: ConfigKey.statsKey,
+    desc: '随机密钥，可自定义\n提供此 key 可协助管理员过滤数据',
+    serialize: (value) => value as string,
+    deserialize: (value) => value,
+  },
 ]

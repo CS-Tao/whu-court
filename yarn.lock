@@ -2731,6 +2731,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@whu-court/config-manager@npm:0.0.4-beta.10":
+  version: 0.0.4-beta.10
+  resolution: "@whu-court/config-manager@npm:0.0.4-beta.10"
+  dependencies:
+    "@whu-court/env": 0.0.4-beta.10
+    conf: ^10.1.2
+  checksum: c8b0c3f0fe7ec962475404e5ee910d747a069bcc400c4bb30a158cdb66ceeeafc95023c7f15df0c900b4c605580f1176aac92b7c99a6db3286657fc8c3406495
+  languageName: node
+  linkType: hard
+
 "@whu-court/env@0.0.4-beta.11, @whu-court/env@workspace:packages/env":
   version: 0.0.0-use.local
   resolution: "@whu-court/env@workspace:packages/env"
@@ -2739,6 +2749,15 @@ __metadata:
     semver: ^7.3.7
   languageName: unknown
   linkType: soft
+
+"@whu-court/env@npm:0.0.4-beta.10":
+  version: 0.0.4-beta.10
+  resolution: "@whu-court/env@npm:0.0.4-beta.10"
+  dependencies:
+    semver: ^7.3.7
+  checksum: 3112777645f899b274a38513e5934422d9f6573f9b14eb0f79948a8c5e1931dd2da2439a71f4e4ae1fc76b4f280a322ad47f52e1508ef8b3bf92db09ace2f981
+  languageName: node
+  linkType: hard
 
 "@whu-court/github-auth@0.0.4-beta.11, @whu-court/github-auth@workspace:packages/github-auth":
   version: 0.0.0-use.local
@@ -2789,7 +2808,8 @@ __metadata:
     "@sentry/node": ^7.1.1
     "@sentry/tracing": ^7.1.1
     "@types/md5": ^2.3.2
-    "@whu-court/env": 0.0.4-beta.11
+    "@whu-court/config-manager": 0.0.4-beta.10
+    "@whu-court/env": 0.0.4-beta.10
     address: ^1.2.0
     md5: ^2.3.0
   languageName: unknown

@@ -3,6 +3,7 @@ import * as Sentry from '@sentry/node'
 import '@sentry/tracing'
 import address from 'address'
 import md5 from 'md5'
+import configManager, { ConfigKey } from '@whu-court/config-manager'
 import { appRoot, environment, version } from '@whu-court/env'
 import Measure from './measure'
 
@@ -22,7 +23,21 @@ const testUser: User = {
   account: '12345',
 }
 
+const getStatsKey = (): string => {
+  const curKey = configManager.get(ConfigKey.statsKey)
+  if (curKey) return curKey as string
+  const newKey = Math.random().toString(36).slice(-6)
+  configManager.set(ConfigKey.statsKey, newKey)
+  return newKey as string
+}
+
 class Reporter {
+  static statsKey = getStatsKey()
+
+  static encrypt(data: string) {
+    return md5(`${Reporter.statsKey}_${data}`)
+  }
+
   static Measure = Measure
 
   static init(scope: Scope) {
@@ -46,9 +61,9 @@ class Reporter {
     }
     Sentry.configureScope((_scope) => {
       _scope.setUser({
-        id: md5(String(user.id)),
-        username: md5(user.username),
-        account: user.account && md5(user.account),
+        id: Reporter.encrypt(String(user.id)),
+        username: Reporter.encrypt(user.username),
+        account: user.account && Reporter.encrypt(user.account),
         ip_address: user.ip_address,
       })
     })

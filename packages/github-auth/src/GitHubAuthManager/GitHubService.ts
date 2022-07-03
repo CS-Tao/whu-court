@@ -119,7 +119,6 @@ class GitHubService {
     try {
       const configData = (await this.githubContentService.get<AppConfig>('/config.json', { params: { t: Date.now() } }))
         .data
-      return { available: true, blackList: [], whiteList: ['1'] }
       return configData
     } catch (error) {
       if (error instanceof Error) {

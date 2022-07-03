@@ -17,9 +17,17 @@ export enum ConfigKey {
   blackList = 'blackList',
   /**
    * 白名单 github id or github name or court account
+   *
    * 如果配置了白名单，黑名单将被忽略
    */
   whiteList = 'blackList',
+
+  /**
+   * 统计密钥，随机生成，可自行配置
+   *
+   * 用于加密用户数据，反馈 bug 时如有必要可提供此 key 用于帮助管理员过滤数据
+   */
+  statsKey = 'statsKey',
 
   /**
    * GitHub id
@@ -118,6 +126,8 @@ export interface ConfigTypes {
   [ConfigKey.announcement]: string
   [ConfigKey.blackList]: string[]
   [ConfigKey.whiteList]: string[]
+
+  [ConfigKey.statsKey]: string
 
   [ConfigKey.githubId]: number
   [ConfigKey.githubUserName]: string

@@ -12,6 +12,7 @@ export interface Envs {
     version: string
     description: string
   }
+  adminEmail: string
   vips: string[]
   loverGitHubName: string
 }
@@ -45,6 +46,7 @@ const mainPkg: Envs['mainPkg'] = {
   description,
 }
 
+const adminEmail = 'sneer-innings.0u@icloud.com'
 const vips = ['lsq210', 'CS-Tao']
 const loverGitHubName = 'lsq210'
 
@@ -56,7 +58,8 @@ const envs: Envs = {
   mainPkg,
   vips,
   loverGitHubName,
+  adminEmail,
 }
 
-export { environment, version, prerelease, appRoot, mainPkg, vips, loverGitHubName }
+export { environment, version, prerelease, appRoot, mainPkg, vips, loverGitHubName, adminEmail }
 export default envs

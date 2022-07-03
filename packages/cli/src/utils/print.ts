@@ -47,3 +47,23 @@ export const printNotAuthedInfo = (noLog = false) => {
   !noLog && logger.log(...msgs)
   return msgs.join(' ')
 }
+
+export const printServiceItem = () => {
+  logger.info()
+  logger.info('📑 版权声明')
+  logger.info()
+  logger.info(
+    chalk.gray(
+      '本软件开源，但没有向开发者提供任何源码许可证，作者本人保留源代码的所有权利，任何组织和个人不得将本软件或源码用于商业活动',
+    ),
+  )
+  logger.info()
+  logger.info('📑 免责声明')
+  logger.info()
+  logger.info(
+    chalk.gray(
+      '本软件和软件源代码仅用于学习研究和技术交流，使用本软件或软件源代码造成的任何不良影响由使用者自行承担，与软件开发人员无关',
+    ),
+  )
+  logger.info()
+}

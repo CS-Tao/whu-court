@@ -1,12 +1,19 @@
 import { Command, Flags } from '@oclif/core'
 import chalk from 'chalk'
+import inquirer from 'inquirer'
 import Listr from 'listr'
 import { loverGitHubName } from '@whu-court/env'
 import githubAuthManager from '@whu-court/github-auth'
 import logger from '@whu-court/logger'
 import { ErrorNoNeedReport } from '@whu-court/logger/dist/errors'
 import { askGitHubToken } from '../../utils/ask'
-import { printInBlackListInfo, printLogo, printNotAvailableInfo, printNotInWhiteListInfo } from '../../utils/print'
+import {
+  printInBlackListInfo,
+  printLogo,
+  printNotAvailableInfo,
+  printNotInWhiteListInfo,
+  printServiceItem,
+} from '../../utils/print'
 
 export default class Setup extends Command {
   static description = 'Setup app.'
@@ -34,6 +41,22 @@ export default class Setup extends Command {
       printLogo(false)
       return logger.log(chalk.gray('完成'))
     }
+
+    printServiceItem()
+
+    const { agree } = await inquirer.prompt({
+      type: 'confirm',
+      name: 'agree',
+      message: '是否同意以上服务条款？（输入 y 后回车表示同意）',
+      default: false,
+    })
+
+    if (!agree) {
+      logger.log(chalk.red('🙁 配置失败。你未同意以上服务条款'))
+      return
+    }
+
+    logger.log(chalk.green('你已同意以上服务条款'))
 
     const githubToken = flags['github-token'] || (await askGitHubToken())
 

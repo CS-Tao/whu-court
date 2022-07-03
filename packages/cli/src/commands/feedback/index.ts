@@ -1,4 +1,5 @@
 import { Command, Flags } from '@oclif/core'
+import inquirer from 'inquirer'
 import { openFeedback, printFeedbackUrl } from '../../utils/feedback'
 
 export default class Feedback extends Command {
@@ -20,6 +21,13 @@ export default class Feedback extends Command {
 
     if (flags['no-open']) return
 
-    await openFeedback()
+    const { open } = await inquirer.prompt({
+      type: 'confirm',
+      name: 'open',
+      message: '打开反馈页面？',
+      default: true,
+    })
+
+    open && (await openFeedback())
   }
 }

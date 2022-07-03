@@ -91,6 +91,12 @@ export const rules: { [key in ConfigKey]: (value: ConfigTypes[key]) => string | 
     }
   },
 
+  [ConfigKey.statsKey]: (value: string) => {
+    if (value.length === 0) {
+      return '统计密钥不能为空'
+    }
+  },
+
   [ConfigKey.githubId]: (value) => {
     if (!value) {
       return 'GitHub id 不能为空'

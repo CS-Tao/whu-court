@@ -47,7 +47,7 @@ export default class Setup extends Command {
     const { agree } = await inquirer.prompt({
       type: 'confirm',
       name: 'agree',
-      message: '是否同意以上服务条款？（输入 y 后回车表示同意）',
+      message: '是否同意以上服务条款？',
       default: false,
     })
 

@@ -42,8 +42,11 @@ const check = (showLog = false) => {
   return true
 }
 
+const noNeedCheckCommands = ['announcement', 'feedback', 'reset', 'setup', 'help', 'logout']
+
 const hook: Hook<'prerun'> = async function (opts) {
-  if (['setup', 'help', 'logout'].includes(opts.Command.id)) return
+  if (noNeedCheckCommands.includes(opts.Command.id)) return
+
   if (githubAuthManager.userInfo?.name === loverGitHubName) {
     logger.info(pink('💖 欢迎小仙女 💖'))
     return
@@ -60,7 +63,7 @@ const hook: Hook<'prerun'> = async function (opts) {
   const loading = new Loading('校验软件可用性').start()
   await githubAuthManager.checkIfConfigured()
   await githubAuthManager.checkConfig()
-  loading.succeed(chalk.gray('校验软件可用性完成'))
+  check() ? loading.succeed(chalk.gray('校验软件可用性完成')) : loading.fail(chalk.gray('校验软件可用性结束'))
   check(true) || process.exit(0)
 }
 

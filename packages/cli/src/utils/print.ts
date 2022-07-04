@@ -66,4 +66,14 @@ export const printServiceItem = () => {
     ),
   )
   logger.info()
+  logger.info('📑 隐私协议')
+  logger.info()
+  logger.info(
+    chalk.gray(
+      `本软件会统计使用数据，包括软件错误日志、软件性能指标、每日使用量等
+其中所有个人信息均经过加密，加密密钥🔑随机生成，你可以运行 ${chalk.green('wcr config statsKey [new-key]')} 自定义密钥🔑
+如需查询软件日志，可将此密钥🔑提供给管理员查询，详情请运行 ${chalk.green('wcr feedback')} 查看`,
+    ),
+  )
+  logger.info()
 }

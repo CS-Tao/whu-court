@@ -50,6 +50,10 @@ export const defaultValues: Partial<ConfigTypes> = {
   [ConfigKey.blackList]: [],
   [ConfigKey.whiteList]: [],
 
+  [ConfigKey.githubId]: 123456,
+  [ConfigKey.githubUserName]: 'guest',
+  [ConfigKey.githubNickName]: 'guest',
+
   [ConfigKey.openTime]: '18:00:00',
   [ConfigKey.checkOpenInterval]: 400,
   [ConfigKey.time]: '08-21',

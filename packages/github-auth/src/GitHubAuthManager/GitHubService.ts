@@ -17,7 +17,7 @@ class GitHubService {
     this.githubApiService.interceptors.response.use(
       (res) => res,
       (error) => {
-        const status = error.response.status
+        const status = error.response?.status
         if (status === 401) {
           return Promise.reject(new Logger.Errors.ErrorNoNeedReport('GitHub token 无效'))
         }

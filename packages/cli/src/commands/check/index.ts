@@ -55,6 +55,6 @@ export default class Check extends Command {
       return this.log(chalk.red(`🙁 登录信息已失效，请运行 ${chalk.green('wcr login')} 重新登录`))
     }
 
-    this.log(chalk.green('🎉 登录信息有效'))
+    this.log(chalk.green('✔'), '登录信息有效')
   }
 }

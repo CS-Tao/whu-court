@@ -28,8 +28,7 @@
     "cd:eslint": "is-ci && yarn eslint-all",
     "cd:check": "is-ci && npm-run-all -p -l cd:eslint cd:test",
     "cd:release": "is-ci && lerna run --scope @whu-court/tools releaseVersion -- $(pwd)",
-    "version": "yarn install --no-immutable && git add yarn.lock",
-    "update-deps": "rm -f yarn.lock && yarn"
+    "version": "yarn install --no-immutable && git add yarn.lock"
   },
   "devDependencies": {
     "@sentry/cli": "^2.1.0",
@@ -56,7 +55,7 @@
     "oclif": "^3.0.1",
     "prettier": "^2.6.2",
     "shx": "^0.3.4",
-    "ts-node": "^10.8.0",
+    "ts-node": "^10.8.2",
     "typescript": "4.3.5"
   },
   "packageManager": "yarn@3.2.1",

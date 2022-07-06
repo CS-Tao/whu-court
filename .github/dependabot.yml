@@ -13,7 +13,6 @@ updates:
       interval: 'monthly'
     labels:
       - 'dependencies'
-    open-pull-requests-limit: 100
     pull-request-branch-name:
       separator: '-'
     ignore:

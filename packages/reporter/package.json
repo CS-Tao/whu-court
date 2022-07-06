@@ -22,8 +22,8 @@
     "@sentry/integrations": "^7.1.1",
     "@sentry/node": "^7.1.1",
     "@sentry/tracing": "^7.1.1",
-    "@whu-court/config-manager": "0.0.4-beta.10",
-    "@whu-court/env": "0.0.4-beta.10",
+    "@whu-court/config-manager": "0.0.4-beta.12",
+    "@whu-court/env": "0.0.4-beta.12",
     "address": "^1.2.0",
     "md5": "^2.3.0"
   },

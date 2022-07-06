@@ -80,12 +80,12 @@ export default class Config extends Command {
     const configValue = args.configValue
 
     if (!configName) {
-      this.error('missing config name')
+      this.log(chalk.red('missing config name'))
       return
     }
 
     if (!config) {
-      this.error(`'${configName}' not a valid config name`)
+      this.log(chalk.red(`'${configName}' not a valid config name`))
       return
     }
 
@@ -107,6 +107,7 @@ export default class Config extends Command {
         config.desc,
       ])
       this.log(table.toString())
+      return
     }
 
     throw Error('Unreachable')

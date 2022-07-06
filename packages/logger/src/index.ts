@@ -28,7 +28,7 @@ class Logger {
   public error(error: string | Error, ...data: string[]): void {
     console.error(typeof error === 'string' ? error : error.message, ...data)
     if (this.options.report && !(error instanceof Logger.Errors.ErrorNoNeedReport)) {
-      Reporter.report(new Error(data.join('\n')))
+      Reporter.report(typeof error === 'string' ? new Error([error, ...data].join('\n')) : error)
     }
   }
 

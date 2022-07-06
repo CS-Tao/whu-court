@@ -3,7 +3,7 @@ import inquirer from 'inquirer'
 import { openFeedback, printFeedbackUrl } from '../../utils/feedback'
 
 export default class Feedback extends Command {
-  static description = 'Feedback for the app.'
+  static description = 'Feedback for wcr.'
 
   static examples = ['$ wcr feedback']
 

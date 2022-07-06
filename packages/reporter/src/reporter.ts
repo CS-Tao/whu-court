@@ -45,7 +45,6 @@ class Reporter {
       dsn: 'https://9f5715bdde344fbd8ee3fb3696edfd86@o1268975.ingest.sentry.io/6505233',
       tracesSampleRate: 1.0,
       integrations: [
-        new Sentry.Integrations.Http({ tracing: true }), // TODO:
         new RewriteFrames({
           root: appRoot,
         }),

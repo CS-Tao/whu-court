@@ -16,7 +16,7 @@ const table = new Table({
 })
 
 export default class Check extends Command {
-  static description = 'Check current status.'
+  static description = 'Check login status.'
 
   static examples = ['$ wcr check']
 

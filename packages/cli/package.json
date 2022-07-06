@@ -74,8 +74,7 @@
     "helpClass": "./dist/lib/help",
     "hooks": {
       "init": [
-        "./dist/hooks/init/printLogo",
-        "./dist/hooks/init/report"
+        "./dist/hooks/init/printLogo"
       ],
       "prerun": [
         "./dist/hooks/prerun/check",
@@ -83,7 +82,8 @@
       ],
       "postrun": [
         "./dist/hooks/postrun/update",
-        "./dist/hooks/prerun/goodbye"
+        "./dist/hooks/postrun/report",
+        "./dist/hooks/postrun/goodbye"
       ]
     },
     "plugins": [

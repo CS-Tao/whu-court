@@ -84,7 +84,7 @@ export const configs: Array<{
   {
     name: 'statsKey',
     key: ConfigKey.statsKey,
-    desc: '随机密钥，可自定义\n提供此 key 可协助管理员过滤数据',
+    desc: '随机数据密钥，可自定义\n提供此 key 可协助管理员查日志',
     serialize: (value) => value as string,
     deserialize: (value) => value,
   },

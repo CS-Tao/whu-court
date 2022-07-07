@@ -41,12 +41,18 @@ class GitHubAuthManager extends GitHubService {
     return [userId, userName, ...additionalAccounts].some((each) => blackList.includes(each))
   }
 
-  checkIfStared = async (token: string) => {
-    const isAuthed = await this.checkIfStaredCore(token, null)
-    if (!isAuthed) {
-      this.clearUserInfos()
+  checkIfStared = async (token: string, ignoreError = false) => {
+    try {
+      const isAuthed = await this.checkIfStaredCore(token, null)
+      if (!isAuthed) {
+        this.clearUserInfos()
+      }
+      return isAuthed
+    } catch (error) {
+      if (!ignoreError) {
+        throw error
+      }
     }
-    return isAuthed
   }
 
   public saveUserInfos = async (token: string) => {
@@ -72,7 +78,7 @@ class GitHubAuthManager extends GitHubService {
     const token = configManager.get(ConfigKey.githubToken)
     if (token && typeof token === 'string') {
       // async
-      useAsyncCheck ? this.checkIfStared(token) : await this.checkIfStared(token)
+      useAsyncCheck ? this.checkIfStared(token, true) : await this.checkIfStared(token, true)
       return true
     }
     return false

@@ -8,7 +8,7 @@ export default class Loading {
     })
   }
 
-  static frames = ['🕐 ', '🕑 ', '🕒 ', '🕓 ', '🕔 ', '🕕 ', '🕖 ', '🕗 ', '🕘 ', '🕙 ', '🕚 ']
+  static frames = ['◰', '◳', '◲', '◱']
 
   handler: loading.Loading | null
 

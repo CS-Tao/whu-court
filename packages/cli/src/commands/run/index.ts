@@ -1,6 +1,7 @@
 import { Command, Flags } from '@oclif/core'
 import inquirer from 'inquirer'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
+import { ReserveManager } from '@whu-court/runtime'
 
 export default class Run extends Command {
   static description = 'Run app to reserve.'
@@ -38,6 +39,8 @@ export default class Run extends Command {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(Run)
+
+    await new ReserveManager().run()
 
     const yes = flags.yes
 

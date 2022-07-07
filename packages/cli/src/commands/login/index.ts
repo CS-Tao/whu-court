@@ -5,8 +5,8 @@ import { loverGitHubName } from '@whu-court/env'
 import githubAuthManager from '@whu-court/github-auth'
 import http from '@whu-court/http'
 import { AuthManager } from '@whu-court/runtime'
+import { Loading } from '@whu-court/utils'
 import { askCourtSid, askCourtToken } from '../../utils/ask'
-import Loading from '../../utils/loading'
 import { printInBlackListInfo, printNotInWhiteListInfo } from '../../utils/print'
 
 export default class Login extends Command {

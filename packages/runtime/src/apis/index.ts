@@ -34,5 +34,9 @@ export const getApiMap: (httpClient: AxiosInstance) => API_MAP = (httpClient) =>
     myOrder: (data, config) => {
       return httpClient.post('/v1.0.0/order/myOrder', data, config)
     },
+
+    queryBookingQueryInfo: (data, config) => {
+      return httpClient.post('/v1.0.0/ballBooking/queryHomeBookingInfo', data, config)
+    },
   }
 }

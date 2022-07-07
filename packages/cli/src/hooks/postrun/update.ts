@@ -5,7 +5,7 @@ import { environment } from '@whu-court/env'
 
 const hook: Hook<'postrun'> = async function () {
   if (environment === 'local') {
-    this.log(chalk.yellow('[local] Run notify update...'))
+    this.log(chalk.gray('[LOCAL]'), chalk.yellow('Run notify update'))
   }
   new UpdateManager().notify()
 }

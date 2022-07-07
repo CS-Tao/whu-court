@@ -5,7 +5,13 @@ import logger from '@whu-court/logger'
 import apis from './apis'
 import { MockData } from './type'
 
+const mockMap = new WeakSet()
+
 export const mockAxios = (axios: AxiosInstance) => {
+  if (mockMap.has(axios)) return
+
+  mockMap.add(axios)
+
   process.env.NODE_ENV !== 'development' &&
     logger.warn(chalk.gray('[MOCK]'), chalk.yellow(`Mock axios enabled for ${apis.length} apis`))
   const mock = new MockAdapter(axios, { delayResponse: 2000 })

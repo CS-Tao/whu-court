@@ -18,6 +18,7 @@ export namespace RequestData {
     /**
      * @example 2022-05-31
      */
+    placeId?: string
     reserveDate: string
     uid: string
     /**
@@ -110,6 +111,13 @@ export namespace RequestData {
     userId: string
     status: [1, 2, 3, 4, 5, 6]
     search: ''
+  }
+
+  export interface QueryHomeBookingInfoData {
+    /**
+     * x-outh-token
+     */
+    uid: string
   }
 }
 
@@ -473,6 +481,27 @@ export namespace ResponseData {
       },
     ]
   }
+
+  export interface QueryHomeBookingInfoData {
+    motionList: Array<{
+      typeId: string
+      typeName: '羽毛球' | string
+      iconUrl: string
+      /**
+       * 本软件只处理为 1 的情况
+       */
+      placeType: '1' | '0'
+    }>
+    gymnasiumList: Array<{
+      placeId: string
+      placeName: string
+      iconUrl: string
+    }>
+    messageInfo: null
+    uidInBlackNameList: false
+    inBlackNameListReason: null
+    lastContractBreachTime: null
+  }
 }
 
 export interface API_MAP {
@@ -506,4 +535,9 @@ export interface API_MAP {
   createOrder: (data: RequestData.CreateOrderData, config?: AxiosRequestConfig) => Promise<ResponseData.CreateOrderData>
 
   myOrder: (params: RequestData.MyOrderData, config?: AxiosRequestConfig) => Promise<ResponseData.MyOrderData>
+
+  queryBookingQueryInfo: (
+    data: RequestData.QueryHomeBookingInfoData,
+    config?: AxiosRequestConfig,
+  ) => Promise<ResponseData.QueryHomeBookingInfoData>
 }

@@ -5,8 +5,8 @@ import configManager, { ConfigKey } from '@whu-court/config-manager'
 import { loverGitHubName } from '@whu-court/env'
 import githubAuthManager from '@whu-court/github-auth'
 import logger from '@whu-court/logger'
+import { Loading } from '@whu-court/utils'
 import { pink } from '../../utils/colors'
-import Loading from '../../utils/loading'
 import {
   printInBlackListInfo,
   printNotAuthedInfo,

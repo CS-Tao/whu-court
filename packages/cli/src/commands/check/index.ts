@@ -4,7 +4,7 @@ import Table from 'cli-table3'
 import moment from 'moment'
 import http from '@whu-court/http'
 import { AuthManager } from '@whu-court/runtime'
-import Loading from '../../utils/loading'
+import { Loading } from '@whu-court/utils'
 
 const table = new Table({
   head: ['Key', 'Value'],
@@ -34,7 +34,7 @@ export default class Check extends Command {
       return this.log(chalk.red(`🙁 你尚未登陆，请运行 ${chalk.green('wcr login')} 登录`))
     }
 
-    const load = new Loading('检查中').start()
+    const loading = new Loading('检查中').start()
 
     const { flags } = await this.parse(Check)
 
@@ -47,7 +47,7 @@ export default class Check extends Command {
 
     const status = await authManager.validate()
 
-    load.stop()
+    loading.stop()
 
     this.log(table.toString())
 

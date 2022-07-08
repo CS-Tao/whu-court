@@ -2,7 +2,7 @@
   "name": "@whu-court/tools",
   "description": "WHU-Court Tools",
   "private": true,
-  "version": "0.0.4-beta.13",
+  "version": "0.0.4-beta.14",
   "author": "cstao.cn@icloud.com",
   "main": "src/index.ts",
   "scripts": {

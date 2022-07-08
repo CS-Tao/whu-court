@@ -14,7 +14,7 @@ function releaseVersion(bumpType, isManual) {
     console.log(chalk.red('releaseVersion: currentBranch or currentCommitHash is missing'))
     process.exit(1)
   }
-  console.log(chalk.gray('releaseVersion start with params:', bumpType, isManual))
+  console.log(chalk.gray('releaseVersion start with params:', 'bumpType', bumpType, 'isManual', isManual))
   let preid
   let options
   let bump
@@ -23,17 +23,21 @@ function releaseVersion(bumpType, isManual) {
   let afterVersionCommands = []
   const isMainBranch = currentBranch === mainBranch
   if (isMainBranch) {
+    const isLatest = ['major', 'minor', 'patch'].includes(bumpType)
     preid = 'beta'
     options = '--no-commit-hooks --exact' + (isManual ? ' --force-publish=.' : '')
     bump = bumpType || 'prerelease'
-    publishOptions = ['major', 'minor', 'patch'].includes(bumpType) ? '--dist-tag=latest' : '--dist-tag=beta'
-    environment = ['major', 'minor', 'patch'].includes(bumpType) ? 'production' : 'gray'
+    publishOptions = isLatest ? '--dist-tag=latest' : '--dist-tag=beta'
+    environment = isLatest ? 'production' : 'gray'
 
     afterVersionCommands = []
   } else {
     if (normalizedCurrentBranch === 'beta' || currentBranch === 'beta') {
       console.log(chalk.red('branch name can not be `beta`'))
       process.exit(1)
+    }
+    if (bumpType) {
+      console.log(chalk.yellow(`release-type will be 'prepatch' in non-main branch, ignore the param: ${bumpType}`))
     }
     preid = `${normalizedCurrentBranch}-${currentCommitHash.slice(0, 8)}`
     options = '--no-commit-hooks --no-git-tag-version --no-push --exact'

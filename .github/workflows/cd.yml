@@ -2,6 +2,8 @@ name: CD for WHU-Court
 
 on:
   push:
+    branches:
+      - master
   workflow_dispatch:
     inputs:
       release-type:

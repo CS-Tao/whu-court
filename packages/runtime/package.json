@@ -1,7 +1,7 @@
 {
   "name": "@whu-court/runtime",
   "description": "WHU-Court Runtime",
-  "version": "0.0.4-beta.14",
+  "version": "0.0.4-beta.15",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,12 +19,12 @@
     "access": "public"
   },
   "dependencies": {
-    "@whu-court/config-manager": "0.0.4-beta.14",
-    "@whu-court/http": "0.0.4-beta.14",
-    "@whu-court/logger": "0.0.4-beta.14",
-    "@whu-court/mock": "0.0.4-beta.14",
-    "@whu-court/reporter": "0.0.4-beta.14",
-    "@whu-court/utils": "0.0.4-beta.14",
+    "@whu-court/config-manager": "0.0.4-beta.15",
+    "@whu-court/http": "0.0.4-beta.15",
+    "@whu-court/logger": "0.0.4-beta.15",
+    "@whu-court/mock": "0.0.4-beta.15",
+    "@whu-court/reporter": "0.0.4-beta.15",
+    "@whu-court/utils": "0.0.4-beta.15",
     "axios": "^0.27.2",
     "chalk": "4.1.2"
   },

@@ -31,10 +31,10 @@ class ConfigManager implements Iterable<[keyof ConfigTypes, ConfigTypes[keyof Co
     return this.conf.get<ConfigKey>(key)
   }
 
-  set<Key extends ConfigKey>(key: Key, value: ConfigTypes[Key]): ErrMsg {
+  set<Key extends ConfigKey>(key: Key, value: ConfigTypes[Key]): void {
     const validateErrMsg = this.validate(key, value)
     if (validateErrMsg) {
-      return validateErrMsg
+      throw Error(validateErrMsg)
     }
     this.conf.set<ConfigKey>(key, value)
   }

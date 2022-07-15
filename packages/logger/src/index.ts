@@ -1,4 +1,6 @@
 /* eslint-disable no-console */
+import chalk from 'chalk'
+import { environment } from '@whu-court/env'
 import Reporter from '@whu-court/reporter'
 import { ErrorNoNeedReport } from './errors'
 
@@ -26,7 +28,10 @@ class Logger {
   }
 
   public error(error: string | Error, ...data: string[]): void {
-    console.error(typeof error === 'string' ? error : error.message, ...data)
+    console.error(chalk.red(typeof error === 'string' ? error : error.message), data.map(chalk.red).join(''))
+    if (environment === 'local') {
+      typeof error !== 'string' && console.trace(error)
+    }
     if (this.options.report && !(error instanceof Logger.Errors.ErrorNoNeedReport)) {
       Reporter.report(typeof error === 'string' ? new Error([error, ...data].join('\n')) : error)
     }

@@ -15,10 +15,10 @@ export namespace RouterPathParams {
 export namespace RequestData {
   export interface QueryPlaceListByTypeIdData {
     typeId: string
+    placeId?: string
     /**
      * @example 2022-05-31
      */
-    placeId?: string
     reserveDate: string
     uid: string
     /**
@@ -40,7 +40,7 @@ export namespace RequestData {
     /**
      * @example '8'
      */
-    fieldNum: number
+    fieldNum: string
   }
 
   export interface UseSportFieldData {
@@ -74,6 +74,9 @@ export namespace RequestData {
      * @example '2022-06-01'
      */
     appointmentDate: string
+    /**
+     * x-auth-token
+     */
     creatorId: string
     placeType: 1 | unknown
     /**
@@ -81,7 +84,13 @@ export namespace RequestData {
      */
     period: string
     fieldId: string
+    /**
+     * 运动类型 id
+     */
     motionTypeId: string
+    /**
+     * 位置 id
+     */
     placeId: string
     /**
      * @example '乒乓球'
@@ -96,12 +105,15 @@ export namespace RequestData {
      * @example '竹园体育馆（信部东区体育馆）'
      */
     placeName: string
-    fieldNum: '8' | unknown
+    fieldNum: '8' | string
     /**
      * @example  '信息学部'
      */
     collegeName: string
     collegeId: string
+    /**
+     * wx.login() 获取的 code
+     */
     code: string
   }
 

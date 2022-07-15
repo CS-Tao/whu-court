@@ -40,7 +40,9 @@ export default class Run extends Command {
   async run(): Promise<void> {
     const { flags } = await this.parse(Run)
 
-    await new ReserveManager().run()
+    await new ReserveManager({}).run()
+
+    return
 
     const yes = flags.yes
 

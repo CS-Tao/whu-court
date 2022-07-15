@@ -58,7 +58,6 @@ http.interceptors.response.use(
         (acc, cur) => (data[cur] ? `${acc}${cur}: ${data[cur]}\n` : acc),
         '\n',
       )}`
-      logger.error(errorMsg)
       throw new Error(`error when load data: ${errorMsg}`)
     }
 

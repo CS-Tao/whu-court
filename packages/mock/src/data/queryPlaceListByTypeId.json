@@ -37,7 +37,151 @@
             "fieldReserveStatus": "1",
             "reserveTimeInfoList": [
               {
+                "canReserve": "0",
+                "isReserve": "1",
+                "reserveBeginTime": "08:00",
+                "reserveEndTime": "14:00",
+                "timeAreaVal": "0",
+                "fieldPrice": 0.0,
+                "lightPrice": 0.0,
+                "isSelfUseField": null,
+                "isStudent": null
+              },
+              {
                 "canReserve": "1",
+                "isReserve": "1",
+                "reserveBeginTime": "14:00",
+                "reserveEndTime": "18:00",
+                "timeAreaVal": "1",
+                "fieldPrice": 0.0,
+                "lightPrice": 0.0,
+                "isSelfUseField": null,
+                "isStudent": null
+              },
+              {
+                "canReserve": "1",
+                "isReserve": "1",
+                "reserveBeginTime": "18:00",
+                "reserveEndTime": "21:00",
+                "timeAreaVal": "2",
+                "fieldPrice": 7.0,
+                "lightPrice": 3.0,
+                "isSelfUseField": null,
+                "isStudent": null
+              }
+            ]
+          },
+          {
+            "fieldId": "a810b5b35cab4f79814511dbd9f473f7",
+            "fieldNum": "2",
+            "fieldCloseStatus": "0",
+            "fieldReserveStatus": "1",
+            "reserveTimeInfoList": [
+              {
+                "canReserve": "0",
+                "isReserve": "1",
+                "reserveBeginTime": "08:00",
+                "reserveEndTime": "14:00",
+                "timeAreaVal": "0",
+                "fieldPrice": 0.0,
+                "lightPrice": 0.0,
+                "isSelfUseField": null,
+                "isStudent": null
+              },
+              {
+                "canReserve": "1",
+                "isReserve": "1",
+                "reserveBeginTime": "14:00",
+                "reserveEndTime": "18:00",
+                "timeAreaVal": "1",
+                "fieldPrice": 0.0,
+                "lightPrice": 0.0,
+                "isSelfUseField": null,
+                "isStudent": null
+              },
+              {
+                "canReserve": "1",
+                "isReserve": "1",
+                "reserveBeginTime": "18:00",
+                "reserveEndTime": "21:00",
+                "timeAreaVal": "2",
+                "fieldPrice": 7.0,
+                "lightPrice": 3.0,
+                "isSelfUseField": null,
+                "isStudent": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "placeName": "卓尔体育馆（卓尔体育馆）",
+        "placeId": "0402900c3742481cb35a212f15a58673",
+        "placeUrl": "https://miniapp.whu.edu.cn/fileweb/upload/file/wdportal/20211112/22c2b9dbf91a4e87811ed75771a1fa44.png",
+        "placePrice": 7.0,
+        "bookingTimeArea": "08:00-21:00",
+        "placeStatus": "0",
+        "morningCanReserve": "1",
+        "afternoonCanReserve": "1",
+        "eveningCanReserve": "1",
+        "canReserve": "0",
+        "canReserveTime": "18",
+        "sportTypeList": [
+          {
+            "typeId": "1372606679c04412b5afbb675fd9f6cb",
+            "typeName": "羽毛球"
+          }
+        ],
+        "placeFieldInfoList": [
+          {
+            "fieldId": "a810b5b353ab4f79814511dbd9f473f7",
+            "fieldNum": "1",
+            "fieldCloseStatus": "0",
+            "fieldReserveStatus": "1",
+            "reserveTimeInfoList": [
+              {
+                "canReserve": "0",
+                "isReserve": "1",
+                "reserveBeginTime": "08:00",
+                "reserveEndTime": "14:00",
+                "timeAreaVal": "0",
+                "fieldPrice": 0.0,
+                "lightPrice": 0.0,
+                "isSelfUseField": null,
+                "isStudent": null
+              },
+              {
+                "canReserve": "1",
+                "isReserve": "1",
+                "reserveBeginTime": "14:00",
+                "reserveEndTime": "18:00",
+                "timeAreaVal": "1",
+                "fieldPrice": 0.0,
+                "lightPrice": 0.0,
+                "isSelfUseField": null,
+                "isStudent": null
+              },
+              {
+                "canReserve": "1",
+                "isReserve": "1",
+                "reserveBeginTime": "18:00",
+                "reserveEndTime": "21:00",
+                "timeAreaVal": "2",
+                "fieldPrice": 7.0,
+                "lightPrice": 3.0,
+                "isSelfUseField": null,
+                "isStudent": null
+              }
+            ]
+          },
+          {
+            "fieldId": "a810b5b35cab4f79814511dbd9f473f7",
+            "fieldNum": "2",
+            "fieldCloseStatus": "0",
+            "fieldReserveStatus": "1",
+            "reserveTimeInfoList": [
+              {
+                "canReserve": "0",
                 "isReserve": "1",
                 "reserveBeginTime": "08:00",
                 "reserveEndTime": "14:00",

@@ -93,31 +93,14 @@ export enum ConfigKey {
    * @default ['ze','xb','fy','gr','gt','yxb']
    */
   courts = 'courts',
-
   /**
-   * 卓尔场地顺序
+   * 预约的场地 id 列表
    */
-  zeOrder = 'zeOrder',
+  fields = 'fields',
   /**
-   * 信部场地顺序
+   * 备用预约的场地 id 列表
    */
-  xbOrder = 'xbOrder',
-  /**
-   * 风雨场地顺序
-   */
-  fyOrder = 'fyOrder',
-  /**
-   * 国软场地顺序
-   */
-  grOrder = 'grOrder',
-  /**
-   * 工体场地顺序
-   */
-  gtOrder = 'gtOrder',
-  /**
-   * 医学部场地顺序
-   */
-  yxbOrder = 'yxbOrder',
+  backupFields = 'backupFields',
 }
 
 export interface ConfigTypes {
@@ -144,11 +127,6 @@ export interface ConfigTypes {
   [ConfigKey.checkOpenInterval]: number
   [ConfigKey.time]: string
   [ConfigKey.courts]: string[]
-
-  [ConfigKey.zeOrder]: string[]
-  [ConfigKey.xbOrder]: string[]
-  [ConfigKey.fyOrder]: string[]
-  [ConfigKey.grOrder]: string[]
-  [ConfigKey.gtOrder]: string[]
-  [ConfigKey.yxbOrder]: string[]
+  [ConfigKey.fields]: string[]
+  [ConfigKey.backupFields]: string[]
 }

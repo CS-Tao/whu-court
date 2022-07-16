@@ -1,12 +1,10 @@
-import data from '../data/myOrder.json'
+import handler from '../data/myOrder'
 import { MockData } from '../type'
 
 const myOrder: MockData = {
   path: /\/v1.0.0\/order\/myOrder/,
   method: 'POST',
-  handler: function () {
-    return data
-  },
+  handler,
 }
 
 export default myOrder

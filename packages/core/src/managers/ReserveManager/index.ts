@@ -388,7 +388,7 @@ class ReserveManager extends BaseManager {
       for (const backupIdx in backupPromise) {
         const backupRequest = backupPromise[backupIdx]
         const res = await this.loopReverve(backupRequest)
-        const requestData = this.reserveSetting.requestDataList[backupIdx]
+        const requestData = this.reserveSetting.requestDataList[courtCount + +backupIdx]
         if (res === true) {
           successedList.push({
             placeName: requestData.placeName,

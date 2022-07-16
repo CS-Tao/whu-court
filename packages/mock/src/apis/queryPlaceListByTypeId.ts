@@ -1,12 +1,10 @@
-import data from '../data/queryPlaceListByTypeId.json'
+import handler from '../data/queryPlaceListByTypeId'
 import { MockData } from '../type'
 
 const queryPlaceListByTypeId: MockData = {
   path: '/v1.0.0/ballBooking/queryPlaceListByTypeId',
   method: 'POST',
-  handler: function () {
-    return data
-  },
+  handler,
 }
 
 export default queryPlaceListByTypeId

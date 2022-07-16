@@ -47,3 +47,17 @@ export const askCourtSid = async (): Promise<string> => {
   ])
   return answers.sid
 }
+
+export const askUserAgent = async (): Promise<string> => {
+  const answers = await inquirer.prompt<{
+    ua: string
+  }>([
+    {
+      type: 'input',
+      name: 'ua',
+      message: '请输入场馆 user agent',
+      validate: () => true,
+    },
+  ])
+  return answers.ua
+}

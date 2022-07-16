@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import chalk from 'chalk'
 import { environment } from '@whu-court/env'
-import Reporter from '@whu-court/reporter'
+import Reporter from '@whu-court/report'
 import { ErrorNoNeedReport } from './errors'
 
 interface Options {

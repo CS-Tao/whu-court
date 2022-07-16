@@ -1,7 +1,7 @@
 import { Command } from '@oclif/core'
 import chalk from 'chalk'
+import { AuthManager } from '@whu-court/core'
 import http from '@whu-court/http'
-import { AuthManager } from '@whu-court/runtime'
 
 export default class Logout extends Command {
   static description = 'Logout from court.'

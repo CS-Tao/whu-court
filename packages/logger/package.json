@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@whu-court/env": "0.0.4-beta.15",
-    "@whu-court/reporter": "0.0.4-beta.15",
+    "@whu-court/report": "0.0.4-beta.15",
     "chalk": "4.1.2"
   }
 }

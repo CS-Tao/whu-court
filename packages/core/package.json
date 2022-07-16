@@ -1,6 +1,6 @@
 {
-  "name": "@whu-court/reporter",
-  "description": "WHU-Court Data Reporter",
+  "name": "@whu-court/core",
+  "description": "WHU-Court Runtime",
   "version": "0.0.4-beta.15",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
@@ -19,15 +19,18 @@
     "access": "public"
   },
   "dependencies": {
-    "@sentry/integrations": "^7.1.1",
-    "@sentry/node": "^7.1.1",
-    "@sentry/tracing": "^7.1.1",
     "@whu-court/config-manager": "0.0.4-beta.15",
-    "@whu-court/env": "0.0.4-beta.15",
-    "address": "^1.2.0",
-    "md5": "^2.3.0"
+    "@whu-court/http": "0.0.4-beta.15",
+    "@whu-court/logger": "0.0.4-beta.15",
+    "@whu-court/mock": "0.0.4-beta.15",
+    "@whu-court/report": "0.0.4-beta.15",
+    "@whu-court/utils": "0.0.4-beta.15",
+    "axios": "^0.27.2",
+    "chalk": "4.1.2",
+    "inquirer": "^8.2.3",
+    "moment": "^2.29.3"
   },
   "devDependencies": {
-    "@types/md5": "^2.3.2"
+    "@types/inquirer": "^8.2.1"
   }
 }

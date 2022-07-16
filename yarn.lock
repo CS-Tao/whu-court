@@ -2690,12 +2690,12 @@ __metadata:
     "@types/node-notifier": ^8.0.2
     "@whu-court/auto-update": 0.0.4-beta.15
     "@whu-court/config-manager": 0.0.4-beta.15
+    "@whu-court/core": 0.0.4-beta.15
     "@whu-court/env": 0.0.4-beta.15
     "@whu-court/github-auth": 0.0.4-beta.15
     "@whu-court/http": 0.0.4-beta.15
     "@whu-court/logger": 0.0.4-beta.15
-    "@whu-court/reporter": 0.0.4-beta.15
-    "@whu-court/runtime": 0.0.4-beta.15
+    "@whu-court/report": 0.0.4-beta.15
     "@whu-court/utils": 0.0.4-beta.15
     cfonts: ^3.1.0
     chai: ^4
@@ -2731,6 +2731,24 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@whu-court/core@0.0.4-beta.15, @whu-court/core@workspace:packages/core":
+  version: 0.0.0-use.local
+  resolution: "@whu-court/core@workspace:packages/core"
+  dependencies:
+    "@types/inquirer": ^8.2.1
+    "@whu-court/config-manager": 0.0.4-beta.15
+    "@whu-court/http": 0.0.4-beta.15
+    "@whu-court/logger": 0.0.4-beta.15
+    "@whu-court/mock": 0.0.4-beta.15
+    "@whu-court/report": 0.0.4-beta.15
+    "@whu-court/utils": 0.0.4-beta.15
+    axios: ^0.27.2
+    chalk: 4.1.2
+    inquirer: ^8.2.3
+    moment: ^2.29.3
+  languageName: unknown
+  linkType: soft
+
 "@whu-court/env@0.0.4-beta.15, @whu-court/env@workspace:packages/env":
   version: 0.0.0-use.local
   resolution: "@whu-court/env@workspace:packages/env"
@@ -2746,7 +2764,7 @@ __metadata:
   dependencies:
     "@whu-court/config-manager": 0.0.4-beta.15
     "@whu-court/logger": 0.0.4-beta.15
-    "@whu-court/reporter": 0.0.4-beta.15
+    "@whu-court/report": 0.0.4-beta.15
     axios: ^0.27.2
   languageName: unknown
   linkType: soft
@@ -2756,7 +2774,9 @@ __metadata:
   resolution: "@whu-court/http@workspace:packages/http"
   dependencies:
     "@whu-court/config-manager": 0.0.4-beta.15
+    "@whu-court/env": 0.0.4-beta.15
     "@whu-court/logger": 0.0.4-beta.15
+    "@whu-court/utils": 0.0.4-beta.15
     axios: ^0.27.2
     chalk: 4.1.2
   languageName: unknown
@@ -2767,7 +2787,7 @@ __metadata:
   resolution: "@whu-court/logger@workspace:packages/logger"
   dependencies:
     "@whu-court/env": 0.0.4-beta.15
-    "@whu-court/reporter": 0.0.4-beta.15
+    "@whu-court/report": 0.0.4-beta.15
     chalk: 4.1.2
   languageName: unknown
   linkType: soft
@@ -2783,9 +2803,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@whu-court/reporter@0.0.4-beta.15, @whu-court/reporter@workspace:packages/reporter":
+"@whu-court/report@0.0.4-beta.15, @whu-court/report@workspace:packages/report":
   version: 0.0.0-use.local
-  resolution: "@whu-court/reporter@workspace:packages/reporter"
+  resolution: "@whu-court/report@workspace:packages/report"
   dependencies:
     "@sentry/integrations": ^7.1.1
     "@sentry/node": ^7.1.1
@@ -2795,24 +2815,6 @@ __metadata:
     "@whu-court/env": 0.0.4-beta.15
     address: ^1.2.0
     md5: ^2.3.0
-  languageName: unknown
-  linkType: soft
-
-"@whu-court/runtime@0.0.4-beta.15, @whu-court/runtime@workspace:packages/runtime":
-  version: 0.0.0-use.local
-  resolution: "@whu-court/runtime@workspace:packages/runtime"
-  dependencies:
-    "@types/inquirer": ^8.2.1
-    "@whu-court/config-manager": 0.0.4-beta.15
-    "@whu-court/http": 0.0.4-beta.15
-    "@whu-court/logger": 0.0.4-beta.15
-    "@whu-court/mock": 0.0.4-beta.15
-    "@whu-court/reporter": 0.0.4-beta.15
-    "@whu-court/utils": 0.0.4-beta.15
-    axios: ^0.27.2
-    chalk: 4.1.2
-    inquirer: ^8.2.3
-    moment: ^2.29.3
   languageName: unknown
   linkType: soft
 

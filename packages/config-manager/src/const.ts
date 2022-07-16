@@ -82,6 +82,11 @@ export const rules: { [key in ConfigKey]: (value: ConfigTypes[key]) => string | 
       return '预约系统 Sid 不能为空'
     }
   },
+  [ConfigKey.courtUserAgent]: (value: string) => {
+    if (!value) {
+      return '预约系统 UserAgent 不能为空'
+    }
+  },
   [ConfigKey.loginTime]: (value: number) => {
     if (!value) {
       return '登录时间不能为空'

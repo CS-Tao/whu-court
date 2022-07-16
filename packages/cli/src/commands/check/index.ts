@@ -2,8 +2,8 @@ import { Command, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import Table from 'cli-table3'
 import moment from 'moment'
+import { AuthManager } from '@whu-court/core'
 import http from '@whu-court/http'
-import { AuthManager } from '@whu-court/runtime'
 import { Loading } from '@whu-court/utils'
 
 const table = new Table({
@@ -44,6 +44,7 @@ export default class Check extends Command {
     table.push(['login time', moment(authManager.getLoginTime()).format('YYYY-MM-DD HH:mm:ss')])
     table.push(['x-outh-token', authManager.getToken(showInPlainText)])
     table.push(['x-outh-sid', authManager.getSid(showInPlainText)])
+    table.push(['user-agent', authManager.getUserAgent().slice(0, 20) + '...'])
 
     const status = await authManager.validate()
 

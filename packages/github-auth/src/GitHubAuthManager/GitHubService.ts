@@ -1,6 +1,6 @@
 import Axios, { AxiosInstance } from 'axios'
 import { Logger } from '@whu-court/logger'
-import Reporter from '@whu-court/reporter'
+import Reporter from '@whu-court/report'
 import { AppConfig, CheckIfStaredRes, GitHubUserInfoRes } from './types'
 
 const USER_NAME = 'CS-Tao'

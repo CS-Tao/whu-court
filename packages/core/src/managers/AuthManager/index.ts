@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
-import Reporter from '@whu-court/reporter'
+import Reporter from '@whu-court/report'
 import { getApiMap } from '../../apis'
 import BaseManager from '../BaseManager'
 
@@ -15,34 +15,36 @@ class AuthManager extends BaseManager {
 
   private readonly tokenConfigKey = ConfigKey.courtToken
   private readonly sidConfigKey = ConfigKey.courtSid
+  private readonly userAgentConfigKey = ConfigKey.courtUserAgent
   private readonly accountConfigKey = ConfigKey.courtAccount
   private readonly loginTimeKey = ConfigKey.loginTime
   public userInfo: UserInfo | null = null
 
-  async login(token: string, sid: string) {
-    this.userInfo = this.userInfo || (await this.getUserInfo(token, sid))
+  async login(token: string, sid: string, userAgent: string) {
+    this.userInfo = this.userInfo || (await this.getUserInfo(token, sid, userAgent))
     configManager.set(this.tokenConfigKey, token)
     configManager.set(this.sidConfigKey, sid)
-    configManager.set(this.accountConfigKey, this.userInfo.account)
+    configManager.set(this.userAgentConfigKey, userAgent)
     configManager.set(this.accountConfigKey, this.userInfo.account)
     configManager.set(this.loginTimeKey, new Date().getTime())
     return this.userInfo.account
   }
 
   async logout() {
+    const keys = [
+      (this.tokenConfigKey, this.sidConfigKey, this.userAgentConfigKey, this.accountConfigKey, this.loginTimeKey),
+    ]
     this.userInfo = null
-    configManager.delete(this.tokenConfigKey)
-    configManager.delete(this.sidConfigKey)
-    configManager.delete(this.accountConfigKey)
-    configManager.delete(this.loginTimeKey)
+    keys.forEach((key) => configManager.delete(key))
   }
 
   async validate(
     token = configManager.get(this.tokenConfigKey) as string,
     sid = configManager.get(this.sidConfigKey) as string,
+    userAgent = configManager.get(this.userAgentConfigKey) as string,
   ) {
     try {
-      this.userInfo = await this.getUserInfo(token, sid)
+      this.userInfo = await this.getUserInfo(token, sid, userAgent)
       if (this.userInfo) {
         return true
       }
@@ -59,8 +61,8 @@ class AuthManager extends BaseManager {
     return !!configManager.get(this.tokenConfigKey) && configManager.get(this.sidConfigKey)
   }
 
-  private async getUserInfo(token: string, sid: string): Promise<UserInfo> {
-    const account = await this.checkAuth(token, sid)
+  private async getUserInfo(token: string, sid: string, userAgent: string): Promise<UserInfo> {
+    const account = await this.checkAuth(token, sid, userAgent)
     if (!account) {
       throw new Error('Token 或 Sid 无效')
     }
@@ -86,6 +88,10 @@ class AuthManager extends BaseManager {
 
   public getLoginTime() {
     return configManager.get(this.loginTimeKey) as number
+  }
+
+  public getUserAgent() {
+    return configManager.get(this.userAgentConfigKey) as string
   }
 }
 

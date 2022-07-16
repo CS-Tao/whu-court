@@ -1,6 +1,6 @@
 import { Hook } from '@oclif/core'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
-import Reporter from '@whu-court/reporter'
+import Reporter from '@whu-court/report'
 
 const hook: Hook<'prerun'> = async function (opts) {
   Reporter.init({

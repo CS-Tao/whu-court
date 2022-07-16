@@ -34,14 +34,43 @@ class BaseManager {
     if (typeList.length === 0) {
       throw Error('数据异常 typeIdMap is empty')
     }
-    return typeList.find((each) => each.includes('羽毛球')) || typeList[0]
+    return this.typeIdMap[typeList.find((each) => each.includes('羽毛球')) || typeList[0]]
   }
 
   private getCourtToken() {
     return configManager.get(ConfigKey.courtToken) as string
   }
 
-  protected async checkAuth(token?: string, sid?: string): Promise<string | false> {
+  private async checkUserAgent(token?: string, sid?: string, userAgent?: string) {
+    await this.fetchTypeIdAndPlaceId()
+    const courtInPage = await this.apis.queryPlaceListByTypeId(
+      {
+        typeId: this.badmintonTypeId,
+        reserveDate: getTodayDate(),
+        uid: token || this.getCourtToken(),
+        pageSize: 4,
+        currentPage: 1,
+      },
+      {
+        timeout: 20000,
+        headers: {
+          ...(token && {
+            'x-outh-token': token,
+          }),
+          ...(sid && {
+            'x-outh-sid': sid,
+          }),
+          ...(userAgent && {
+            'User-Agent': userAgent,
+          }),
+        },
+      },
+    )
+    return !!courtInPage
+  }
+
+  protected async checkAuth(token?: string, sid?: string, userAgent?: string): Promise<string | false> {
+    if (!(await this.checkUserAgent(token, sid, userAgent))) return false
     const orderList = await this.apis.myOrder(
       {
         currentPage: 1,
@@ -88,10 +117,8 @@ class BaseManager {
   }
 
   protected async checkFirstCourtIsOpen() {
-    const typeList = Object.keys(this.typeIdMap)
     const placeList = Object.keys(this.placeIdMap)
 
-    const badmintonType = typeList.find((each) => each.includes('羽毛球')) || typeList[0]
     /**
      * 国软场地较少，数据量不大，适合轮询
      */
@@ -100,16 +127,21 @@ class BaseManager {
 
     let courtInfo: null | ResponseData.QueryPlaceListByTypeIdData['pageData'][number] = null
 
-    for (const court in [grCourt, otherCourts]) {
+    const courts = [grCourt, ...otherCourts]
+    for (const idx in courts) {
+      const court = this.placeIdMap[courts[idx]]
       courtInfo = (
-        await this.apis.queryPlaceListByTypeId({
-          typeId: this.typeIdMap[badmintonType],
-          reserveDate: getTomorrowDate(),
-          uid: this.config.token,
-          placeId: court,
-          currentPage: 1,
-          pageSize: 5,
-        })
+        await this.apis.queryPlaceListByTypeId(
+          {
+            typeId: this.badmintonTypeId,
+            reserveDate: getTomorrowDate(),
+            uid: this.config.token,
+            placeId: court,
+            currentPage: 1,
+            pageSize: 5,
+          },
+          { timeout: 20000 },
+        )
       ).pageData[0]
 
       // 未闭馆
@@ -130,15 +162,16 @@ class BaseManager {
   }
 
   protected async getCourtListByPage(page: number): Promise<CourtList> {
-    const typeList = Object.keys(this.typeIdMap)
-    const badmintonType = typeList.find((each) => each.includes('羽毛球')) || typeList[0]
-    const courtInPage = await this.apis.queryPlaceListByTypeId({
-      typeId: badmintonType,
-      reserveDate: getTodayDate(),
-      uid: this.config.token,
-      pageSize: 4,
-      currentPage: page,
-    })
+    const courtInPage = await this.apis.queryPlaceListByTypeId(
+      {
+        typeId: this.badmintonTypeId,
+        reserveDate: getTodayDate(),
+        uid: this.config.token,
+        pageSize: 4,
+        currentPage: page,
+      },
+      { timeout: 20000 },
+    )
     return courtInPage.pageData.map((court) => {
       return {
         name: court.placeName,

@@ -20,4 +20,5 @@ oclif
   .catch((error) => {
     const logger = require('@whu-court/logger').default
     logger.error(error)
+    process.exit(1)
   })

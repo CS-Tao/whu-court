@@ -4,8 +4,8 @@ import moment from 'moment'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
 import http from '@whu-court/http'
 import logger from '@whu-court/logger'
-import Reporter from '@whu-court/reporter'
-import { Loading, Notify, getCurrentTime, getTomorrowDate, sleep } from '@whu-court/utils'
+import Reporter from '@whu-court/report'
+import { Loading, Notify, getCurrentTime, getTodayDate, getTomorrowDate, sleep } from '@whu-court/utils'
 import { getApiMap } from '../../apis'
 import { CourtDetail, ReserveSetting } from '../../types'
 import AuthManager from '../AuthManager'
@@ -14,6 +14,7 @@ import BaseManager from '../BaseManager'
 const ONE_MINITE = 60 * 1000
 const FOUR_MINITES = 4 * ONE_MINITE
 const TEN_MINITES = 10 * ONE_MINITE
+const TEN_SECONDS = 10 * 1000
 
 const formatCountdown = (until: number) => {
   const h = moment.duration(until - moment().valueOf()).hours()
@@ -22,16 +23,19 @@ const formatCountdown = (until: number) => {
   return (h > 9 ? h : `0${h}`) + ':' + (m > 9 ? m : `0${m}`) + ':' + (s > 9 ? s : `0${s}`)
 }
 
+type FailedList = Array<{ placeName: string; fieldNum: string; error: string }>
+type SuccessedList = Array<{ placeName: string; fieldNum: string }>
+
 export interface ReserveManagerOptions {
   autoConfirm?: boolean
-  courtIds?: string[]
-  backupCourtIds?: string[]
-  reserveTime?: string
+  openTime?: string | 'now'
+  reserveToday?: boolean
 }
 
 class ReserveManager extends BaseManager {
   constructor(private options: ReserveManagerOptions) {
     super(http, getApiMap(http))
+    this.config.openTime = options.openTime || this.config.openTime
   }
 
   /**
@@ -50,11 +54,14 @@ class ReserveManager extends BaseManager {
     // 生成预约请求数据
     await this.generateReserveSetting()
 
-    // 检查当前时间是否可以启动应用。因为需要输入微信登录码，有效期只有 5 分钟，所以只能在开放前四分钟启动
+    // 检查当前时间是否可以启动应用。因为需要输入微信登录码，有效期只有 5 分钟，所以只能在开放前 4 分钟启动
     if (!(await this.checkCanRun())) return
 
     // 提示用户输入微信登录码
     await this.promptWxCodes()
+
+    // 等待接近场馆开放时间
+    await this.waitOpen()
 
     // 检查场馆是否开放
     await this.checkOpen()
@@ -99,7 +106,7 @@ class ReserveManager extends BaseManager {
         {
           type: 'checkbox',
           name: 'filedIds',
-          message: '选择场地',
+          message: '选择场地(最多两个)',
           default: this.config.fields,
           choices: court.fields.map((field) => ({
             name:
@@ -111,6 +118,9 @@ class ReserveManager extends BaseManager {
           })),
         },
       ])
+      if (filedIds.length > 2) {
+        throw new Error('最多只能选择两个场地')
+      }
       this.config.fields = filedIds
       configManager.set(ConfigKey.fields, filedIds)
 
@@ -132,12 +142,15 @@ class ReserveManager extends BaseManager {
             {
               type: 'checkbox',
               name: 'backupFieldIds',
-              message: '选择备用场地',
-              default: this.config.backupFields,
+              message: '选择备用场地(最多两个)',
+              default: this.config.backupFields.filter((each) => !filedIds.includes(each)),
               choices: backupFieldChoices,
             },
           ])
         ).backupFieldIds
+      }
+      if (backupFieldIds.length > 2) {
+        throw new Error('最多只能选择两个场地')
       }
       this.config.backupFields = backupFieldIds
       configManager.set(ConfigKey.backupFields, backupFieldIds)
@@ -181,7 +194,7 @@ class ReserveManager extends BaseManager {
         requestDataList: allFields.map((field) => {
           const fieldDetail = fieldDetailMap[field.id]
           return {
-            appointmentDate: getTomorrowDate(),
+            appointmentDate: this.options.reserveToday ? getTodayDate() : getTomorrowDate(),
             creatorId: this.config.token,
             placeType: 1,
             period: this.config.reserveTime,
@@ -210,7 +223,7 @@ class ReserveManager extends BaseManager {
       const { code } = await inquirer.prompt({
         type: 'input',
         name: 'code',
-        message: `请输入场地 ${requestData.fieldNum} 的微信登录码`,
+        message: `请输入 ${requestData.fieldNum} 的微信登录码`,
       })
       if (!code) throw Error('登录码不能为空')
       if (codes.includes(code)) throw Error('登录码重复')
@@ -219,6 +232,7 @@ class ReserveManager extends BaseManager {
   }
 
   private async checkCanRun(): Promise<boolean> {
+    if (this.config.openTime === 'now') return true
     const openTimeMs = moment(this.config.openTime, 'HH:mm:ss').valueOf()
     const nowMs = moment().valueOf()
     const diffMs = openTimeMs - nowMs
@@ -235,15 +249,15 @@ class ReserveManager extends BaseManager {
     if (!wait) {
       return false
     }
-    await this.countdown(openTimeMs - FOUR_MINITES)
+    await this.countdown(openTimeMs - FOUR_MINITES, '等待倒计时完成')
     Notify.notify('提示', '倒计时完成，请继续')
     return true
   }
 
-  private async countdown(until: number) {
+  private async countdown(until: number, label: string) {
     return new Promise<void>((resolve) => {
       const formatLoadingText = () =>
-        chalk.blue('等待倒计时完成 ' + formatCountdown(until) + chalk.gray(' (Type `Ctrl/⌘ + C` to exit)'))
+        chalk.blue(label + ' ' + formatCountdown(until) + chalk.gray(' (Type `Ctrl/⌘ + C` to exit)'))
       const loading = new Loading(formatLoadingText()).start()
       setInterval(() => {
         const nowMs = moment().valueOf()
@@ -277,7 +291,18 @@ class ReserveManager extends BaseManager {
     return true
   }
 
+  private async waitOpen() {
+    if (this.config.openTime === 'now') return
+    const openTimeMs = moment(this.config.openTime, 'HH:mm:ss').valueOf()
+    const nowMs = moment().valueOf()
+    const diffMs = openTimeMs - nowMs
+    if (diffMs > TEN_SECONDS) {
+      await this.countdown(openTimeMs - TEN_SECONDS, '等待场馆开放(提前 10 秒开始准备预约)')
+    }
+  }
+
   private async checkOpen() {
+    if (this.config.openTime === 'now') return
     const loading = new Loading(`等待场馆后台开放，检查第 ${chalk.green(1)} 次`).start()
 
     const errors = []
@@ -333,11 +358,11 @@ class ReserveManager extends BaseManager {
 
   private async reserve() {
     const courtCount = this.reserveSetting.minRequests
-    const promises = this.reserveSetting.requestDataList.slice(0, courtCount).map(this.reserveField)
-    const backupCount = this.reserveSetting.requestDataList.length - courtCount
-    const failedList: Array<{ placeName: string; fieldNum: string; error: string }> = []
-    const successedList: Array<{ placeName: string; fieldNum: string }> = []
-    promises.forEach(async (request, idx) => {
+    const promises = this.reserveSetting.requestDataList.slice(0, courtCount).map((each) => this.reserveField(each))
+    const failedList: FailedList = []
+    const successedList: SuccessedList = []
+    for (const idx in promises) {
+      const request = promises[idx]
       const res = await this.loopReverve(request)
       const requestData = this.reserveSetting.requestDataList[idx]
       if (res === true) {
@@ -352,13 +377,14 @@ class ReserveManager extends BaseManager {
           error: res,
         })
       }
-    })
-    if (failedList.length > 0 && backupCount > 0) {
+    }
+    if (failedList.length > 0 && this.reserveSetting.requestDataList.length > courtCount) {
       logger.info(chalk.yellow(`有 ${failedList.length} 个场馆预约失败，尝试预约备用场地`))
       const backupPromise = this.reserveSetting.requestDataList
-        .slice(courtCount, courtCount + Math.min(courtCount + backupCount))
+        .slice(courtCount, courtCount + failedList.length)
         .map(this.reserveField)
-      backupPromise.forEach(async (backupRequest, backupIdx) => {
+      for (const backupIdx in backupPromise) {
+        const backupRequest = backupPromise[backupIdx]
         const res = await this.loopReverve(backupRequest)
         const requestData = this.reserveSetting.requestDataList[backupIdx]
         if (res === true) {
@@ -373,23 +399,10 @@ class ReserveManager extends BaseManager {
             error: res,
           })
         }
-      })
+      }
     }
 
-    if (failedList.length > 0) {
-      this.notifyFailedReserved(
-        failedList[0].placeName,
-        failedList.map((each) => each.fieldNum),
-        failedList.map((each) => each.error),
-      )
-    }
-
-    if (successedList.length > 0) {
-      this.notifySuccessReserved(
-        successedList[0].placeName,
-        successedList.map((each) => each.fieldNum),
-      )
-    }
+    this.notifyResult(successedList, failedList)
   }
 
   private async loopReverve(request: Promise<{ status: 1 | unknown }>, tryTimes = 3): Promise<string | true> {
@@ -415,12 +428,34 @@ class ReserveManager extends BaseManager {
     }
   }
 
+  private notifyResult(successedList: SuccessedList, failedList: FailedList) {
+    if (failedList.length > 0) {
+      this.notifyFailedReserved(
+        failedList[0].placeName,
+        failedList.map((each) => each.fieldNum),
+        failedList.map((each) => each.error),
+      )
+    }
+
+    if (successedList.length > 0) {
+      this.notifySuccessReserved(
+        successedList[0].placeName,
+        successedList.map((each) => each.fieldNum),
+      )
+    }
+
+    Notify.notify(
+      '预约结果',
+      `${successedList.length} 个场馆预约成功` + (failedList.length ? `，${failedList.length} 个场馆预约失败` : ''),
+    )
+  }
+
   private notifySuccessReserved(name: string, fieldNums: string[]) {
-    logger.info(chalk.green(`🎉 ${name}-${fieldNums.join(',')} 号场地预约成功`))
+    logger.info(chalk.green(`🎉 ${name} ${fieldNums.join(',')} 预约成功`))
   }
 
   private notifyFailedReserved(name: string, fieldNums: string[], errors: string[]) {
-    logger.info(chalk.red(`❌ ${name}-${fieldNums.join(',')} 号场地预约失败`), '\n', chalk.gray(errors.join('\n')))
+    logger.info(chalk.red(`❌ ${name} ${fieldNums.join(',')} 预约失败`), '\n', chalk.gray(errors.join('\n')))
   }
 }
 

@@ -1,23 +1,38 @@
 import Axios from 'axios'
 import chalk from 'chalk'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
+import { environment } from '@whu-court/env'
 import logger from '@whu-court/logger'
+import { enterCourtApp } from './helper'
 import { ServerData } from './types'
+
+const checkUserByAppAuthApiMap: Record<string, boolean> = {}
 
 const commonHeaders = {
   Host: 'miniapp.whu.edu.cn',
   Connection: 'keep-alive',
   'content-type': 'application/json',
   'Accept-Encoding': 'gzip,compress,br,deflate',
-  'User-Agent':
-    'Mozilla/5.0 (iPhone; CPU iPhone OS 15_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.22(0x18001627) NetType/WIFI Language/zh_CN',
+  'User-Agent': configManager.get(ConfigKey.courtUserAgent) as string,
   Referer: 'https://servicewechat.com/wx20499591d49cdb5c/53/page-frame.html',
+}
+
+let proxyConfig: { proxy: { host: string; port: number } } | null = null
+
+if (environment === 'local' && process.env.court_proxy) {
+  proxyConfig = {
+    proxy: {
+      host: process.env.court_proxy.split(':')[0],
+      port: +process.env.court_proxy.split(':')[1],
+    },
+  }
 }
 
 const http = Axios.create({
   baseURL: 'https://miniapp.whu.edu.cn/wisdomapi',
-  timeout: 5000,
+  timeout: 10000,
   headers: commonHeaders,
+  ...proxyConfig,
 })
 
 http.interceptors.request.use((config) => {
@@ -25,40 +40,41 @@ http.interceptors.request.use((config) => {
   config.headers = config.headers || {}
   const token = config.headers['x-outh-token'] || (configManager.get(ConfigKey.courtToken) as string)
   const sid = config.headers['x-outh-sid'] || (configManager.get(ConfigKey.courtSid) as string)
-  config.headers.token = config.headers.token || ''
   if (!token || !sid) {
     throw new Error('请先登录')
   }
+  config.headers.token = config.headers.token || ''
+  config.headers['x-outh-token'] = token
+  config.headers['x-outh-sid'] = sid
+  // console.log('request', config.url, config.headers, config.data)
   return config
 })
 
 http.interceptors.response.use(
-  (response) => {
+  async (response) => {
     if (!response.data) return response
 
     const url = response.config.url
     const data = response.data as ServerData
     const rawData = data.data
-    const code = data.errcode
 
-    // { code: '9999', desc: '登录凭证已过期，请重新登录' }
-    if (code === '9999' && response.data.desc.include('过期')) {
-      // TODO: relogin
+    // 重新模拟进入应用
+    if (data.errmsg?.includes('系统繁忙') && url && !checkUserByAppAuthApiMap[url]) {
+      await enterCourtApp(http)
+      checkUserByAppAuthApiMap[url] = true
+      return await http(response.config)
+    }
+    if (url) {
+      checkUserByAppAuthApiMap[url] = false
     }
 
     if (response.data.errcode !== 0) {
-      const dataKeysForErrorInfo: Array<Partial<keyof ServerData>> = [
-        'errmsg',
-        'desc',
-        'errmsg',
-        'detailErrMsg',
-        'hint',
-      ]
+      const dataKeysForErrorInfo: Array<Partial<keyof ServerData>> = ['errmsg', 'desc', 'detailErrMsg', 'hint']
       const errorMsg = `url: ${url}${dataKeysForErrorInfo.reduce(
         (acc, cur) => (data[cur] ? `${acc}${cur}: ${data[cur]}\n` : acc),
         '\n',
       )}`
-      throw new Error(`error when load data: ${errorMsg}`)
+      throw new Error(`error when load data\n${errorMsg}`)
     }
 
     if (data.hint && typeof data.hint === 'string') {

@@ -63,6 +63,10 @@ export enum ConfigKey {
    */
   courtSid = 'courtSid',
   /**
+   * 预约系统 UA
+   */
+  courtUserAgent = 'courtUserAgent',
+  /**
    * 登录时间
    */
   loginTime = 'loginTime',
@@ -121,6 +125,7 @@ export interface ConfigTypes {
   [ConfigKey.courtAccount]: string
   [ConfigKey.courtToken]: string
   [ConfigKey.courtSid]: string
+  [ConfigKey.courtUserAgent]: string
   [ConfigKey.loginTime]: number
 
   [ConfigKey.openTime]: string

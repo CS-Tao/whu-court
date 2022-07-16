@@ -3,7 +3,7 @@ import open from 'open'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
 import envs from '@whu-court/env'
 import logger from '@whu-court/logger'
-import Reporter from '@whu-court/reporter'
+import Reporter from '@whu-court/report'
 
 const FEEDBACK_URL = 'https://github.com/CS-Tao/whu-court/discussions/18'
 

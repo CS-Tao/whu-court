@@ -1,4 +1,5 @@
 import { Command, Flags } from '@oclif/core'
+import chalk from 'chalk'
 import { ReserveManager } from '@whu-court/core'
 import logger from '@whu-court/logger'
 
@@ -32,6 +33,10 @@ export default class Run extends Command {
     if (openTime && !/\d{2}:\d{2}:\d{2}/.test(openTime) && openTime !== 'now') {
       return logger.error(`🙅‍ open-time(${openTime}) 格式错误，应为 "HH:mm:ss" or "now"`)
     }
+
+    autoConfirm && logger.info(chalk.gray('[INFO] ') + '--yes ' + chalk.green('true'))
+    openTime && logger.info(chalk.gray('[INFO] ') + '--open-time ' + chalk.green(`${openTime}`))
+    reserveToday && logger.info(chalk.gray('[INFO] ') + '--today ' + chalk.green('true'))
 
     await new ReserveManager({ autoConfirm, openTime, reserveToday }).run()
   }

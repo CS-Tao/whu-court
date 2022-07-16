@@ -257,11 +257,13 @@ class ReserveManager extends BaseManager {
   private async countdown(until: number, label: string) {
     return new Promise<void>((resolve) => {
       const formatLoadingText = () =>
-        chalk.blue(label + ' ' + formatCountdown(until) + chalk.gray(' (Type `Ctrl/⌘ + C` to exit)'))
+        label + ' ' + chalk.yellow(formatCountdown(until)) + chalk.gray(' (Type `Ctrl/⌘ + C` to exit)')
       const loading = new Loading(formatLoadingText()).start()
-      setInterval(() => {
+      const timer = setInterval(() => {
         const nowMs = moment().valueOf()
         if (until - nowMs <= 0) {
+          loading.succeed(label + chalk.green(' 倒计时完成'))
+          clearInterval(timer)
           resolve()
         }
         loading.setText(formatLoadingText())
@@ -382,7 +384,7 @@ class ReserveManager extends BaseManager {
       logger.info(chalk.yellow(`有 ${failedList.length} 个场馆预约失败，尝试预约备用场地`))
       const backupPromise = this.reserveSetting.requestDataList
         .slice(courtCount, courtCount + failedList.length)
-        .map(this.reserveField)
+        .map((each) => this.reserveField(each))
       for (const backupIdx in backupPromise) {
         const backupRequest = backupPromise[backupIdx]
         const res = await this.loopReverve(backupRequest)
@@ -451,11 +453,14 @@ class ReserveManager extends BaseManager {
   }
 
   private notifySuccessReserved(name: string, fieldNums: string[]) {
-    logger.info(chalk.green(`🎉 ${name} ${fieldNums.join(',')} 预约成功`))
+    logger.info(chalk.green(`🎉 ${name.replace('（', '(').replace('）', ')')} ${fieldNums.join(',')} 预约成功`))
   }
 
   private notifyFailedReserved(name: string, fieldNums: string[], errors: string[]) {
-    logger.info(chalk.red(`❌ ${name} ${fieldNums.join(',')} 预约失败`), '\n', chalk.gray(errors.join('\n')))
+    logger.info(
+      chalk.red(`❗️ ${name.replace('（', '(').replace('）', ')')} ${fieldNums.join(',')} 预约失败`),
+      `\n详细错误信息：\n${chalk.gray(errors.join('\n'))}`,
+    )
   }
 }
 

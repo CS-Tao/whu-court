@@ -179,21 +179,23 @@ class BaseManager {
         placeUrl: court.placeUrl,
         placeAddress: court.placeName,
         isOpen: court.placeStatus === '0',
-        fields: court.placeFieldInfoList.map((field) => {
-          return {
-            name: `${field.fieldNum} 号场`,
-            id: field.fieldId,
-            number: field.fieldNum,
-            isOpen: field.fieldCloseStatus === '0',
-            reserveTimeList: field.reserveTimeInfoList.map((time) => {
-              return {
-                reserveBeginTime: time.reserveBeginTime,
-                reserveEndTime: time.reserveEndTime,
-                canReserve: time.canReserve === '0',
-              }
-            }),
-          }
-        }),
+        fields: court.placeFieldInfoList
+          .map((field) => {
+            return {
+              name: `${field.fieldNum} 号场`,
+              id: field.fieldId,
+              number: field.fieldNum,
+              isOpen: field.fieldCloseStatus === '0',
+              reserveTimeList: field.reserveTimeInfoList.map((time) => {
+                return {
+                  reserveBeginTime: time.reserveBeginTime,
+                  reserveEndTime: time.reserveEndTime,
+                  canReserve: time.canReserve === '0',
+                }
+              }),
+            }
+          })
+          .sort(),
       }
     })
   }

@@ -1,7 +1,7 @@
 {
   "name": "@whu-court/report",
   "description": "WHU-Court Data Reporter",
-  "version": "0.0.4-beta.16",
+  "version": "0.0.4",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,8 +22,8 @@
     "@sentry/integrations": "^7.1.1",
     "@sentry/node": "^7.1.1",
     "@sentry/tracing": "^7.1.1",
-    "@whu-court/config-manager": "0.0.4-beta.16",
-    "@whu-court/env": "0.0.4-beta.16",
+    "@whu-court/config-manager": "0.0.4",
+    "@whu-court/env": "0.0.4",
     "address": "^1.2.0",
     "md5": "^2.3.0"
   },

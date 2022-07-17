@@ -120,14 +120,14 @@ class BaseManager {
     const placeList = Object.keys(this.placeIdMap)
 
     /**
-     * 国软场地较少，数据量不大，适合轮询
+     * 风雨场地较少，数据量不大，适合轮询
      */
-    const grCourt = placeList.filter((each) => each.includes('星湖体育馆'))[0] || placeList[0]
-    const otherCourts = placeList.filter((each) => each !== grCourt && !each.includes('宋卿'))
+    const fyCourt = placeList.filter((each) => each.includes('风雨体育馆'))[0] || placeList[0]
+    const otherCourts = placeList.filter((each) => each !== fyCourt && !each.includes('宋卿'))
 
     let courtInfo: null | ResponseData.QueryPlaceListByTypeIdData['pageData'][number] = null
 
-    const courts = [grCourt, ...otherCourts]
+    const courts = [fyCourt, ...otherCourts]
     for (const idx in courts) {
       const court = this.placeIdMap[courts[idx]]
       courtInfo = (

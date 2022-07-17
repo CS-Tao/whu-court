@@ -14,7 +14,7 @@ import BaseManager from '../BaseManager'
 const ONE_MINITE = 60 * 1000
 const FOUR_MINITES = 4 * ONE_MINITE
 const TEN_MINITES = 10 * ONE_MINITE
-const TEN_SECONDS = 10 * 1000
+const FIVE_SECONDS = 10 * 1000
 
 const formatCountdown = (until: number) => {
   const h = moment.duration(until - moment().valueOf()).hours()
@@ -54,10 +54,10 @@ class ReserveManager extends BaseManager {
     // 生成预约请求数据
     await this.generateReserveSetting()
 
-    // 检查当前时间是否可以启动应用。因为需要输入微信登录码，有效期只有 5 分钟，所以只能在开放前 4 分钟启动
+    // 检查当前时间是否可以启动应用。因为需要输入登录码，有效期只有 5 分钟，所以只能在开放前 4 分钟启动
     if (!(await this.checkCanRun())) return
 
-    // 提示用户输入微信登录码
+    // 提示用户输入登录码
     await this.promptWxCodes()
 
     // 等待接近场馆开放时间
@@ -221,10 +221,10 @@ class ReserveManager extends BaseManager {
       const { code } = await inquirer.prompt({
         type: 'input',
         name: 'code',
-        message: `请输入 ${requestData.fieldNum} 的微信登录码`,
+        message: `请输入 ${requestData.fieldNum} 的登录码`,
       })
       if (!code) throw Error('登录码不能为空')
-      if (codes.includes(code)) throw Error('登录码重复')
+      if (codes.includes(code)) throw Error('登录码不能重复')
       this.reserveSetting.requestDataList[idx].code = code
     }
   }
@@ -253,8 +253,8 @@ class ReserveManager extends BaseManager {
     if (!wait) {
       return false
     }
-    await this.countdown(openTimeMs - FOUR_MINITES, '等待倒计时完成，完成后需要输入具有失效时间的微信登录码')
-    Notify.notify('提示', '倒计时完成，请生成并输入微信登录码')
+    await this.countdown(openTimeMs - FOUR_MINITES, '等待倒计时完成，完成后需要输入具有时效性登录码')
+    Notify.notify('提示', '倒计时完成，请生成并输入登录码')
     return true
   }
 
@@ -302,8 +302,8 @@ class ReserveManager extends BaseManager {
     const openTimeMs = moment(this.config.openTime, 'HH:mm:ss').valueOf()
     const nowMs = moment().valueOf()
     const diffMs = openTimeMs - nowMs
-    if (diffMs > TEN_SECONDS) {
-      await this.countdown(openTimeMs - TEN_SECONDS, '等待场馆开放(提前 10 秒开始准备预约)')
+    if (diffMs > FIVE_SECONDS) {
+      await this.countdown(openTimeMs - FIVE_SECONDS, '等待场馆开放(提前 5 秒开始准备预约)')
     }
   }
 
@@ -326,7 +326,9 @@ class ReserveManager extends BaseManager {
         isOpen = await this.checkFirstCourtIsOpen()
         checkTimes++
         isOpen
-          ? loading.succeed('场馆后台已开放，当前时间是 ' + chalk.gray(getCurrentTime(true)))
+          ? loading.succeed(
+              `场馆后台已开放，共检查了 ${chalk.green(checkTimes)} 次。当前时间是 ` + chalk.gray(getCurrentTime(true)),
+            )
           : loading.setText(`等待场馆后台开放，检查第 ${chalk.green(checkTimes)} 次`)
       } catch (error) {
         if (error instanceof Error) {
@@ -365,13 +367,15 @@ class ReserveManager extends BaseManager {
 
   private async reserve() {
     const courtCount = this.reserveSetting.minRequests
-    const promises = this.reserveSetting.requestDataList.slice(0, courtCount).map((each) => this.reserveField(each))
+    const promises = this.reserveSetting.requestDataList
+      .slice(0, courtCount)
+      .map((each) => this.loopReverve(this.reserveField(each), 3, each.fieldNum))
     const failedList: FailedList = []
     const successedList: SuccessedList = []
     for (const idx in promises) {
       const request = promises[idx]
       const requestData = this.reserveSetting.requestDataList[idx]
-      const res = await this.loopReverve(request, 3, requestData.fieldNum)
+      const res = await request
       if (res === true) {
         successedList.push({
           placeName: requestData.placeName,
@@ -386,14 +390,14 @@ class ReserveManager extends BaseManager {
       }
     }
     if (failedList.length > 0 && this.reserveSetting.requestDataList.length > courtCount) {
-      logger.info(chalk.yellow(`有 ${failedList.length} 个场馆预约失败，尝试预约备用场地`))
+      logger.info(chalk.yellow(`有 ${failedList.length} 个场地预约失败，尝试预约备用场地`))
       const backupPromise = this.reserveSetting.requestDataList
         .slice(courtCount, courtCount + failedList.length)
-        .map((each) => this.reserveField(each))
+        .map((each) => this.loopReverve(this.reserveField(each), 3, each.fieldNum))
       for (const backupIdx in backupPromise) {
         const backupRequest = backupPromise[backupIdx]
         const requestData = this.reserveSetting.requestDataList[courtCount + +backupIdx]
-        const res = await this.loopReverve(backupRequest, 3, requestData.fieldNum)
+        const res = await backupRequest
         if (res === true) {
           successedList.push({
             placeName: requestData.placeName,

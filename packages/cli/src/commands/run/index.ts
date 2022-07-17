@@ -1,13 +1,12 @@
 import { Command, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { ReserveManager } from '@whu-court/core'
-import { environment } from '@whu-court/env'
 import logger from '@whu-court/logger'
 
 export default class Run extends Command {
   static description = 'Run app to reserve.'
 
-  static examples = ['$ wcr run -y']
+  static examples = ['$ wcr run', '$ wcr run -y']
 
   static flags = {
     yes: Flags.boolean({ char: 'y', description: 'Use default config and do not prompt', required: false }),
@@ -35,11 +34,9 @@ export default class Run extends Command {
       return logger.error(`🙅‍ open-time(${openTime}) 格式错误，应为 "HH:mm:ss" or "now"`)
     }
 
-    if (environment === 'local') {
-      autoConfirm && logger.info(chalk.gray('[INFO] ') + '--yes ' + chalk.green('true'))
-      openTime && logger.info(chalk.gray('[INFO] ') + '--open-time ' + chalk.green(`${openTime}`))
-      reserveToday && logger.info(chalk.gray('[INFO] ') + '--today ' + chalk.green('true'))
-    }
+    autoConfirm && logger.debug(chalk.gray('[INFO] ') + '--yes ' + chalk.green('true'))
+    openTime && logger.debug(chalk.gray('[INFO] ') + '--open-time ' + chalk.green(`${openTime}`))
+    reserveToday && logger.debug(chalk.gray('[INFO] ') + '--today ' + chalk.green('true'))
 
     await new ReserveManager({ autoConfirm, openTime, reserveToday }).run()
   }

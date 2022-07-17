@@ -2776,6 +2776,7 @@ __metadata:
     "@whu-court/config-manager": 0.0.4
     "@whu-court/env": 0.0.4
     "@whu-court/logger": 0.0.4
+    "@whu-court/report": 0.0.4
     "@whu-court/utils": 0.0.4
     axios: ^0.27.2
     chalk: 4.1.2

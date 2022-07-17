@@ -12,7 +12,6 @@
   "types": "dist/index.d.ts",
   "repository": "CS-Tao/whu-court",
   "files": [
-    "assets",
     "bin",
     "dist",
     "!dist/**/*.map",

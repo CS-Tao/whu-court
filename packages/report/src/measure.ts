@@ -46,6 +46,7 @@ class Measure {
   end() {
     if (environment === 'local') {
       this.debugDuration &&
+        process.env.DEBUG &&
         // eslint-disable-next-line no-console
         console.debug(
           chalk.gray('[REPORTER]'),

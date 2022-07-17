@@ -12,6 +12,7 @@
     "prepack": "yarn build"
   },
   "files": [
+    "assets",
     "dist",
     "!dist/**/*.map"
   ],

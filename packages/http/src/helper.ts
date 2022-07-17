@@ -5,6 +5,7 @@ import { sleep } from '@whu-court/utils'
 const enterCourtAppWaitTime = 400
 
 export const enterCourtApp = async (http: AxiosInstance): Promise<void> => {
+  await sleep(enterCourtAppWaitTime)
   await http.post(
     '/v1.0.0/application/checkUserByAppAuth',
     'url=%2FpackageB%2Fpages%2Fhome%2Findex&jump=%2FpackageB%2Fpages%2Fhome%2Findex&platform=',

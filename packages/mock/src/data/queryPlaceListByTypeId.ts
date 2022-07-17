@@ -18,7 +18,7 @@ export default () => ({
           'https://miniapp.whu.edu.cn/fileweb/upload/file/wdportal/20211112/c3e5777ee3c6412ba7d4a1fab7920a4e.png',
         placePrice: 5.0,
         bookingTimeArea: '08:00-21:00',
-        placeStatus: '0',
+        placeStatus: Math.round(Math.random()).toString(),
         morningCanReserve: '0',
         afternoonCanReserve: '1',
         eveningCanReserve: '1',

@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
 import { mockAxios } from '@whu-court/mock'
-import { Loading, getTodayDate, getTomorrowDate } from '@whu-court/utils'
+import { Loading, formatBracket, getTodayDate, getTomorrowDate } from '@whu-court/utils'
 import { API_MAP, Config, CourtDetail, CourtList, CourtType, RequestData, ResponseData } from '../../types'
 
 class BaseManager {
@@ -161,11 +161,11 @@ class BaseManager {
     return canReserve
   }
 
-  protected async getCourtListByPage(page: number): Promise<CourtList> {
+  protected async getCourtListByPage(page: number, reserveDate: string): Promise<CourtList> {
     const courtInPage = await this.apis.queryPlaceListByTypeId(
       {
         typeId: this.badmintonTypeId,
-        reserveDate: getTodayDate(),
+        reserveDate,
         uid: this.config.token,
         pageSize: 4,
         currentPage: page,
@@ -174,10 +174,10 @@ class BaseManager {
     )
     return courtInPage.pageData.map((court) => {
       return {
-        name: court.placeName,
+        name: formatBracket(court.placeName),
         id: court.placeId,
         placeUrl: court.placeUrl,
-        placeAddress: court.placeName,
+        placeAddress: formatBracket(court.placeName),
         isOpen: court.placeStatus === '0',
         fields: court.placeFieldInfoList
           .map((field) => {
@@ -200,10 +200,12 @@ class BaseManager {
     })
   }
 
-  protected async getCourtList(): Promise<CourtList> {
-    const firstPageData = await this.getCourtListByPage(1)
+  protected async getCourtList(reserveDate: string): Promise<CourtList> {
+    const firstPageData = await this.getCourtListByPage(1, reserveDate)
     const firstPageIds = firstPageData.map((court) => court.id)
-    const secondPageData = (await this.getCourtListByPage(2)).filter((each) => !firstPageIds.includes(each.id))
+    const secondPageData = (await this.getCourtListByPage(2, reserveDate)).filter(
+      (each) => !firstPageIds.includes(each.id),
+    )
     return [...firstPageData, ...secondPageData]
   }
 

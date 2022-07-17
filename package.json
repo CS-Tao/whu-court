@@ -1,6 +1,5 @@
 {
   "name": "whu-court",
-  "version": "0.0.4-beta.0",
   "private": true,
   "scripts": {
     "a": "git add -A && git commit --no-edit",

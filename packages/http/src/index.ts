@@ -1,8 +1,9 @@
 import Axios from 'axios'
 import chalk from 'chalk'
+import { URL } from 'url'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
-import { environment } from '@whu-court/env'
 import logger from '@whu-court/logger'
+import Reporter from '@whu-court/report'
 import { enterCourtApp } from './helper'
 import { ServerData } from './types'
 
@@ -19,12 +20,21 @@ const commonHeaders = {
 
 let proxyConfig: { proxy: { host: string; port: number } } | null = null
 
-if (environment === 'local' && process.env.court_proxy) {
-  proxyConfig = {
-    proxy: {
-      host: process.env.court_proxy.split(':')[0],
-      port: +process.env.court_proxy.split(':')[1],
-    },
+if (process.env.https_proxy) {
+  try {
+    const httpsProxy = new URL(process.env.https_proxy)
+    proxyConfig = {
+      proxy: {
+        host: httpsProxy.hostname,
+        port: +httpsProxy.port,
+      },
+    }
+    logger.info(chalk.gray('[HTTPS PROXY]'), 'use', chalk.yellow(`https://${httpsProxy.hostname}:${+httpsProxy.port}`))
+  } catch (error) {
+    if (error instanceof Error) {
+      Reporter.report(error)
+    }
+    logger.log(chalk.gray('[HTTPS PROXY]'), chalk.red('invalid https_proxy: ' + process.env.https_proxy))
   }
 }
 

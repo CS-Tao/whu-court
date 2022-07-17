@@ -14,7 +14,7 @@ export const mockAxios = (axios: AxiosInstance) => {
 
   process.env.NODE_ENV !== 'development' &&
     logger.warn(chalk.gray('[MOCK]'), chalk.yellow(`Mock axios enabled for ${apis.length} apis`))
-  const mock = new MockAdapter(axios, { delayResponse: 2000 })
+  const mock = new MockAdapter(axios, { delayResponse: 200 })
   apis.forEach((each) => {
     const mockTypeMap: Record<MockData['method'], typeof mock.onGet> = {
       GET: mock.onGet.bind(mock),
@@ -23,6 +23,8 @@ export const mockAxios = (axios: AxiosInstance) => {
       DELETE: mock.onDelete.bind(mock),
     }
     const matcher = mockTypeMap[each.method]
-    matcher(each.path).reply(200, each.handler())
+    matcher(each.path).reply((config) => {
+      return [200, each.handler(config)]
+    })
   })
 }

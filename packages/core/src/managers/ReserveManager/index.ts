@@ -75,7 +75,7 @@ class ReserveManager extends BaseManager {
 
     if (!autoConfirm || !this.config.courts?.length || !this.config.fields?.length || !this.config.reserveTime) {
       const loadCourtsListLoading = new Loading('加载场馆列表').start()
-      const courts = await this.getCourtList()
+      const courts = await this.getCourtList(this.options.reserveToday ? getTodayDate() : getTomorrowDate())
       loadCourtsListLoading.succeed('加载场馆列表')
       const { courtId } = await inquirer.prompt<{ courtId: string }>([
         {
@@ -87,7 +87,7 @@ class ReserveManager extends BaseManager {
             name:
               court.name +
               (court.tag ? chalk.gray(` [${court.tag}]`) : '') +
-              (court.isOpen ? '' : chalk.red(' [已闭馆]')),
+              (court.isOpen ? '' : chalk.red('[已闭馆]')),
             value: court.id,
             disabled: !court.isOpen,
           })),
@@ -112,7 +112,7 @@ class ReserveManager extends BaseManager {
             name:
               field.name +
               (field.tag ? chalk.gray(` [${field.tag}]`) : '') +
-              (field.isOpen ? '' : chalk.red(' [被占用]')),
+              (field.isOpen ? '' : chalk.red('[被占用]')),
             value: field.id,
             disabled: !field.isOpen,
           })),
@@ -128,9 +128,7 @@ class ReserveManager extends BaseManager {
         .filter((each) => !filedIds.includes(each.id))
         .map((field) => ({
           name:
-            field.name +
-            (field.tag ? chalk.gray(` [${field.tag}]`) : '') +
-            (field.isOpen ? '' : chalk.red(' [被占用]')),
+            field.name + (field.tag ? chalk.gray(` [${field.tag}]`) : '') + (field.isOpen ? '' : chalk.red('[被占用]')),
           value: field.id,
           disabled: !field.isOpen,
         }))
@@ -239,7 +237,13 @@ class ReserveManager extends BaseManager {
     if (diffMs < FOUR_MINITES) {
       return true
     }
-    logger.info(chalk.yellow(`请于场馆开放前四分钟启动本应用，还需等待 ${formatCountdown(openTimeMs - FOUR_MINITES)}`))
+    logger.info(
+      chalk.yellow(
+        `请于场馆开放前四分钟启动本应用，当前时间是 ${chalk.gray(getCurrentTime())}，还需等待 ${chalk.gray(
+          formatCountdown(openTimeMs - FOUR_MINITES),
+        )}`,
+      ),
+    )
     const { wait } = await inquirer.prompt({
       type: 'confirm',
       name: 'wait',
@@ -249,20 +253,20 @@ class ReserveManager extends BaseManager {
     if (!wait) {
       return false
     }
-    await this.countdown(openTimeMs - FOUR_MINITES, '等待倒计时完成')
-    Notify.notify('提示', '倒计时完成，请继续')
+    await this.countdown(openTimeMs - FOUR_MINITES, '等待倒计时完成，完成后需要输入具有失效时间的微信登录码')
+    Notify.notify('提示', '倒计时完成，请生成并输入微信登录码')
     return true
   }
 
   private async countdown(until: number, label: string) {
     return new Promise<void>((resolve) => {
       const formatLoadingText = () =>
-        label + ' ' + chalk.yellow(formatCountdown(until)) + chalk.gray(' (Type `Ctrl/⌘ + C` to exit)')
+        label + ' ' + chalk.yellow(formatCountdown(until)) + chalk.gray(' (Type `Ctrl + C` to exit)')
       const loading = new Loading(formatLoadingText()).start()
       const timer = setInterval(() => {
         const nowMs = moment().valueOf()
         if (until - nowMs <= 0) {
-          loading.succeed(label + chalk.green(' 倒计时完成'))
+          loading.succeed(label + chalk.green(' 倒计时完成') + ' 当前时间是 ' + chalk.gray(getCurrentTime(true)))
           clearInterval(timer)
           resolve()
         }
@@ -317,7 +321,8 @@ class ReserveManager extends BaseManager {
 
     while (!isOpen) {
       try {
-        await sleep(this.config.checkInterval)
+        // 等待 this.config.checkInterval * (0.8~1.2) 秒
+        await sleep(this.config.checkInterval * (Math.random() * 0.4 + 0.8))
         isOpen = await this.checkFirstCourtIsOpen()
         checkTimes++
         isOpen
@@ -365,8 +370,8 @@ class ReserveManager extends BaseManager {
     const successedList: SuccessedList = []
     for (const idx in promises) {
       const request = promises[idx]
-      const res = await this.loopReverve(request)
       const requestData = this.reserveSetting.requestDataList[idx]
+      const res = await this.loopReverve(request, 3, requestData.fieldNum)
       if (res === true) {
         successedList.push({
           placeName: requestData.placeName,
@@ -387,8 +392,8 @@ class ReserveManager extends BaseManager {
         .map((each) => this.reserveField(each))
       for (const backupIdx in backupPromise) {
         const backupRequest = backupPromise[backupIdx]
-        const res = await this.loopReverve(backupRequest)
         const requestData = this.reserveSetting.requestDataList[courtCount + +backupIdx]
+        const res = await this.loopReverve(backupRequest, 3, requestData.fieldNum)
         if (res === true) {
           successedList.push({
             placeName: requestData.placeName,
@@ -407,26 +412,28 @@ class ReserveManager extends BaseManager {
     this.notifyResult(successedList, failedList)
   }
 
-  private async loopReverve(request: Promise<{ status: 1 | unknown }>, tryTimes = 3): Promise<string | true> {
-    let hasTriedTimes = 0
+  private async loopReverve(
+    request: Promise<{ status: 1 | unknown }>,
+    tryTimes = 3,
+    label = '',
+  ): Promise<string | true> {
     try {
       const res = await request
       if (res.status !== 1) {
-        return '已被预约'
+        return label + chalk.gray(' 已被预约')
       }
       return true
     } catch (error) {
       if (error instanceof Error) {
         Reporter.report(error)
       }
-      hasTriedTimes++
-      if (hasTriedTimes > tryTimes) {
+      if (tryTimes <= 1) {
         if (error instanceof Error) {
-          return error.message
+          return label + ' ' + chalk.gray(error.message)
         }
-        return '未知错误'
+        return label + chalk.gray(' 未知错误')
       }
-      return this.loopReverve(request)
+      return await this.loopReverve(request, tryTimes - 1, label)
     }
   }
 
@@ -453,14 +460,11 @@ class ReserveManager extends BaseManager {
   }
 
   private notifySuccessReserved(name: string, fieldNums: string[]) {
-    logger.info(chalk.green(`🎉 ${name.replace('（', '(').replace('）', ')')} ${fieldNums.join(',')} 预约成功`))
+    logger.info(chalk.green(`🎉 ${name} ${fieldNums.join(',')} 预约成功`))
   }
 
   private notifyFailedReserved(name: string, fieldNums: string[], errors: string[]) {
-    logger.info(
-      chalk.red(`❗️ ${name.replace('（', '(').replace('）', ')')} ${fieldNums.join(',')} 预约失败`),
-      `\n详细错误信息：\n${chalk.gray(errors.join('\n'))}`,
-    )
+    logger.info(chalk.red(`❗️ ${name} ${fieldNums.join(',')} 预约失败`), `\n详细错误信息：\n${errors.join('\n')}`)
   }
 }
 

@@ -25,6 +25,7 @@
     "@whu-court/config-manager": "0.0.5-beta.0",
     "@whu-court/env": "0.0.5-beta.0",
     "address": "^1.2.0",
+    "chalk": "4.1.2",
     "md5": "^2.3.0"
   },
   "devDependencies": {

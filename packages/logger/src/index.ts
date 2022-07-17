@@ -29,8 +29,9 @@ class Logger {
 
   public error(error: string | Error, ...data: string[]): void {
     console.error(chalk.red(typeof error === 'string' ? error : error.message), data.map(chalk.red).join(''))
-    if (environment === 'local') {
-      typeof error !== 'string' && console.trace(error)
+    if (environment === 'local' && typeof error !== 'string') {
+      console.log(chalk.gray('[INFO]'), 'trace below only show in local')
+      console.trace(error)
     }
     if (this.options.report && !(error instanceof Logger.Errors.ErrorNoNeedReport)) {
       Reporter.report(typeof error === 'string' ? new Error([error, ...data].join('\n')) : error)

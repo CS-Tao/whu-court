@@ -1,5 +1,6 @@
 import Axios from 'axios'
 import chalk from 'chalk'
+import { uid } from 'uid'
 import { URL } from 'url'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
 import logger from '@whu-court/logger'
@@ -56,12 +57,23 @@ http.interceptors.request.use((config) => {
   config.headers.token = config.headers.token || ''
   config.headers['x-outh-token'] = token
   config.headers['x-outh-sid'] = sid
-  // console.log('request', config.url, config.headers, config.data)
+
+  const measureId = `${config.url}(${uid()})`
+  // @ts-ignore
+  config.metadata = {
+    measureId,
+  }
+  Reporter.Measure.shared(measureId, 'court-api-request').start()
+
   return config
 })
 
 http.interceptors.response.use(
   async (response) => {
+    // @ts-ignore
+    const measureId = response.config.metadata?.measureId
+    measureId && Reporter.Measure.shared(measureId, 'court-api-request').end()
+
     if (!response.data) return response
 
     const url = response.config.url
@@ -79,12 +91,17 @@ http.interceptors.response.use(
     }
 
     if (response.data.errcode !== 0) {
-      const dataKeysForErrorInfo: Array<Partial<keyof ServerData>> = ['errmsg', 'desc', 'detailErrMsg', 'hint']
-      const errorMsg = `url: ${url}${dataKeysForErrorInfo.reduce(
-        (acc, cur) => (data[cur] ? `${acc}${cur}: ${data[cur]}\n` : acc),
+      const dataKeysForErrorInfo: Array<[Partial<keyof ServerData>, string]> = [
+        ['desc', '描述信息'],
+        ['errmsg', '错误信息'],
+        ['detailErrMsg', '错误详情'],
+        ['hint', '提示信息'],
+      ]
+      const errorMsg = `接口: ${url}${dataKeysForErrorInfo.reduce(
+        (acc, cur) => (data[cur[0]] ? `${acc}${cur[1]}: ${data[cur[0]]}\n` : acc),
         '\n',
       )}`
-      throw new Error(`error when load data\n${errorMsg}`)
+      throw new Error(`数据请求失败\n${errorMsg}`)
     }
 
     if (data.hint && typeof data.hint === 'string') {

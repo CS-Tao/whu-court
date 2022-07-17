@@ -1,4 +1,5 @@
 import Axios, { AxiosInstance } from 'axios'
+import { uid } from 'uid'
 import { Logger } from '@whu-court/logger'
 import Reporter from '@whu-court/report'
 import { AppConfig, CheckIfStaredRes, GitHubUserInfoRes } from './types'
@@ -14,8 +15,23 @@ class GitHubService {
       withCredentials: true,
     })
 
+    this.githubApiService.interceptors.request.use((config) => {
+      const measureId = `${config.url}(${uid()})`
+      // @ts-ignore
+      config.metadata = {
+        measureId,
+      }
+      Reporter.Measure.shared(measureId, 'github-graph-api-request').start()
+      return config
+    })
+
     this.githubApiService.interceptors.response.use(
-      (res) => res,
+      (res) => {
+        // @ts-ignore
+        const measureId = response.config.metadata?.measureId
+        measureId && Reporter.Measure.shared(measureId, 'github-graph-api-request').end()
+        return res
+      },
       (error) => {
         const status = error.response?.status
         if (status === 401) {
@@ -32,6 +48,21 @@ class GitHubService {
       baseURL: 'https://raw.githubusercontent.com/CS-Tao/github-content/master/contents/github/whu-court',
       timeout: 8000,
       withCredentials: true,
+    })
+    this.githubContentService.interceptors.request.use((config) => {
+      const measureId = `${config.url}(${uid()})`
+      // @ts-ignore
+      config.metadata = {
+        measureId,
+      }
+      Reporter.Measure.shared(measureId, 'github-content-api-request').start()
+      return config
+    })
+    this.githubApiService.interceptors.response.use((res) => {
+      // @ts-ignore
+      const measureId = response.config.metadata?.measureId
+      measureId && Reporter.Measure.shared(measureId, 'github-content-api-request').end()
+      return res
     })
   }
 

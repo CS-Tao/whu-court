@@ -8,7 +8,7 @@ module.exports = {
     camelcase: 0,
     '@typescript-eslint/explicit-function-return-type': 0,
     indent: 'off',
-    '@typescript-eslint/indent': ['error', 2],
+    '@typescript-eslint/indent': 0,
     '@typescript-eslint/explicit-module-boundary-types': 0,
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', args: 'after-used' }],
     '@typescript-eslint/no-empty-function': 0,

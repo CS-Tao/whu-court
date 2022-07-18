@@ -1,5 +1,5 @@
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![CD for whu-court](https://github.com/CS-Tao/whu-court/actions/workflows/cd.yml/badge.svg)](https://github.com/CS-Tao/whu-court/actions/workflows/cd.yml)
+[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Join the chat at discussion](https://img.shields.io/badge/chat-on%20github%20discussion-28BC99.svg)](https://github.com/CS-Tao/whu-court/discussions/18)
 [![license](https://img.shields.io/badge/license-none-yellow.svg)](#版权声明)
 

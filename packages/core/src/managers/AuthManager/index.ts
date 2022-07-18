@@ -21,10 +21,10 @@ class AuthManager extends BaseManager {
   public userInfo: UserInfo | null = null
 
   async login(token: string, sid: string, userAgent: string) {
-    this.userInfo = this.userInfo || (await this.getUserInfo(token, sid, userAgent))
     configManager.set(this.tokenConfigKey, token)
     configManager.set(this.sidConfigKey, sid)
     configManager.set(this.userAgentConfigKey, userAgent)
+    this.userInfo = this.userInfo || (await this.getUserInfo())
     configManager.set(this.accountConfigKey, this.userInfo.account)
     configManager.set(this.loginTimeKey, new Date().getTime())
     return this.userInfo.account
@@ -47,7 +47,7 @@ class AuthManager extends BaseManager {
       if (!token || !sid || !userAgent) {
         return false
       }
-      this.userInfo = await this.getUserInfo(token, sid, userAgent)
+      this.userInfo = await this.getUserInfo()
       if (this.userInfo) {
         return true
       }
@@ -64,8 +64,8 @@ class AuthManager extends BaseManager {
     return !!configManager.get(this.tokenConfigKey) && configManager.get(this.sidConfigKey)
   }
 
-  private async getUserInfo(token: string, sid: string, userAgent: string): Promise<UserInfo> {
-    const account = await this.checkAuth(token, sid, userAgent)
+  private async getUserInfo(): Promise<UserInfo> {
+    const account = await this.checkAuth()
     if (!account) {
       throw new Error('Token 或 Sid 无效')
     }

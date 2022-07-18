@@ -59,8 +59,8 @@ export default class Login extends Command {
       this.log(chalk.green('🎉 登录成功'), '账号', chalk.gray(account))
     } catch (error) {
       load.stop()
+      authManager.logout()
       if (error instanceof Error) {
-        authManager.logout()
         this.log(chalk.red('🙁 登录失败'))
       }
       throw error

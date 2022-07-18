@@ -2,10 +2,11 @@ import { AxiosInstance } from 'axios'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
 import { sleep } from '@whu-court/utils'
 
-const enterCourtAppWaitTime = 400
+const beforeEnterCourtAppWaitTime = 1000
+const afterEnterCourtAppWaitTime = 2000
 
 export const enterCourtApp = async (http: AxiosInstance): Promise<void> => {
-  await sleep(enterCourtAppWaitTime)
+  await sleep(beforeEnterCourtAppWaitTime)
   await http.post(
     '/v1.0.0/application/checkUserByAppAuth',
     'url=%2FpackageB%2Fpages%2Fhome%2Findex&jump=%2FpackageB%2Fpages%2Fhome%2Findex&platform=',
@@ -27,5 +28,5 @@ export const enterCourtApp = async (http: AxiosInstance): Promise<void> => {
   await http.post('/v1.0.0/ballBooking/queryHomeBookingInfo', {
     uid: configManager.get(ConfigKey.courtToken),
   })
-  await sleep(enterCourtAppWaitTime)
+  await sleep(afterEnterCourtAppWaitTime)
 }

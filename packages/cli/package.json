@@ -100,7 +100,7 @@
     "posttest": "yarn lint",
     "prepack": "yarn build && oclif manifest && oclif readme",
     "test": "mocha --forbid-only \"test/**/*.test.ts\"",
-    "version": "yarn readme && git add README.md",
+    "version": "yarn readme && git add ${INIT_CWD}/README.md",
     "readme": "oclif readme"
   },
   "engines": {

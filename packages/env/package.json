@@ -1,7 +1,7 @@
 {
   "name": "@whu-court/env",
   "description": "WHU-Court Envs",
-  "version": "0.0.5-beta.4",
+  "version": "0.0.5-beta.5",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

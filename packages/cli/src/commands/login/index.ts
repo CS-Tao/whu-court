@@ -12,7 +12,7 @@ import { printInBlackListInfo, printNotInWhiteListInfo } from '../../utils/print
 export default class Login extends Command {
   static description = 'Login to court.'
 
-  static examples = ['$ wcr login', '$ wcr login --token=<***> --sid=<***>']
+  static examples = ['$ wcr login', '$ wcr login --token=<value> --sid=<value>']
 
   static flags = {
     token: Flags.string({

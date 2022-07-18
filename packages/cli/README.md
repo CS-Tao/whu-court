@@ -46,7 +46,6 @@ USAGE
 
 FLAGS
   -o, --open-time=<value>  Court system open time. e.g. "18:00:00" | "now"
-  -y, --yes                Use default config and do not prompt
   --today                  Reserve for today
 
 DESCRIPTION
@@ -54,8 +53,6 @@ DESCRIPTION
 
 EXAMPLES
   $ wcr run
-
-  $ wcr run -y
 ```
 
 ## `wcr setup`
@@ -76,7 +73,7 @@ DESCRIPTION
 EXAMPLES
   $ wcr setup
 
-  $ wcr setup --github-token=<***>
+  $ wcr setup --github-token=<value>
 
   $ wcr setup --clear-token
 ```
@@ -100,7 +97,7 @@ DESCRIPTION
 EXAMPLES
   $ wcr login
 
-  $ wcr login --token=<***> --sid=<***>
+  $ wcr login --token=<value> --sid=<value>
 ```
 
 ## `wcr logout`

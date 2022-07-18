@@ -27,7 +27,6 @@ type FailedList = Array<{ placeName: string; fieldNum: string; error: string }>
 type SuccessedList = Array<{ placeName: string; fieldNum: string }>
 
 export interface ReserveManagerOptions {
-  autoConfirm?: boolean
   openTime?: string | 'now'
   reserveToday?: boolean
 }
@@ -71,168 +70,158 @@ class ReserveManager extends BaseManager {
   }
 
   private async generateReserveSetting() {
-    const autoConfirm = this.options.autoConfirm || false
+    const loadCourtsListLoading = new Loading('加载场馆列表').start()
+    const courts = await this.getCourtList(this.options.reserveToday ? getTodayDate() : getTomorrowDate())
+    const courtsChoices = courts.map((court) => ({
+      name: court.name + (court.tag ? chalk.gray(` [${court.tag}]`) : '') + (court.isOpen ? '' : chalk.red('[已闭馆]')),
+      value: court.id,
+      disabled: !court.isOpen,
+    }))
+    loadCourtsListLoading.succeed('加载场馆列表')
+    const { courtId } = await inquirer.prompt<{ courtId: string }>([
+      {
+        type: 'list',
+        name: 'courtId',
+        message: '场馆',
+        default: courtsChoices.some((each) => each.value === this.config.courts[0]) ? this.config.courts[0] : undefined,
+        choices: courtsChoices,
+        validate: (value) => (value ? true : '请选择场馆'),
+      },
+    ])
+    this.config.courts = [courtId]
+    configManager.set(ConfigKey.courts, [courtId])
 
-    if (!autoConfirm || !this.config.courts?.length || !this.config.fields?.length || !this.config.reserveTime) {
-      const loadCourtsListLoading = new Loading('加载场馆列表').start()
-      const courts = await this.getCourtList(this.options.reserveToday ? getTodayDate() : getTomorrowDate())
-      const courtsChoices = courts.map((court) => ({
-        name:
-          court.name + (court.tag ? chalk.gray(` [${court.tag}]`) : '') + (court.isOpen ? '' : chalk.red('[已闭馆]')),
-        value: court.id,
-        disabled: !court.isOpen,
-      }))
-      loadCourtsListLoading.succeed('加载场馆列表')
-      const { courtId } = await inquirer.prompt<{ courtId: string }>([
-        {
-          type: 'list',
-          name: 'courtId',
-          message: '场馆',
-          default: courtsChoices.some((each) => each.value === this.config.courts[0])
-            ? this.config.courts[0]
-            : undefined,
-          choices: courtsChoices,
-          validate: (value) => (value ? true : '请选择场馆'),
+    const court = courts.find((c) => c.id === courtId)
+
+    if (!court) {
+      throw new Error('运行逻辑出错，场馆不存在')
+    }
+
+    const fieldsChoices = court.fields.map((field) => ({
+      name: field.name + (field.tag ? chalk.gray(` [${field.tag}]`) : '') + (field.isOpen ? '' : chalk.red('[被占用]')),
+      value: field.id,
+      disabled: !field.isOpen,
+    }))
+
+    const { filedIds } = await inquirer.prompt<{ filedIds: string[] }>([
+      {
+        type: 'checkbox',
+        name: 'filedIds',
+        message: '选择场地(最多两个)',
+        default: this.config.fields.filter((field) => fieldsChoices.some((f) => f.value === field)),
+        choices: fieldsChoices,
+        validate: (value) => {
+          if (!value || value.length === 0) {
+            return '请选择场地'
+          }
+          if (value.length > 2) {
+            return '最多只能选择两个场地'
+          }
+          return true
         },
-      ])
-      this.config.courts = [courtId]
-      configManager.set(ConfigKey.courts, [courtId])
+      },
+    ])
+    this.config.fields = filedIds
+    configManager.set(ConfigKey.fields, filedIds)
 
-      const court = courts.find((c) => c.id === courtId)
-
-      if (!court) {
-        throw new Error('运行逻辑出错，场馆不存在')
-      }
-
-      const fieldsChoices = court.fields.map((field) => ({
+    const backupFieldChoices = court.fields
+      .filter((each) => !filedIds.includes(each.id))
+      .map((field) => ({
         name:
           field.name + (field.tag ? chalk.gray(` [${field.tag}]`) : '') + (field.isOpen ? '' : chalk.red('[被占用]')),
         value: field.id,
         disabled: !field.isOpen,
       }))
 
-      const { filedIds } = await inquirer.prompt<{ filedIds: string[] }>([
-        {
-          type: 'checkbox',
-          name: 'filedIds',
-          message: '选择场地(最多两个)',
-          default: this.config.fields.filter((field) => fieldsChoices.some((f) => f.value === field)),
-          choices: fieldsChoices,
-          validate: (value) => {
-            if (!value || value.length === 0) {
-              return '请选择场地'
-            }
-            if (value.length > 2) {
-              return '最多只能选择两个场地'
-            }
-            return true
-          },
-        },
-      ])
-      this.config.fields = filedIds
-      configManager.set(ConfigKey.fields, filedIds)
-
-      const backupFieldChoices = court.fields
-        .filter((each) => !filedIds.includes(each.id))
-        .map((field) => ({
-          name:
-            field.name + (field.tag ? chalk.gray(` [${field.tag}]`) : '') + (field.isOpen ? '' : chalk.red('[被占用]')),
-          value: field.id,
-          disabled: !field.isOpen,
-        }))
-
-      let backupFieldIds: string[] = []
-      if (backupFieldChoices.length) {
-        backupFieldIds = (
-          await inquirer.prompt<{ backupFieldIds: string[] }>([
-            {
-              type: 'checkbox',
-              name: 'backupFieldIds',
-              message: '选择备用场地(最多两个)',
-              default: this.config.backupFields
-                .filter((each) => !filedIds.includes(each))
-                .filter((each) => backupFieldChoices.some((f) => f.value === each)),
-              choices: backupFieldChoices,
-              validate: (value) => {
-                if (value.length > 2) {
-                  return '最多只能选择两个备用场地'
-                }
-                return true
-              },
+    let backupFieldIds: string[] = []
+    if (backupFieldChoices.length) {
+      backupFieldIds = (
+        await inquirer.prompt<{ backupFieldIds: string[] }>([
+          {
+            type: 'checkbox',
+            name: 'backupFieldIds',
+            message: '选择备用场地(最多两个)',
+            default: this.config.backupFields
+              .filter((each) => !filedIds.includes(each))
+              .filter((each) => backupFieldChoices.some((f) => f.value === each)),
+            choices: backupFieldChoices,
+            validate: (value) => {
+              if (value.length > 2) {
+                return '最多只能选择两个备用场地'
+              }
+              return true
             },
-          ])
-        ).backupFieldIds
-      }
-      this.config.backupFields = backupFieldIds
-      configManager.set(ConfigKey.backupFields, backupFieldIds)
-
-      const allFields = court.fields.filter((each) => [...filedIds, ...backupFieldIds].includes(each.id))
-
-      const reserveTimeChoices = [8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20]
-        .map((each) => {
-          const nextHour = each + 1
-          const format = (h: number) => (h < 10 ? '0' + h : h)
-          return {
-            name: `${format(each)}:00-${format(nextHour)}:00`,
-            value: `${format(each)}:00-${format(nextHour)}:00`,
-          }
-        })
-        .reverse()
-
-      const { reserveTime } = await inquirer.prompt<{ reserveTime: string[] }>([
-        {
-          type: 'checkbox',
-          name: 'reserveTime',
-          message: '选择时间',
-          default: this.config.reserveTime
-            .split(',')
-            .filter((each) => reserveTimeChoices.some((t) => t.value === each)),
-          choices: reserveTimeChoices,
-          loop: false,
-          validate: (value) => {
-            if (!value || value.length === 0) {
-              return '请选择时间'
-            }
-            return true
           },
-        },
-      ])
-      this.config.reserveTime = reserveTime.reverse().join(',')
-      configManager.set(ConfigKey.time, this.config.reserveTime)
-
-      const loadDetailLoading = new Loading('生成预约信息').start()
-      const fieldDetailMap: Record<string, CourtDetail> = {}
-      for (const idx in allFields) {
-        const f = allFields[idx]
-        const fieldDetail = await this.getFieldDetail(courtId, f.id, f.number)
-        fieldDetailMap[f.id] = fieldDetail
-      }
-
-      this.reserveSetting = {
-        minRequests: filedIds.length,
-        requestDataList: allFields.map((field) => {
-          const fieldDetail = fieldDetailMap[field.id]
-          return {
-            appointmentDate: this.options.reserveToday ? getTodayDate() : getTomorrowDate(),
-            creatorId: this.config.token,
-            placeType: 1,
-            period: this.config.reserveTime,
-            fieldId: field.id,
-            motionTypeId: this.badmintonTypeId,
-            placeId: court.id,
-            typeName: '羽毛球',
-            placeUrl: court.placeUrl,
-            placeAddress: fieldDetail.placeAddress,
-            placeName: fieldDetail.placeName,
-            fieldNum: field.name,
-            collegeName: fieldDetail.collegeName,
-            collegeId: fieldDetail.collegeId,
-            code: '',
-          }
-        }),
-      }
-      loadDetailLoading.succeed('生成预约信息')
+        ])
+      ).backupFieldIds
     }
+    this.config.backupFields = backupFieldIds
+    configManager.set(ConfigKey.backupFields, backupFieldIds)
+
+    const allFields = court.fields.filter((each) => [...filedIds, ...backupFieldIds].includes(each.id))
+
+    const reserveTimeChoices = [8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20]
+      .map((each) => {
+        const nextHour = each + 1
+        const format = (h: number) => (h < 10 ? '0' + h : h)
+        return {
+          name: `${format(each)}:00-${format(nextHour)}:00`,
+          value: `${format(each)}:00-${format(nextHour)}:00`,
+        }
+      })
+      .reverse()
+
+    const { reserveTime } = await inquirer.prompt<{ reserveTime: string[] }>([
+      {
+        type: 'checkbox',
+        name: 'reserveTime',
+        message: '选择时间',
+        default: this.config.reserveTime.split(',').filter((each) => reserveTimeChoices.some((t) => t.value === each)),
+        choices: reserveTimeChoices,
+        loop: false,
+        validate: (value) => {
+          if (!value || value.length === 0) {
+            return '请选择时间'
+          }
+          return true
+        },
+      },
+    ])
+    this.config.reserveTime = reserveTime.reverse().join(',')
+    configManager.set(ConfigKey.time, this.config.reserveTime)
+
+    const loadDetailLoading = new Loading('生成预约信息').start()
+    const fieldDetailMap: Record<string, CourtDetail> = {}
+    for (const idx in allFields) {
+      const f = allFields[idx]
+      const fieldDetail = await this.getFieldDetail(courtId, f.id, f.number)
+      fieldDetailMap[f.id] = fieldDetail
+    }
+
+    this.reserveSetting = {
+      minRequests: filedIds.length,
+      requestDataList: allFields.map((field) => {
+        const fieldDetail = fieldDetailMap[field.id]
+        return {
+          appointmentDate: this.options.reserveToday ? getTodayDate() : getTomorrowDate(),
+          creatorId: this.config.token,
+          placeType: 1,
+          period: this.config.reserveTime,
+          fieldId: field.id,
+          motionTypeId: this.badmintonTypeId,
+          placeId: court.id,
+          typeName: '羽毛球',
+          placeUrl: court.placeUrl,
+          placeAddress: fieldDetail.placeAddress,
+          placeName: fieldDetail.placeName,
+          fieldNum: field.name,
+          collegeName: fieldDetail.collegeName,
+          collegeId: fieldDetail.collegeId,
+          code: '',
+        }
+      }),
+    }
+    loadDetailLoading.succeed('生成预约信息')
   }
 
   private async promptWxCodes(): Promise<void> {

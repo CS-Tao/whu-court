@@ -1,7 +1,7 @@
 {
   "name": "@whu-court/auto-update",
   "description": "WHU-Court Auto Update Manager",
-  "version": "0.0.5-beta.6",
+  "version": "0.1.0",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,7 +19,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@whu-court/env": "0.0.5-beta.6",
+    "@whu-court/env": "0.1.0",
     "update-notifier": "^5.1.0"
   },
   "devDependencies": {

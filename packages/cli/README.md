@@ -29,11 +29,11 @@ USAGE
 * [`wcr setup`](#wcr-setup)
 * [`wcr login`](#wcr-login)
 * [`wcr logout`](#wcr-logout)
-* [`wcr announcement`](#wcr-announcement)
 * [`wcr check`](#wcr-check)
 * [`wcr config [CONFIGNAME] [CONFIGVALUE]`](#wcr-config-configname-configvalue)
-* [`wcr feedback`](#wcr-feedback)
 * [`wcr reset`](#wcr-reset)
+* [`wcr announcement`](#wcr-announcement)
+* [`wcr feedback`](#wcr-feedback)
 * [`wcr help [COMMAND]`](#wcr-help-command)
 
 ## `wcr run`
@@ -118,24 +118,6 @@ EXAMPLES
   $ wcr logout
 ```
 
-## `wcr announcement`
-
-Open app announcements.
-
-```
-USAGE
-  $ wcr announcement [-n]
-
-FLAGS
-  -n, --no-open  Do not open the announcements page
-
-DESCRIPTION
-  Open app announcements.
-
-EXAMPLES
-  $ wcr announcement
-```
-
 ## `wcr check`
 
 Check login status.
@@ -181,6 +163,39 @@ EXAMPLES
   $ wcr config time 15-17,18-21,!8-12
 ```
 
+## `wcr reset`
+
+Reset app.
+
+```
+USAGE
+  $ wcr reset
+
+DESCRIPTION
+  Reset app.
+
+EXAMPLES
+  $ wcr reset
+```
+
+## `wcr announcement`
+
+Open app announcements.
+
+```
+USAGE
+  $ wcr announcement [-n]
+
+FLAGS
+  -n, --no-open  Do not open the announcements page
+
+DESCRIPTION
+  Open app announcements.
+
+EXAMPLES
+  $ wcr announcement
+```
+
 ## `wcr feedback`
 
 Feedback for wcr.
@@ -197,21 +212,6 @@ DESCRIPTION
 
 EXAMPLES
   $ wcr feedback
-```
-
-## `wcr reset`
-
-Reset app.
-
-```
-USAGE
-  $ wcr reset
-
-DESCRIPTION
-  Reset app.
-
-EXAMPLES
-  $ wcr reset
 ```
 
 ## `wcr help [COMMAND]`

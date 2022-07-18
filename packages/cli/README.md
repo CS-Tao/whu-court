@@ -10,7 +10,7 @@
 
 ![logo.jpg](https://github.com/CS-Tao/github-content/blob/8578d68e6b3446f0620d4df830b8133881364cc5/contents/github/whu-court/logo.jpg)
 
-# 📕 使用方法
+# 📗 使用方法
 
 ```sh-session
 $ npm install -g @whu-court/cli

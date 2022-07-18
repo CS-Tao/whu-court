@@ -99,9 +99,7 @@
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint",
     "prepack": "yarn build && oclif manifest && oclif readme",
-    "test": "mocha --forbid-only \"test/**/*.test.ts\"",
-    "version": "yarn readme && git add ${INIT_CWD}/README.md",
-    "readme": "oclif readme"
+    "test": "mocha --forbid-only \"test/**/*.test.ts\""
   },
   "engines": {
     "node": ">=16.0.0"

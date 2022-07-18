@@ -1,7 +1,8 @@
 [![CD for whu-court](https://github.com/CS-Tao/whu-court/actions/workflows/cd.yml/badge.svg)](https://github.com/CS-Tao/whu-court/actions/workflows/cd.yml)
-[![Join the chat at giithub discussion](https://img.shields.io/badge/💬-github-%23016bb6.svg)](https://github.com/CS-Tao/whu-court/discussions/18)
-[![oclif](https://img.shields.io/badge/🚀-oclif-%2300a851.svg)](https://oclif.io)
-[![license](https://img.shields.io/badge/⚖️-none-yellow.svg)](#%20📑%20版权声明)
+[![Join the chat at github discussion](https://img.shields.io/badge/💬-github-%23016bb6.svg)](https://github.com/CS-Tao/whu-court/discussions/18)
+[![Open the announcement](https://img.shields.io/badge/📢-github-%2300a851.svg)](https://github.com/CS-Tao/whu-court/discussions/categories/announcements)
+[![oclif](https://img.shields.io/badge/🚀-oclif-%23016bb6.svg)](https://oclif.io)
+[![license](https://img.shields.io/badge/⚖️-none-%2300a851.svg)](#-版权声明)
 
 🏸 whu-court
 =================

@@ -9,7 +9,7 @@
 
 💻 场地预约助手 CLI
 
-![logo.jpg](https://github.com/CS-Tao/github-content/blob/8578d68e6b3446f0620d4df830b8133881364cc5/contents/github/whu-court/logo.jpg)
+![logo.png](https://github.com/CS-Tao/github-content/raw/b2dedf92264f40901e2b8c3a4867f3b94faa5a54/contents/github/whu-court/logo.png)
 
 # 📗 使用方法
 

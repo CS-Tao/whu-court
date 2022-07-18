@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === 'production') {
 
 const appRoot = path.join(__dirname, '..', '..', '..', '..')
 
-const description = '场馆预约助手'
+const description = '🏸 场地预约助手'
 
 const mainPkg: Envs['mainPkg'] = {
   name: '@whu-court/cli',

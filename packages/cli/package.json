@@ -1,7 +1,7 @@
 {
   "name": "@whu-court/cli",
   "version": "0.1.2",
-  "description": "场馆预约助手",
+  "description": "🏸 场地预约助手",
   "author": "cstao.cn@icloud.com",
   "bin": {
     "wcr": "./bin/run"

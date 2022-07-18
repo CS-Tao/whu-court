@@ -14,10 +14,13 @@
 
 ```sh-session
 $ npm install -g @whu-court/cli
+
 $ wcr COMMAND
 running command...
+
 $ wcr (--version|-v)
 version infomation...
+
 $ wcr --help [COMMAND]
 USAGE
   $ wcr COMMAND

@@ -100,7 +100,8 @@
     "posttest": "yarn lint",
     "prepack": "yarn build && oclif manifest && oclif readme",
     "test": "mocha --forbid-only \"test/**/*.test.ts\"",
-    "version:tmp": "oclif readme && git add README.md"
+    "version": "yarn readme && git add README.md",
+    "readme": "oclif readme"
   },
   "engines": {
     "node": ">=16.0.0"

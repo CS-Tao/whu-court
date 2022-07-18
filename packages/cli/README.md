@@ -1,16 +1,16 @@
 [![CD for whu-court](https://github.com/CS-Tao/whu-court/actions/workflows/cd.yml/badge.svg)](https://github.com/CS-Tao/whu-court/actions/workflows/cd.yml)
-[![Join the chat at discussion](https://img.shields.io/badge/chat-on%20github%20discussion-28BC99.svg)](https://github.com/CS-Tao/whu-court/discussions/18)
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![license](https://img.shields.io/badge/license-none-yellow.svg)](#版权声明)
+[![Join the chat at giithub discussion](https://img.shields.io/badge/💬-github-%23016bb6.svg)](https://github.com/CS-Tao/whu-court/discussions/18)
+[![oclif](https://img.shields.io/badge/🚀-oclif-%2300a851.svg)](https://oclif.io)
+[![license](https://img.shields.io/badge/⚖️-none-white.svg)](#%20📑%20版权声明)
 
-whu-court
+🏸 whu-court
 =================
 
-场地预约助手
+💻 场地预约助手 CLI
 
 ![logo.jpg](https://github.com/CS-Tao/github-content/blob/8578d68e6b3446f0620d4df830b8133881364cc5/contents/github/whu-court/logo.jpg)
 
-# 使用方法
+# 📕 使用方法
 
 ```sh-session
 $ npm install -g @whu-court/cli
@@ -24,7 +24,7 @@ USAGE
 ...
 ```
 
-# 命令集
+# ⌨️ 命令集
 * [`wcr run`](#wcr-run)
 * [`wcr setup`](#wcr-setup)
 * [`wcr login`](#wcr-login)
@@ -232,10 +232,10 @@ DESCRIPTION
   Display help for wcr.
 ```
 
-# 版权声明
+# 📑 版权声明
 
-本软件开源，但没有向开发者提供任何源码许可证，作者本人保留源代码的所有权利，任何组织和个人不得将本软件或源码用于商业活动
+本软件开源，但没有向开发者提供任何源码`许可证`，作者本人保留源代码的所有权利，任何组织和个人不得将本软件或源码用于商业活动
 
-# 免责声明
+# ⚖️ 免责声明
 
 本软件和软件源代码仅用于学习研究和技术交流，使用本软件或软件源代码造成的任何不良影响由使用者自行承担，与软件开发人员无关

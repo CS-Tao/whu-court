@@ -63,7 +63,7 @@ const hook: Hook<'prerun'> = async function (opts) {
   const loading = new Loading('校验软件可用性').start()
   await githubAuthManager.checkIfConfigured()
   await githubAuthManager.checkConfig()
-  check() ? loading.succeed(chalk.gray('校验软件可用性完成')) : loading.fail(chalk.gray('校验软件可用性结束'))
+  loading.succeed(chalk.gray('校验软件可用性完成'))
   check(true) || process.exit(0)
 }
 

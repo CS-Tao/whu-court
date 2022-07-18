@@ -90,7 +90,7 @@ class GitHubAuthManager extends GitHubService {
     config.prohibitMsg && configManager.set(ConfigKey.prohibitMsg, config.prohibitMsg)
     config.announcement && configManager.set(ConfigKey.announcement, config.announcement)
     config.blackList && configManager.set(ConfigKey.blackList, config.blackList)
-    config.whiteList && configManager.set(ConfigKey.blackList, config.whiteList)
+    config.whiteList && configManager.set(ConfigKey.whiteList, config.whiteList)
     return config
   }
 

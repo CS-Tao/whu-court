@@ -25,10 +25,11 @@ class ConfigManager implements Iterable<[keyof ConfigTypes, ConfigTypes[keyof Co
   }
 
   get(key: ConfigKey) {
-    if (defaultValues[key]) {
+    const value = this.conf.get<ConfigKey>(key)
+    if (typeof value === 'undefined') {
       return this.conf.get<ConfigKey>(key, defaultValues[key] as ConfigTypes[ConfigKey])
     }
-    return this.conf.get<ConfigKey>(key)
+    return value
   }
 
   set<Key extends ConfigKey>(key: Key, value: ConfigTypes[Key]): void {

@@ -11,6 +11,8 @@ export const defaultValues: Partial<ConfigTypes> = {
   [ConfigKey.githubUserName]: 'guest',
   [ConfigKey.githubNickName]: 'guest',
 
+  [ConfigKey.courtUserAgent]: '',
+
   [ConfigKey.openTime]: '18:00:00',
   [ConfigKey.checkOpenInterval]: 400,
   [ConfigKey.time]: '08-21',

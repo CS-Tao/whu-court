@@ -1,7 +1,7 @@
 {
   "name": "@whu-court/http",
   "description": "WHU-Court Http Client",
-  "version": "0.0.5-beta.0",
+  "version": "0.0.5-beta.1",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,11 +19,11 @@
     "access": "public"
   },
   "dependencies": {
-    "@whu-court/config-manager": "0.0.5-beta.0",
-    "@whu-court/env": "0.0.5-beta.0",
-    "@whu-court/logger": "0.0.5-beta.0",
-    "@whu-court/report": "0.0.5-beta.0",
-    "@whu-court/utils": "0.0.5-beta.0",
+    "@whu-court/config-manager": "0.0.5-beta.1",
+    "@whu-court/env": "0.0.5-beta.1",
+    "@whu-court/logger": "0.0.5-beta.1",
+    "@whu-court/report": "0.0.5-beta.1",
+    "@whu-court/utils": "0.0.5-beta.1",
     "axios": "^0.27.2",
     "chalk": "4.1.2",
     "uid": "^2.0.0"

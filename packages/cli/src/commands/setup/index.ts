@@ -18,7 +18,7 @@ import {
 export default class Setup extends Command {
   static description = 'Setup app.'
 
-  static examples = ['$ wcr setup', '$ wcr setup --github-token=<***>', '$ wcr setup --clear-token']
+  static examples = ['$ wcr setup', '$ wcr setup --github-token=<value>', '$ wcr setup --clear-token']
 
   static flags = {
     'github-token': Flags.string({

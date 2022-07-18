@@ -7,7 +7,7 @@
 🏸 场地预约助手 CLI
 =================
 
-![logo.png](https://github.com/CS-Tao/github-content/raw/master/contents/github/whu-court/logo1.png)
+<img src="https://github.com/CS-Tao/github-content/raw/master/contents/github/whu-court/logo1.png" alt="logo.png" style="width: 360px;">
 
 # 📗 使用方法
 

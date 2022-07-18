@@ -76,21 +76,23 @@ class ReserveManager extends BaseManager {
     if (!autoConfirm || !this.config.courts?.length || !this.config.fields?.length || !this.config.reserveTime) {
       const loadCourtsListLoading = new Loading('加载场馆列表').start()
       const courts = await this.getCourtList(this.options.reserveToday ? getTodayDate() : getTomorrowDate())
+      const courtsChoices = courts.map((court) => ({
+        name:
+          court.name + (court.tag ? chalk.gray(` [${court.tag}]`) : '') + (court.isOpen ? '' : chalk.red('[已闭馆]')),
+        value: court.id,
+        disabled: !court.isOpen,
+      }))
       loadCourtsListLoading.succeed('加载场馆列表')
       const { courtId } = await inquirer.prompt<{ courtId: string }>([
         {
           type: 'list',
           name: 'courtId',
           message: '场馆',
-          default: this.config.courts[0],
-          choices: courts.map((court) => ({
-            name:
-              court.name +
-              (court.tag ? chalk.gray(` [${court.tag}]`) : '') +
-              (court.isOpen ? '' : chalk.red('[已闭馆]')),
-            value: court.id,
-            disabled: !court.isOpen,
-          })),
+          default: courtsChoices.some((each) => each.value === this.config.courts[0])
+            ? this.config.courts[0]
+            : undefined,
+          choices: courtsChoices,
+          validate: (value) => (value ? true : '请选择场馆'),
         },
       ])
       this.config.courts = [courtId]
@@ -102,25 +104,31 @@ class ReserveManager extends BaseManager {
         throw new Error('运行逻辑出错，场馆不存在')
       }
 
+      const fieldsChoices = court.fields.map((field) => ({
+        name:
+          field.name + (field.tag ? chalk.gray(` [${field.tag}]`) : '') + (field.isOpen ? '' : chalk.red('[被占用]')),
+        value: field.id,
+        disabled: !field.isOpen,
+      }))
+
       const { filedIds } = await inquirer.prompt<{ filedIds: string[] }>([
         {
           type: 'checkbox',
           name: 'filedIds',
           message: '选择场地(最多两个)',
-          default: this.config.fields,
-          choices: court.fields.map((field) => ({
-            name:
-              field.name +
-              (field.tag ? chalk.gray(` [${field.tag}]`) : '') +
-              (field.isOpen ? '' : chalk.red('[被占用]')),
-            value: field.id,
-            disabled: !field.isOpen,
-          })),
+          default: this.config.fields.filter((field) => fieldsChoices.some((f) => f.value === field)),
+          choices: fieldsChoices,
+          validate: (value) => {
+            if (!value || value.length === 0) {
+              return '请选择场地'
+            }
+            if (value.length > 2) {
+              return '最多只能选择两个场地'
+            }
+            return true
+          },
         },
       ])
-      if (filedIds.length > 2) {
-        throw new Error('最多只能选择两个场地')
-      }
       this.config.fields = filedIds
       configManager.set(ConfigKey.fields, filedIds)
 
@@ -141,14 +149,19 @@ class ReserveManager extends BaseManager {
               type: 'checkbox',
               name: 'backupFieldIds',
               message: '选择备用场地(最多两个)',
-              default: this.config.backupFields.filter((each) => !filedIds.includes(each)),
+              default: this.config.backupFields
+                .filter((each) => !filedIds.includes(each))
+                .filter((each) => backupFieldChoices.some((f) => f.value === each)),
               choices: backupFieldChoices,
+              validate: (value) => {
+                if (value.length > 2) {
+                  return '最多只能选择两个备用场地'
+                }
+                return true
+              },
             },
           ])
         ).backupFieldIds
-      }
-      if (backupFieldIds.length > 2) {
-        throw new Error('最多只能选择两个场地')
       }
       this.config.backupFields = backupFieldIds
       configManager.set(ConfigKey.backupFields, backupFieldIds)
@@ -171,9 +184,17 @@ class ReserveManager extends BaseManager {
           type: 'checkbox',
           name: 'reserveTime',
           message: '选择时间',
-          default: this.config.reserveTime.split(','),
+          default: this.config.reserveTime
+            .split(',')
+            .filter((each) => reserveTimeChoices.some((t) => t.value === each)),
           choices: reserveTimeChoices,
           loop: false,
+          validate: (value) => {
+            if (!value || value.length === 0) {
+              return '请选择时间'
+            }
+            return true
+          },
         },
       ])
       this.config.reserveTime = reserveTime.reverse().join(',')

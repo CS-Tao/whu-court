@@ -41,55 +41,32 @@ class BaseManager {
     return configManager.get(ConfigKey.courtToken) as string
   }
 
-  private async checkUserAgent(token?: string, sid?: string, userAgent?: string) {
-    await this.fetchTypeIdAndPlaceId()
+  private async checkUserAgent() {
+    await this.fetchTypeIdAndPlaceId(false)
     const courtInPage = await this.apis.queryPlaceListByTypeId(
       {
         typeId: this.badmintonTypeId,
         reserveDate: getTodayDate(),
-        uid: token || this.getCourtToken(),
+        uid: this.getCourtToken(),
         pageSize: 4,
         currentPage: 1,
       },
       {
         timeout: 20000,
-        headers: {
-          ...(token && {
-            'x-outh-token': token,
-          }),
-          ...(sid && {
-            'x-outh-sid': sid,
-          }),
-          ...(userAgent && {
-            'User-Agent': userAgent,
-          }),
-        },
       },
     )
     return !!courtInPage
   }
 
-  protected async checkAuth(token?: string, sid?: string, userAgent?: string): Promise<string | false> {
-    if (!(await this.checkUserAgent(token, sid, userAgent))) return false
-    const orderList = await this.apis.myOrder(
-      {
-        currentPage: 1,
-        pageSize: 5,
-        userId: token || this.getCourtToken(),
-        status: [1, 2, 3, 4, 5, 6],
-        search: '',
-      },
-      {
-        headers: {
-          ...(token && {
-            'x-outh-token': token,
-          }),
-          ...(sid && {
-            'x-outh-sid': sid,
-          }),
-        },
-      },
-    )
+  protected async checkAuth(): Promise<string | false> {
+    if (!(await this.checkUserAgent())) return false
+    const orderList = await this.apis.myOrder({
+      currentPage: 1,
+      pageSize: 5,
+      userId: this.getCourtToken(),
+      status: [1, 2, 3, 4, 5, 6],
+      search: '',
+    })
     const currentUser = orderList?.pageData?.[0]?.creatorId
     if (currentUser) {
       return currentUser

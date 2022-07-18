@@ -15,7 +15,6 @@ const commonHeaders = {
   Connection: 'keep-alive',
   'content-type': 'application/json',
   'Accept-Encoding': 'gzip,compress,br,deflate',
-  'User-Agent': configManager.get(ConfigKey.courtUserAgent) as string,
   Referer: 'https://servicewechat.com/wx20499591d49cdb5c/53/page-frame.html',
 }
 
@@ -51,12 +50,14 @@ http.interceptors.request.use((config) => {
   config.headers = config.headers || {}
   const token = config.headers['x-outh-token'] || (configManager.get(ConfigKey.courtToken) as string)
   const sid = config.headers['x-outh-sid'] || (configManager.get(ConfigKey.courtSid) as string)
+  const userAgent = config.headers['user-agent'] || (configManager.get(ConfigKey.courtUserAgent) as string)
   if (!token || !sid) {
     throw new Error('请先登录')
   }
   config.headers.token = config.headers.token || ''
   config.headers['x-outh-token'] = token
   config.headers['x-outh-sid'] = sid
+  config.headers['User-Agent'] = userAgent
 
   const measureId = `${config.url}(${uid()})`
   // @ts-ignore

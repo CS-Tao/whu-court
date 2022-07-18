@@ -20,7 +20,7 @@ export enum ConfigKey {
    *
    * 如果配置了白名单，黑名单将被忽略
    */
-  whiteList = 'blackList',
+  whiteList = 'whiteList',
 
   /**
    * 统计密钥，随机生成，可自行配置

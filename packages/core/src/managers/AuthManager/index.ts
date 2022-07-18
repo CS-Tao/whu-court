@@ -44,6 +44,9 @@ class AuthManager extends BaseManager {
     userAgent = configManager.get(this.userAgentConfigKey) as string,
   ) {
     try {
+      if (!token || !sid || !userAgent) {
+        return false
+      }
       this.userInfo = await this.getUserInfo(token, sid, userAgent)
       if (this.userInfo) {
         return true

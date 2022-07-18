@@ -8,7 +8,7 @@ whu-court
 
 场地预约助手
 
-![logo.jpg](./readme-logo.jpg)
+![logo.jpg](https://github.com/CS-Tao/github-content/blob/8578d68e6b3446f0620d4df830b8133881364cc5/contents/github/whu-court/logo.jpg)
 
 <!-- toc -->
 * [使用方法](#使用方法)

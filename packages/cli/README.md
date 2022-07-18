@@ -4,10 +4,8 @@
 [![oclif](https://img.shields.io/badge/🚀-oclif-%23016bb6.svg)](https://oclif.io)
 [![license](https://img.shields.io/badge/⚖️-none-%2300a851.svg)](#-版权声明)
 
-🏸 whu-court
+🏸 场地预约助手 CLI
 =================
-
-💻 场地预约助手 CLI
 
 ![logo.png](https://github.com/CS-Tao/github-content/raw/master/contents/github/whu-court/logo1.png)
 
@@ -17,15 +15,13 @@
 $ npm install -g @whu-court/cli
 
 $ wcr COMMAND
-running command...
+run a command...
 
-$ wcr (--version|-v)
-version infomation...
+$ wcr -v
+show version info...
 
-$ wcr --help [COMMAND]
-USAGE
-  $ wcr COMMAND
-...
+$ wcr --h
+show help...
 ```
 
 # ⌨️ 命令集

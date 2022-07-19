@@ -1,7 +1,7 @@
 {
   "name": "@whu-court/github-auth",
   "description": "WHU-Court GitHub Auth Manager",
-  "version": "0.1.4-beta.0",
+  "version": "0.1.4",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,9 +19,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@whu-court/config-manager": "0.1.4-beta.0",
-    "@whu-court/logger": "0.1.4-beta.0",
-    "@whu-court/report": "0.1.4-beta.0",
+    "@whu-court/config-manager": "0.1.4",
+    "@whu-court/logger": "0.1.4",
+    "@whu-court/report": "0.1.4",
     "axios": "^0.27.2",
     "uid": "^2.0.0"
   }

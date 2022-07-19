@@ -1,5 +1,5 @@
 export default () => {
-  const shouldError = Math.random() > 0.5
+  const shouldError = Math.random() > 0.85
   if (shouldError) {
     return {
       errcode: 1,

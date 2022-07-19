@@ -5,7 +5,7 @@ import { pink } from '../../utils/colors'
 
 const hook: Hook<'postrun'> = async function () {
   if (githubAuthManager.userInfo?.name === loverGitHubName) {
-    this.log(pink('💖 小仙女下次见 💖'))
+    this.log(pink('\n💖 小仙女下次见 💖'))
   }
 }
 

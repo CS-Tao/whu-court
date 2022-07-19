@@ -5,10 +5,12 @@ import { URL } from 'url'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
 import logger from '@whu-court/logger'
 import Reporter from '@whu-court/report'
+import { getCurrentTime } from '@whu-court/utils'
 import { enterCourtApp } from './helper'
 import { ServerData } from './types'
 
-const checkUserByAppAuthApiMap: Record<string, boolean> = {}
+const lastEnterAppApiMap: Record<string, number> = {}
+const ONE_MINUTE = 60 * 1000
 
 const commonHeaders = {
   Host: 'miniapp.whu.edu.cn',
@@ -81,14 +83,15 @@ http.interceptors.response.use(
     const data = response.data as ServerData
     const rawData = data.data
 
-    // 重新模拟进入应用
-    if (data.errmsg?.includes('系统繁忙') && url && !checkUserByAppAuthApiMap[url]) {
+    // 模拟重新进入应用
+    if (
+      data.errmsg?.includes('系统繁忙') &&
+      url &&
+      (!lastEnterAppApiMap[url] || Date.now() - lastEnterAppApiMap[url] > ONE_MINUTE)
+    ) {
       await enterCourtApp(http)
-      checkUserByAppAuthApiMap[url] = true
+      lastEnterAppApiMap[url] = Date.now()
       return await http(response.config)
-    }
-    if (url) {
-      checkUserByAppAuthApiMap[url] = false
     }
 
     if (response.data.errcode !== 0) {
@@ -102,7 +105,7 @@ http.interceptors.response.use(
         (acc, cur) => (data[cur[0]] ? `${acc}${cur[1]}: ${data[cur[0]]}\n` : acc),
         '\n',
       )}`
-      throw new Error(`数据请求失败\n${errorMsg}`)
+      throw new Error(`数据请求失败\n${errorMsg}\n时间: ${getCurrentTime(true)}`)
     }
 
     if (data.hint && typeof data.hint === 'string') {

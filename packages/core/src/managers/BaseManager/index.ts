@@ -1,7 +1,9 @@
 import { AxiosInstance } from 'axios'
+import chalk from 'chalk'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
 import { mockAxios } from '@whu-court/mock'
-import { Loading, formatBracket, getTodayDate, getTomorrowDate } from '@whu-court/utils'
+import { Loading, formatBracket, getCurrentTime, getTodayDate, getTomorrowDate } from '@whu-court/utils'
+import { ErrorNoNeddRetry } from '../../consts'
 import { API_MAP, Config, CourtDetail, CourtList, CourtType, RequestData, ResponseData } from '../../types'
 
 class BaseManager {
@@ -205,8 +207,52 @@ class BaseManager {
     }
   }
 
-  protected reserveField(data: RequestData.CreateOrderData) {
-    return this.apis.createOrder(data)
+  protected async reserveField(data: RequestData.CreateOrderData, useFallback = false) {
+    const timeList = data.period.split(',').map((each) => {
+      return {
+        beginTime: each.split('-')[0],
+        endTime: each.split('-')[1],
+      }
+    })
+    const checkList = await Promise.all(
+      timeList.map((each) => {
+        const req: RequestData.UseSportFieldData = {
+          uid: this.config.token,
+          placeId: data.placeId,
+          typeId: data.motionTypeId,
+          reserveDate: data.appointmentDate,
+          fieldId: data.fieldId,
+          fieldNum: data.fieldNum,
+          isSelected: 'Y',
+          reserveTimeList: [each],
+        }
+        return this.apis.useSportField(req)
+      }),
+    )
+    const cantReserveList = checkList
+      .map((each, idx) => (each ? null : timeList[idx]))
+      .filter(Boolean)
+      .map((each) => `${each!.beginTime}-${each!.endTime}`)
+      .join(',')
+    const isAllCantReserve = checkList.every((each) => !each)
+    if (!useFallback && checkList.some((each) => !each)) {
+      throw new ErrorNoNeddRetry(
+        chalk.gray(
+          `${cantReserveList} 时间段已被预定` +
+            (isAllCantReserve ? '' : '，不考虑空闲时间段' + `。当前时间: ${getCurrentTime(true)}`),
+        ),
+      )
+    }
+    if (useFallback && isAllCantReserve) {
+      throw new ErrorNoNeddRetry(`${cantReserveList} 时间段已被预定` + `。当前时间: ${getCurrentTime(true)}`)
+    }
+    return await this.apis.createOrder({
+      ...data,
+      period: timeList
+        .filter((_, idx) => !checkList[idx])
+        .map((each) => `${each.beginTime}-${each.endTime}`)
+        .join(','),
+    })
   }
 }
 

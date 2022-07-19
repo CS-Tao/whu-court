@@ -26,11 +26,11 @@ class GitHubService {
     })
 
     this.githubApiService.interceptors.response.use(
-      (res) => {
+      (response) => {
         // @ts-ignore
         const measureId = response.config.metadata?.measureId
         measureId && Reporter.Measure.shared(measureId, 'github-graph-api-request').end()
-        return res
+        return response
       },
       (error) => {
         const status = error.response?.status
@@ -58,11 +58,11 @@ class GitHubService {
       Reporter.Measure.shared(measureId, 'github-content-api-request').start()
       return config
     })
-    this.githubApiService.interceptors.response.use((res) => {
+    this.githubApiService.interceptors.response.use((response) => {
       // @ts-ignore
       const measureId = response.config.metadata?.measureId
       measureId && Reporter.Measure.shared(measureId, 'github-content-api-request').end()
-      return res
+      return response
     })
   }
 

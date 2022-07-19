@@ -7,6 +7,7 @@ import logger from '@whu-court/logger'
 import Reporter from '@whu-court/report'
 import { Loading, Notify, getCurrentTime, getTodayDate, getTomorrowDate, sleep } from '@whu-court/utils'
 import { getApiMap } from '../../apis'
+import { ErrorNoNeddRetry } from '../../consts'
 import { CourtDetail, ReserveSetting } from '../../types'
 import AuthManager from '../AuthManager'
 import BaseManager from '../BaseManager'
@@ -23,8 +24,8 @@ const formatCountdown = (until: number) => {
   return (h > 9 ? h : `0${h}`) + ':' + (m > 9 ? m : `0${m}`) + ':' + (s > 9 ? s : `0${s}`)
 }
 
-type FailedList = Array<{ placeName: string; fieldNum: string; error: string }>
-type SuccessedList = Array<{ placeName: string; fieldNum: string }>
+type FailedList = Array<{ placeName: string; fieldNum: string; error: string; isBackup: boolean }>
+type SuccessedList = Array<{ placeName: string; fieldNum: string; isBackup: boolean }>
 
 export interface ReserveManagerOptions {
   openTime?: string | 'now'
@@ -214,7 +215,7 @@ class ReserveManager extends BaseManager {
           placeUrl: court.placeUrl,
           placeAddress: fieldDetail.placeAddress,
           placeName: fieldDetail.placeName,
-          fieldNum: field.name,
+          fieldNum: String(field.number),
           collegeName: fieldDetail.collegeName,
           collegeId: fieldDetail.collegeId,
           code: '',
@@ -231,10 +232,17 @@ class ReserveManager extends BaseManager {
       const { code } = await inquirer.prompt({
         type: 'input',
         name: 'code',
-        message: `请输入 ${requestData.fieldNum} 的登录码`,
+        message: `请输入 ${requestData.fieldNum} 号场的登录码`,
+        validate: (value) => {
+          if (!value) {
+            return '请输入登录码'
+          }
+          if (codes.includes(value)) {
+            return '登录码重复'
+          }
+          return true
+        },
       })
-      if (!code) throw Error('登录码不能为空')
-      if (codes.includes(code)) throw Error('登录码不能重复')
       this.reserveSetting.requestDataList[idx].code = code
     }
   }
@@ -379,7 +387,7 @@ class ReserveManager extends BaseManager {
     const courtCount = this.reserveSetting.minRequests
     const promises = this.reserveSetting.requestDataList
       .slice(0, courtCount)
-      .map((each) => this.loopReverve(this.reserveField(each), 3, each.fieldNum))
+      .map((each) => this.loopReverve(this.reserveField(each), 3, each.fieldNum + ' 号场'))
     const failedList: FailedList = []
     const successedList: SuccessedList = []
     for (const idx in promises) {
@@ -390,20 +398,25 @@ class ReserveManager extends BaseManager {
         successedList.push({
           placeName: requestData.placeName,
           fieldNum: requestData.fieldNum,
+          isBackup: false,
         })
       } else {
         failedList.push({
           placeName: requestData.placeName,
           fieldNum: requestData.fieldNum,
           error: res,
+          isBackup: false,
         })
       }
     }
     if (failedList.length > 0 && this.reserveSetting.requestDataList.length > courtCount) {
       logger.info(chalk.yellow(`有 ${failedList.length} 个场地预约失败，尝试预约备用场地`))
+      if (this.reserveSetting.requestDataList[0].period.split(',').length > 1) {
+        logger.info(chalk.gray('[INFO]'), '预约备用场地时，如果你选择的某个时间段已被他人预约，将忽略该时间段')
+      }
       const backupPromise = this.reserveSetting.requestDataList
         .slice(courtCount, courtCount + failedList.length)
-        .map((each) => this.loopReverve(this.reserveField(each), 3, each.fieldNum))
+        .map((each) => this.loopReverve(this.reserveField(each, true), 3, each.fieldNum + ' 号场'))
       for (const backupIdx in backupPromise) {
         const backupRequest = backupPromise[backupIdx]
         const requestData = this.reserveSetting.requestDataList[courtCount + +backupIdx]
@@ -412,12 +425,14 @@ class ReserveManager extends BaseManager {
           successedList.push({
             placeName: requestData.placeName,
             fieldNum: requestData.fieldNum,
+            isBackup: true,
           })
         } else {
           failedList.push({
             placeName: requestData.placeName,
             fieldNum: requestData.fieldNum,
             error: res,
+            isBackup: true,
           })
         }
       }
@@ -441,7 +456,7 @@ class ReserveManager extends BaseManager {
       if (error instanceof Error) {
         Reporter.report(error)
       }
-      if (tryTimes <= 1) {
+      if (tryTimes <= 1 || error instanceof ErrorNoNeddRetry) {
         if (error instanceof Error) {
           return label + ' ' + chalk.gray(error.message)
         }
@@ -467,6 +482,16 @@ class ReserveManager extends BaseManager {
       )
     }
 
+    if (failedList.length > 0 && successedList.length > 0) {
+      logger.info(
+        chalk.gray('[INFO]'),
+        `\n${successedList
+          .filter((each) => each.isBackup)
+          .map((each) => each.fieldNum)
+          .join(',')} 号场地是你设置的备用场地，预约的时间有可能和你选择的时间不一致，请进入小程序查看订单以确认订单`,
+      )
+    }
+
     Notify.notify(
       '预约结果',
       `${successedList.length} 个场馆预约成功` + (failedList.length ? `，${failedList.length} 个场馆预约失败` : ''),
@@ -478,7 +503,10 @@ class ReserveManager extends BaseManager {
   }
 
   private notifyFailedReserved(name: string, fieldNums: string[], errors: string[]) {
-    logger.info(chalk.red(`❗️ ${name} ${fieldNums.join(',')} 预约失败`), `\n详细错误信息：\n${errors.join('\n')}`)
+    logger.info(
+      chalk.red(`\n❗️ ${name} ${fieldNums.join(',')} 号场地预约失败`),
+      `\n\n详细错误信息：\n\n${errors.join('\n\n')}\n`,
+    )
   }
 }
 

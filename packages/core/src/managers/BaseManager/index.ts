@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios'
 import chalk from 'chalk'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
 import { mockAxios } from '@whu-court/mock'
-import { Loading, formatBracket, getCurrentTime, getTodayDate, getTomorrowDate } from '@whu-court/utils'
+import { Loading, getCurrentTime, getTodayDate } from '@whu-court/utils'
 import { ErrorNoNeddRetry } from '../../consts'
 import { API_MAP, Config, CourtDetail, CourtList, CourtType, RequestData, ResponseData } from '../../types'
 
@@ -77,7 +77,7 @@ class BaseManager {
   }
 
   protected async fetchTypeIdAndPlaceId(showLoading = false) {
-    const loading = new Loading('加载场馆类型')
+    const loading = new Loading('加载基础信息')
     showLoading && loading.start()
     if (Object.keys(this.typeIdMap).length > 0 && Object.keys(this.placeIdMap).length === 0) {
       return
@@ -89,13 +89,13 @@ class BaseManager {
       .filter((each) => each.placeType === '1')
       .reduce((acc, cur) => ({ ...acc, [cur.typeName]: cur.typeId }), {})
     this.placeIdMap = res.gymnasiumList.reduce((acc, cur) => ({ ...acc, [cur.placeName]: cur.placeId }), {})
-    showLoading && loading.succeed('加载场馆类型')
+    showLoading && loading.succeed('加载基础信息')
     if (Object.keys(this.typeIdMap).length === 0 || Object.keys(this.placeIdMap).length === 0) {
       throw Error(`无法识别场馆接口 queryBookingQueryInfo res: ${JSON.stringify(res)}`)
     }
   }
 
-  protected async checkFirstCourtIsOpen() {
+  protected async checkFirstCourtIsOpen(reserveDate: string) {
     const placeList = Object.keys(this.placeIdMap)
 
     /**
@@ -113,7 +113,7 @@ class BaseManager {
         await this.apis.queryPlaceListByTypeId(
           {
             typeId: this.badmintonTypeId,
-            reserveDate: getTomorrowDate(),
+            reserveDate,
             uid: this.config.token,
             placeId: court,
             currentPage: 1,
@@ -153,10 +153,10 @@ class BaseManager {
     )
     return courtInPage.pageData.map((court) => {
       return {
-        name: formatBracket(court.placeName),
+        name: court.placeName,
         id: court.placeId,
         placeUrl: court.placeUrl,
-        placeAddress: formatBracket(court.placeName),
+        placeAddress: court.placeName,
         isOpen: court.placeStatus === '0',
         fields: court.placeFieldInfoList
           .map((field) => {
@@ -204,18 +204,26 @@ class BaseManager {
       placeAddress: courtDetail.placeAddress,
       typeName: courtDetail.typeName,
       placeUrl: courtDetail.placeUrl,
+      reserveTimeInfoList: courtDetail.reserveTimeInfoList,
     }
   }
 
   protected async reserveField(data: RequestData.CreateOrderData, useFallback = false) {
+    const detail = await this.getFieldDetail(data.placeId, data.fieldId, data.fieldNum)
+    const cantReserveCourtsFromDetail = detail.reserveTimeInfoList.filter((each) => each.canReserve === '1')
+
     const timeList = data.period.split(',').map((each) => {
       return {
         beginTime: each.split('-')[0],
         endTime: each.split('-')[1],
       }
     })
+
     const checkList = await Promise.all(
       timeList.map((each) => {
+        if (cantReserveCourtsFromDetail.some((time) => time.reserveBeginTime === each.beginTime)) {
+          return false
+        }
         const req: RequestData.UseSportFieldData = {
           uid: this.config.token,
           placeId: data.placeId,
@@ -229,27 +237,30 @@ class BaseManager {
         return this.apis.useSportField(req)
       }),
     )
-    const cantReserveList = checkList
-      .map((each, idx) => (each ? null : timeList[idx]))
-      .filter(Boolean)
-      .map((each) => `${each!.beginTime}-${each!.endTime}`)
-      .join(',')
-    const isAllCantReserve = checkList.every((each) => !each)
-    if (!useFallback && checkList.some((each) => !each)) {
+
+    const cantReserveList = timeList
+      .filter((_, idx) => !checkList[idx])
+      .map((each) => `${each.beginTime}-${each.endTime}`)
+    const isEveryCantReserve = checkList.every((each) => !each)
+    const isSomeCantReserve = checkList.some((each) => !each)
+
+    if (!useFallback && isSomeCantReserve) {
       throw new ErrorNoNeddRetry(
         chalk.gray(
-          `${cantReserveList} 时间段已被预定` +
-            (isAllCantReserve ? '' : '，不考虑空闲时间段' + `。当前时间: ${getCurrentTime(true)}`),
+          `${cantReserveList.join(',')} 时间段已被预定` +
+            (isEveryCantReserve ? '' : '(非备用场地不考虑空闲时间段)') +
+            `。${getCurrentTime(true)}`,
         ),
       )
     }
-    if (useFallback && isAllCantReserve) {
-      throw new ErrorNoNeddRetry(`${cantReserveList} 时间段已被预定` + `。当前时间: ${getCurrentTime(true)}`)
+    if (useFallback && isEveryCantReserve) {
+      throw new ErrorNoNeddRetry(`${cantReserveList.join(',')} 时间段已被预定` + `。${getCurrentTime(true)}`)
     }
+
     return await this.apis.createOrder({
       ...data,
       period: timeList
-        .filter((_, idx) => !checkList[idx])
+        .filter((_, idx) => checkList[idx])
         .map((each) => `${each.beginTime}-${each.endTime}`)
         .join(','),
     })

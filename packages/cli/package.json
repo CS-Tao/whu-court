@@ -80,9 +80,9 @@
         "./dist/hooks/prerun/report"
       ],
       "postrun": [
+        "./dist/hooks/postrun/goodbye",
         "./dist/hooks/postrun/update",
-        "./dist/hooks/postrun/report",
-        "./dist/hooks/postrun/goodbye"
+        "./dist/hooks/postrun/report"
       ]
     },
     "plugins": [

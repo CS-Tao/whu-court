@@ -105,7 +105,7 @@ http.interceptors.response.use(
         (acc, cur) => (data[cur[0]] ? `${acc}${cur[1]}: ${data[cur[0]]}\n` : acc),
         '\n',
       )}`
-      throw new Error(`数据请求失败\n${errorMsg}\n时间: ${getCurrentTime(true)}`)
+      throw new Error(`数据请求失败\n${errorMsg}时间: ${getCurrentTime(true)}`)
     }
 
     if (data.hint && typeof data.hint === 'string') {

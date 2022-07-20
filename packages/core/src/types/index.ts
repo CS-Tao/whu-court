@@ -1,4 +1,4 @@
-import { RequestData } from './api'
+import { RequestData, ResponseData } from './api'
 
 export * from './api'
 
@@ -48,4 +48,5 @@ export interface CourtDetail {
   collegeName: string
   typeName: string
   placeUrl: string
+  reserveTimeInfoList: ResponseData.QueryReservePlaceDetailData['reserveTimeInfoList']
 }

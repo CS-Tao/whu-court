@@ -5,7 +5,7 @@ import configManager, { ConfigKey } from '@whu-court/config-manager'
 import http from '@whu-court/http'
 import logger from '@whu-court/logger'
 import Reporter from '@whu-court/report'
-import { Loading, Notify, getCurrentTime, getTodayDate, getTomorrowDate, sleep } from '@whu-court/utils'
+import { Loading, Notify, formatBracket, getCurrentTime, getTodayDate, getTomorrowDate, sleep } from '@whu-court/utils'
 import { getApiMap } from '../../apis'
 import { ErrorNoNeddRetry } from '../../consts'
 import { CourtDetail, ReserveSetting } from '../../types'
@@ -54,10 +54,10 @@ class ReserveManager extends BaseManager {
     // 生成预约请求数据
     await this.generateReserveSetting()
 
-    // 检查当前时间是否可以启动应用。因为需要输入登录码，有效期只有 5 分钟，所以只能在开放前 4 分钟启动
+    // 检查当前时间是否可以启动应用。因为需要输入登录码(预约码)，有效期只有 5 分钟，所以只能在开放前 4 分钟启动
     if (!(await this.checkCanRun())) return
 
-    // 提示用户输入登录码
+    // 提示用户输入登录码(预约码)
     await this.promptWxCodes()
 
     // 等待接近场馆开放时间
@@ -74,7 +74,10 @@ class ReserveManager extends BaseManager {
     const loadCourtsListLoading = new Loading('加载场馆列表').start()
     const courts = await this.getCourtList(this.options.reserveToday ? getTodayDate() : getTomorrowDate())
     const courtsChoices = courts.map((court) => ({
-      name: court.name + (court.tag ? chalk.gray(` [${court.tag}]`) : '') + (court.isOpen ? '' : chalk.red('[已闭馆]')),
+      name:
+        formatBracket(court.name) +
+        (court.tag ? chalk.gray(` [${court.tag}]`) : '') +
+        (court.isOpen ? '' : chalk.red('[已闭馆]')),
       value: court.id,
       disabled: !court.isOpen,
     }))
@@ -108,7 +111,7 @@ class ReserveManager extends BaseManager {
       {
         type: 'checkbox',
         name: 'filedIds',
-        message: '选择场地(最多两个)',
+        message: '选择场地',
         default: this.config.fields.filter((field) => fieldsChoices.some((f) => f.value === field)),
         choices: fieldsChoices,
         validate: (value) => {
@@ -141,7 +144,7 @@ class ReserveManager extends BaseManager {
           {
             type: 'checkbox',
             name: 'backupFieldIds',
-            message: '选择备用场地(最多两个)',
+            message: '选择备用场地',
             default: this.config.backupFields
               .filter((each) => !filedIds.includes(each))
               .filter((each) => backupFieldChoices.some((f) => f.value === each)),
@@ -232,13 +235,13 @@ class ReserveManager extends BaseManager {
       const { code } = await inquirer.prompt({
         type: 'input',
         name: 'code',
-        message: `请输入 ${requestData.fieldNum} 号场的登录码`,
+        message: `请输入 ${requestData.fieldNum} 号场的预约码`,
         validate: (value) => {
           if (!value) {
-            return '请输入登录码'
+            return '请输入预约码'
           }
           if (codes.includes(value)) {
-            return '登录码重复'
+            return '预约码重复'
           }
           return true
         },
@@ -271,8 +274,8 @@ class ReserveManager extends BaseManager {
     if (!wait) {
       return false
     }
-    await this.countdown(openTimeMs - FOUR_MINITES, '等待倒计时完成，完成后需要输入具有时效性登录码')
-    Notify.notify('提示', '倒计时完成，请生成并输入登录码')
+    await this.countdown(openTimeMs - FOUR_MINITES, '等待倒计时完成，完成后需要输入具有时效性预约码')
+    Notify.notify('提示', '倒计时完成，请生成并输入预约码')
     return true
   }
 
@@ -341,7 +344,7 @@ class ReserveManager extends BaseManager {
       try {
         // 等待 this.config.checkInterval * (0.8~1.2) 秒
         await sleep(this.config.checkInterval * (Math.random() * 0.4 + 0.8))
-        isOpen = await this.checkFirstCourtIsOpen()
+        isOpen = await this.checkFirstCourtIsOpen(this.options.reserveToday ? getTodayDate() : getTomorrowDate())
         checkTimes++
         isOpen
           ? loading.succeed(
@@ -387,7 +390,7 @@ class ReserveManager extends BaseManager {
     const courtCount = this.reserveSetting.minRequests
     const promises = this.reserveSetting.requestDataList
       .slice(0, courtCount)
-      .map((each) => this.loopReverve(this.reserveField(each), 3, each.fieldNum + ' 号场'))
+      .map((each) => this.loopReverve(() => this.reserveField(each), 3, each.fieldNum + ' 号场'))
     const failedList: FailedList = []
     const successedList: SuccessedList = []
     for (const idx in promises) {
@@ -412,11 +415,14 @@ class ReserveManager extends BaseManager {
     if (failedList.length > 0 && this.reserveSetting.requestDataList.length > courtCount) {
       logger.info(chalk.yellow(`有 ${failedList.length} 个场地预约失败，尝试预约备用场地`))
       if (this.reserveSetting.requestDataList[0].period.split(',').length > 1) {
-        logger.info(chalk.gray('[INFO]'), '预约备用场地时，如果你选择的某个时间段已被他人预约，将忽略该时间段')
+        logger.info(
+          chalk.gray('[INFO]'),
+          '预约备用场地时，如果某个时间段已被预约，将忽略该时间段，预约你选择的其它时间段',
+        )
       }
       const backupPromise = this.reserveSetting.requestDataList
         .slice(courtCount, courtCount + failedList.length)
-        .map((each) => this.loopReverve(this.reserveField(each, true), 3, each.fieldNum + ' 号场'))
+        .map((each) => this.loopReverve(() => this.reserveField(each, true), 3, each.fieldNum + ' 号场'))
       for (const backupIdx in backupPromise) {
         const backupRequest = backupPromise[backupIdx]
         const requestData = this.reserveSetting.requestDataList[courtCount + +backupIdx]
@@ -442,21 +448,26 @@ class ReserveManager extends BaseManager {
   }
 
   private async loopReverve(
-    request: Promise<{ status: 1 | unknown }>,
+    request: () => Promise<{ status: 1 | unknown }>,
     tryTimes = 3,
     label = '',
   ): Promise<string | true> {
     try {
-      const res = await request
+      const res = await request()
       if (res.status !== 1) {
-        return label + chalk.gray(' 已被预约')
+        return label + chalk.gray(' 已被预定')
       }
       return true
     } catch (error) {
       if (error instanceof Error) {
         Reporter.report(error)
       }
-      if (tryTimes <= 1 || error instanceof ErrorNoNeddRetry) {
+      if (
+        tryTimes <= 1 ||
+        error instanceof ErrorNoNeddRetry ||
+        (error instanceof Error && error.message.includes('已被预定'))
+      ) {
+        // no try
         if (error instanceof Error) {
           return label + ' ' + chalk.gray(error.message)
         }
@@ -482,29 +493,31 @@ class ReserveManager extends BaseManager {
       )
     }
 
-    if (failedList.length > 0 && successedList.length > 0) {
+    if (successedList.filter((each) => each.isBackup).length > 0) {
       logger.info(
-        chalk.gray('[INFO]'),
-        `\n${successedList
-          .filter((each) => each.isBackup)
-          .map((each) => each.fieldNum)
-          .join(',')} 号场地是你设置的备用场地，预约的时间有可能和你选择的时间不一致，请进入小程序查看订单以确认订单`,
+        chalk.gray('\n[INFO]'),
+        chalk.yellow(
+          `${successedList
+            .filter((each) => each.isBackup)
+            .map((each) => each.fieldNum)
+            .join(',')} 号场地`,
+        ) + '是你设置的备用场地，预约的时间可能和你选择的时间不一致',
       )
     }
 
     Notify.notify(
       '预约结果',
-      `${successedList.length} 个场馆预约成功` + (failedList.length ? `，${failedList.length} 个场馆预约失败` : ''),
+      `${successedList.length} 个场地预约成功` + (failedList.length ? `，${failedList.length} 个场地预约失败` : ''),
     )
   }
 
   private notifySuccessReserved(name: string, fieldNums: string[]) {
-    logger.info(chalk.green(`🎉 ${name} ${fieldNums.join(',')} 预约成功`))
+    logger.info(chalk.green(`🎉 ${formatBracket(name)} ${fieldNums.join(',')} 号场地预约成功`))
   }
 
   private notifyFailedReserved(name: string, fieldNums: string[], errors: string[]) {
     logger.info(
-      chalk.red(`\n❗️ ${name} ${fieldNums.join(',')} 号场地预约失败`),
+      chalk.red(`\n❗️ ${formatBracket(name)} ${fieldNums.join(',')} 号场地预约失败`),
       `\n\n详细错误信息：\n\n${errors.join('\n\n')}\n`,
     )
   }

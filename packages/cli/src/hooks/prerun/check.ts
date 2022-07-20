@@ -48,7 +48,7 @@ const hook: Hook<'prerun'> = async function (opts) {
   if (noNeedCheckCommands.includes(opts.Command.id)) return
 
   if (githubAuthManager.userInfo?.name === loverGitHubName) {
-    logger.info(pink('💖 欢迎小仙女 💖'))
+    logger.info(pink('\n💖 欢迎小仙女 💖\n'))
     return
   }
 

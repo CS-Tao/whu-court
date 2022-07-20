@@ -25,7 +25,13 @@ const formatCountdown = (until: number) => {
 }
 
 type FailedList = Array<{ placeName: string; fieldNum: string; error: string; isBackup: boolean }>
-type SuccessedList = Array<{ placeName: string; fieldNum: string; isBackup: boolean }>
+type SuccessedList = Array<{
+  placeName: string
+  fieldNum: string
+  isBackup: boolean
+  period: string
+  isFallbacked: boolean
+}>
 
 export interface ReserveManagerOptions {
   openTime?: string | 'now'
@@ -150,8 +156,8 @@ class ReserveManager extends BaseManager {
               .filter((each) => backupFieldChoices.some((f) => f.value === each)),
             choices: backupFieldChoices,
             validate: (value) => {
-              if (value.length > 2) {
-                return '最多只能选择两个备用场地'
+              if (value.length > 4) {
+                return '最多只能选择四个备用场地'
               }
               return true
             },
@@ -167,10 +173,10 @@ class ReserveManager extends BaseManager {
     const reserveTimeChoices = [8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20]
       .map((each) => {
         const nextHour = each + 1
-        const format = (h: number) => (h < 10 ? '0' + h : h)
+        const fill0 = (h: number) => (h < 10 ? '0' + h : h)
         return {
-          name: `${format(each)}:00-${format(nextHour)}:00`,
-          value: `${format(each)}:00-${format(nextHour)}:00`,
+          name: `${fill0(each)}:00-${fill0(nextHour)}:00`,
+          value: `${fill0(each)}:00-${fill0(nextHour)}:00`,
         }
       })
       .reverse()
@@ -388,59 +394,51 @@ class ReserveManager extends BaseManager {
 
   private async reserve() {
     const courtCount = this.reserveSetting.minRequests
-    const promises = this.reserveSetting.requestDataList
-      .slice(0, courtCount)
-      .map((each) => this.loopReverve(() => this.reserveField(each), 3, each.fieldNum + ' 号场'))
+    const promiseFactories = this.reserveSetting.requestDataList.map(
+      (each) => (useReserveFallback: boolean) =>
+        this.loopReverve(() => this.reserveField(each, useReserveFallback), 3, each.fieldNum + ' 号场'),
+    )
     const failedList: FailedList = []
     const successedList: SuccessedList = []
-    for (const idx in promises) {
-      const request = promises[idx]
+
+    for (const idx in promiseFactories) {
+      const isBackup = +idx >= courtCount
+      const isFirstBackup = +idx === courtCount
+
+      // 备用场地
+      if (isFirstBackup) {
+        logger.info(chalk.yellow(`有 ${failedList.length} 个场地预约失败，尝试预约备用场地`))
+        if (this.reserveSetting.requestDataList[0].period.split(',').length > 1) {
+          logger.info(
+            chalk.gray('[INFO]'),
+            '预约备用场地时，如果某个时间段已被预约，将忽略该时间段，预约你选择的其它时间段',
+          )
+        }
+      }
+
+      const res = await promiseFactories[idx](isBackup)
       const requestData = this.reserveSetting.requestDataList[idx]
-      const res = await request
-      if (res === true) {
-        successedList.push({
-          placeName: requestData.placeName,
-          fieldNum: requestData.fieldNum,
-          isBackup: false,
-        })
-      } else {
+
+      if (typeof res === 'string') {
         failedList.push({
           placeName: requestData.placeName,
           fieldNum: requestData.fieldNum,
           error: res,
-          isBackup: false,
+          isBackup,
+        })
+      } else {
+        successedList.push({
+          placeName: requestData.placeName,
+          fieldNum: requestData.fieldNum,
+          isBackup,
+          isFallbacked: res.isFallbacked,
+          period: res.period,
         })
       }
-    }
-    if (failedList.length > 0 && this.reserveSetting.requestDataList.length > courtCount) {
-      logger.info(chalk.yellow(`有 ${failedList.length} 个场地预约失败，尝试预约备用场地`))
-      if (this.reserveSetting.requestDataList[0].period.split(',').length > 1) {
-        logger.info(
-          chalk.gray('[INFO]'),
-          '预约备用场地时，如果某个时间段已被预约，将忽略该时间段，预约你选择的其它时间段',
-        )
-      }
-      const backupPromise = this.reserveSetting.requestDataList
-        .slice(courtCount, courtCount + failedList.length)
-        .map((each) => this.loopReverve(() => this.reserveField(each, true), 3, each.fieldNum + ' 号场'))
-      for (const backupIdx in backupPromise) {
-        const backupRequest = backupPromise[backupIdx]
-        const requestData = this.reserveSetting.requestDataList[courtCount + +backupIdx]
-        const res = await backupRequest
-        if (res === true) {
-          successedList.push({
-            placeName: requestData.placeName,
-            fieldNum: requestData.fieldNum,
-            isBackup: true,
-          })
-        } else {
-          failedList.push({
-            placeName: requestData.placeName,
-            fieldNum: requestData.fieldNum,
-            error: res,
-            isBackup: true,
-          })
-        }
+
+      // 达到预约数量限制
+      if (successedList.length >= courtCount) {
+        break
       }
     }
 
@@ -448,16 +446,25 @@ class ReserveManager extends BaseManager {
   }
 
   private async loopReverve(
-    request: () => Promise<{ status: 1 | unknown }>,
+    request: () => Promise<{ status: 1 | unknown; isFallbacked: boolean; period: string }>,
     tryTimes = 3,
     label = '',
-  ): Promise<string | true> {
+  ): Promise<
+    | string
+    | {
+        isFallbacked: boolean
+        period: string
+      }
+  > {
     try {
       const res = await request()
       if (res.status !== 1) {
         return label + chalk.gray(' 已被预定')
       }
-      return true
+      return {
+        isFallbacked: res.isFallbacked,
+        period: res.period,
+      }
     } catch (error) {
       if (error instanceof Error) {
         Reporter.report(error)
@@ -493,16 +500,16 @@ class ReserveManager extends BaseManager {
       )
     }
 
-    if (successedList.filter((each) => each.isBackup).length > 0) {
-      logger.info(
-        chalk.gray('\n[INFO]'),
-        chalk.yellow(
-          `${successedList
-            .filter((each) => each.isBackup)
-            .map((each) => each.fieldNum)
-            .join(',')} 号场地`,
-        ) + '是你设置的备用场地，预约的时间可能和你选择的时间不一致',
-      )
+    const fallbackList = successedList.filter((each) => each.isFallbacked)
+
+    if (fallbackList.length > 0) {
+      logger.info()
+      fallbackList.forEach((each) => {
+        logger.info(
+          chalk.gray('[NOTICE]'),
+          chalk.yellow(`${each.fieldNum} 号场地`) + ` 仅约了 ${chalk.yellow(each.period)} 时间段，其余时间段已被占用`,
+        )
+      })
     }
 
     Notify.notify(

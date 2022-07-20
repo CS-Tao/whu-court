@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/node'
-import chalk from 'chalk'
 import { environment } from '@whu-court/env'
 import { EventKey } from './type'
 
@@ -24,7 +23,6 @@ class Measure {
   private measureId: string
   private eventKey: EventKey
   private transaction?: ReturnType<Sentry.Hub['startTransaction']>
-  private debugDuration?: number
 
   get eventTag() {
     return getEventMapKey(this.measureId, this.eventKey)
@@ -36,7 +34,6 @@ class Measure {
 
   start() {
     if (environment === 'local') {
-      this.debugDuration = Date.now()
       return this
     }
     this.transaction = Sentry.startTransaction({ name: this.transactionEventTag })
@@ -45,15 +42,6 @@ class Measure {
 
   end() {
     if (environment === 'local') {
-      this.debugDuration &&
-        process.env.DEBUG &&
-        // eslint-disable-next-line no-console
-        console.debug(
-          chalk.gray('[REPORTER]'),
-          'local debug measure',
-          this.transactionEventTag,
-          Date.now() - this.debugDuration,
-        )
       return
     }
     if (this.transaction) {

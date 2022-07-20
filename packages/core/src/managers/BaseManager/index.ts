@@ -257,13 +257,21 @@ class BaseManager {
       throw new ErrorNoNeddRetry(`${cantReserveList.join(',')} 时间段已被预定` + `。${getCurrentTime(true)}`)
     }
 
-    return await this.apis.createOrder({
+    const period = timeList
+      .filter((_, idx) => checkList[idx])
+      .map((each) => `${each.beginTime}-${each.endTime}`)
+      .join(',')
+
+    const res = await this.apis.createOrder({
       ...data,
-      period: timeList
-        .filter((_, idx) => checkList[idx])
-        .map((each) => `${each.beginTime}-${each.endTime}`)
-        .join(','),
+      period,
     })
+
+    return {
+      ...res,
+      isFallbacked: isSomeCantReserve,
+      period,
+    }
   }
 }
 

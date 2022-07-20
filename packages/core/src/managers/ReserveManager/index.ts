@@ -405,15 +405,8 @@ class ReserveManager extends BaseManager {
       const isBackup = +idx >= courtCount
       const isFirstBackup = +idx === courtCount
 
-      // 备用场地
       if (isFirstBackup) {
         logger.info(chalk.yellow(`有 ${failedList.length} 个场地预约失败，尝试预约备用场地`))
-        if (this.reserveSetting.requestDataList[0].period.split(',').length > 1) {
-          logger.info(
-            chalk.gray('[INFO]'),
-            '预约备用场地时，如果某个时间段已被预约，将忽略该时间段，预约你选择的其它时间段',
-          )
-        }
       }
 
       const res = await promiseFactories[idx](isBackup)

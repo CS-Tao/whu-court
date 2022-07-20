@@ -3,7 +3,7 @@ export default () => {
     errcode: 0,
     errmsg: null,
     detailErrMsg: null,
-    data: Math.random() > 0.2,
+    data: Math.random() > 0.7,
     hint: null,
   }
 }

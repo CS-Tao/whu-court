@@ -1,7 +1,7 @@
 {
   "name": "@whu-court/utils",
   "description": "WHU-Court Utils",
-  "version": "0.1.5-beta.0",
+  "version": "0.1.5-beta.1",
   "author": "cstao.cn@icloud.com",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

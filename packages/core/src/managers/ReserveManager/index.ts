@@ -293,7 +293,7 @@ class ReserveManager extends BaseManager {
       const timer = setInterval(() => {
         const nowMs = moment().valueOf()
         if (until - nowMs <= 0) {
-          loading.succeed(label + chalk.green(' 倒计时完成') + ' 当前时间是 ' + chalk.gray(getCurrentTime(true)))
+          loading.succeed(label + chalk.green(' 倒计时完成') + ' ' + chalk.gray(getCurrentTime(true)))
           clearInterval(timer)
           resolve()
         }
@@ -339,8 +339,8 @@ class ReserveManager extends BaseManager {
     const loading = new Loading(`等待场馆后台开放，检查第 ${chalk.green(1)} 次`).start()
 
     const errors = []
+    const checkTimeList: Array<{ count: number; duration: number }> = []
     let lastTimeWindow = Date.now()
-    let checkTimes = 0
     let failTimes = 0
     let isOpen = false
 
@@ -350,13 +350,25 @@ class ReserveManager extends BaseManager {
       try {
         // 等待 this.config.checkInterval * (0.8~1.2) 秒
         await sleep(this.config.checkInterval * (Math.random() * 0.4 + 0.8))
+        const startTime = Date.now()
         isOpen = await this.checkFirstCourtIsOpen(this.options.reserveToday ? getTodayDate() : getTomorrowDate())
-        checkTimes++
+        checkTimeList.push({
+          count: checkTimeList.length + 1,
+          duration: Date.now() - startTime,
+        })
         isOpen
           ? loading.succeed(
-              `场馆后台已开放，共检查了 ${chalk.green(checkTimes)} 次。当前时间是 ` + chalk.gray(getCurrentTime(true)),
+              `场馆后台已开放，共检查了 ${chalk.green(checkTimeList.length)} 次。` + chalk.gray(getCurrentTime(true)),
             )
-          : loading.setText(`等待场馆后台开放，检查第 ${chalk.green(checkTimes)} 次`)
+          : loading.setText(`等待场馆后台开放，检查第 ${chalk.green(checkTimeList.length)} 次`)
+        if (isOpen) {
+          checkTimeList.slice(checkTimeList.length - 5, checkTimeList.length).forEach(({ count, duration }) => {
+            logger.info(
+              chalk.gray('[INFO]'),
+              `第 ${count} 次检查耗时 ${duration} 毫秒。${chalk.gray(getCurrentTime(true))}`,
+            )
+          })
+        }
       } catch (error) {
         if (error instanceof Error) {
           Reporter.report(error)

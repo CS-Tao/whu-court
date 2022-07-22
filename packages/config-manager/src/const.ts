@@ -14,7 +14,7 @@ export const defaultValues: Partial<ConfigTypes> = {
   [ConfigKey.courtUserAgent]: '',
 
   [ConfigKey.openTime]: '18:00:00',
-  [ConfigKey.checkOpenInterval]: 400,
+  [ConfigKey.checkOpenInterval]: 200,
   [ConfigKey.time]: '08-21',
   [ConfigKey.courts]: [],
   [ConfigKey.fields]: [],

@@ -2,7 +2,7 @@
 [![Join the chat at github discussion](https://img.shields.io/badge/💬-github-%23016bb6.svg)](https://github.com/CS-Tao/whu-court/discussions/18)
 [![Open the announcement](https://img.shields.io/badge/📢-github-%2300a851.svg)](https://github.com/CS-Tao/whu-court/discussions/categories/announcements)
 [![oclif](https://img.shields.io/badge/🚀-oclif-%23016bb6.svg)](https://oclif.io)
-[![license](https://img.shields.io/badge/⚖️-none-%2300a851.svg)](#%EF%B8%8F-免责声明)
+[![license](https://img.shields.io/badge/⚖️-none-%2300a851.svg)](#-版权声明)
 
 🏸 场地预约助手 CLI
 =================

@@ -9,7 +9,7 @@ const mainBranch = 'master'
 
 const getCurrentWorkspaceVersionCommand = '$(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' lerna.json)'
 
-function releaseVersion(bumpType, isManual) {
+function releaseVersion(cwd, bumpType, isManual) {
   if ([currentBranch, currentCommitHash].some((each) => !each)) {
     console.log(chalk.red('releaseVersion: currentBranch or currentCommitHash is missing'))
     process.exit(1)
@@ -68,7 +68,6 @@ function releaseVersion(bumpType, isManual) {
     ...releaseSentryCommands,
   ]
 
-  const cwd = process.argv[2] || __dirname
   console.log(chalk.green('cwd', cwd))
   commands.forEach((command) => {
     console.log(chalk.green('[exec command]', command))
@@ -90,4 +89,4 @@ function releaseVersion(bumpType, isManual) {
   })
 }
 
-releaseVersion(process.env.MANUAL_RELEASE_TYPE, !!process.env.MANUAL_RELEASE_TYPE)
+module.exports = ({ cwd }) => releaseVersion(cwd, process.env.MANUAL_RELEASE_TYPE, !!process.env.MANUAL_RELEASE_TYPE)

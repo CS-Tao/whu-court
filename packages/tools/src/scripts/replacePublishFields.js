@@ -20,12 +20,12 @@ function replacePublishFields({ cwd }) {
     const field = get(pkg, each)
     if (field) {
       if (typeof field === 'string') {
-        set(pkg, each, field.replace('src', 'dist'))
+        set(pkg, each, field.replace('src', 'dist').replace('.ts', '.js'))
       } else {
         set(
           pkg,
           each,
-          field.map((each) => each.replace('src', 'dist')),
+          field.map((each) => each.replace('src', 'dist').replace('.ts', '.js')),
         )
       }
     } else {

@@ -8,8 +8,8 @@
   },
   "homepage": "https://github.com/CS-Tao/whu-court",
   "license": "MIT",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
   "repository": "CS-Tao/whu-court",
   "files": [
     "bin",
@@ -110,5 +110,14 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "wcrt": {
+    "publishDist": [
+      "oclif.commands",
+      "oclif.helpClass",
+      "oclif.hooks.init",
+      "oclif.hooks.prerun",
+      "oclif.hooks.postrun"
+    ]
   }
 }

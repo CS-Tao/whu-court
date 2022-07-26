@@ -2847,11 +2847,11 @@ __metadata:
 
 "@whu-court/tools@file:./packages/tools::locator=whu-court%40workspace%3A.":
   version: 0.1.5-beta.4
-  resolution: "@whu-court/tools@file:./packages/tools#./packages/tools::hash=24daf1&locator=whu-court%40workspace%3A."
+  resolution: "@whu-court/tools@file:./packages/tools#./packages/tools::hash=2366e1&locator=whu-court%40workspace%3A."
   bin:
     get-remote-ref: ./bin/get-remote-ref
     wcrt: ./bin/wcrt
-  checksum: 5cfa067772bcb627cb5488e2cc628b1e7ef4acb3e92266ba007e97d56d463ba2872fd5b02e2ff045c9cf51185a249ecb368e75a22780dee9ab461c969c480680
+  checksum: 77747961a5fefb4c7d37a6619f04a1098dee62847ee4f2ff67bcddca102c9ff1e1c26cd1a27487e3e710cc05cf995b39551583c75f2274f291f6d46da0182e76
   languageName: node
   linkType: hard
 

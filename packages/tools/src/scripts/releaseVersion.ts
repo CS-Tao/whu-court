@@ -1,15 +1,15 @@
 /* eslint-disable no-console */
-const shell = require('shelljs')
-const chalk = require('chalk')
+import chalk from 'chalk'
+import { exec } from 'shelljs'
 
 const currentBranch = process.env.GITHUB_REF_NAME
 const normalizedCurrentBranch = (currentBranch || '').replace(/\//g, '-')
-const currentCommitHash = process.env.GITHUB_SHA
+const currentCommitHash = process.env.GITHUB_SHA || ''
 const mainBranch = 'master'
 
 const getCurrentWorkspaceVersionCommand = '$(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' lerna.json)'
 
-function releaseVersion(cwd, bumpType, isManual) {
+function releaseVersion(cwd: string, bumpType?: string, isManual?: boolean) {
   if ([currentBranch, currentCommitHash].some((each) => !each)) {
     console.log(chalk.red('releaseVersion: currentBranch or currentCommitHash is missing'))
     process.exit(1)
@@ -20,10 +20,10 @@ function releaseVersion(cwd, bumpType, isManual) {
   let bump
   let publishOptions
   let environment
-  let afterVersionCommands = []
+  let afterVersionCommands: string[] = []
   const isMainBranch = currentBranch === mainBranch
   if (isMainBranch) {
-    const isLatest = ['major', 'minor', 'patch'].includes(bumpType)
+    const isLatest = bumpType && ['major', 'minor', 'patch'].includes(bumpType)
     preid = 'beta'
     options = '--no-commit-hooks --exact' + (isManual ? ' --force-publish=.' : '')
     bump = bumpType || 'prerelease'
@@ -71,7 +71,7 @@ function releaseVersion(cwd, bumpType, isManual) {
   console.log(chalk.green('cwd', cwd))
   commands.forEach((command) => {
     console.log(chalk.green('[exec command]', command))
-    const { code, stdout, stderr } = shell.exec(command, {
+    const { code, stdout, stderr } = exec(command, {
       silent: true,
       fatal: true,
       cwd,
@@ -89,4 +89,5 @@ function releaseVersion(cwd, bumpType, isManual) {
   })
 }
 
-module.exports = ({ cwd }) => releaseVersion(cwd, process.env.MANUAL_RELEASE_TYPE, !!process.env.MANUAL_RELEASE_TYPE)
+module.exports = ({ cwd }: { cwd: string }) =>
+  releaseVersion(cwd, process.env.MANUAL_RELEASE_TYPE, !!process.env.MANUAL_RELEASE_TYPE)

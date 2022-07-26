@@ -8,8 +8,6 @@
     "dev": "yarn build && lerna run --no-private --parallel dev",
     "start": "./node_modules/@whu-court/cli/bin/dev",
     "start:mock": "ENABLE_MOCK=true yarn start",
-    "start:prod": "./node_modules/@whu-court/cli/bin/run",
-    "start:prod-mock": "ENABLE_MOCK=true start:prod",
     "clean": "lerna run --no-private --stream clean",
     "build": "lerna run --no-private --stream build",
     "wcrt": "FORCE_COLOR=1 ./node_modules/.bin/wcrt",

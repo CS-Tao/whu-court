@@ -2,7 +2,7 @@
 import chalk from 'chalk'
 import log4js from 'log4js'
 import path from 'path'
-import { environment } from '@whu-court/env'
+import { environment, loggerDir } from '@whu-court/env'
 import Reporter from '@whu-court/report'
 import { ErrorNoNeedReport } from './errors'
 
@@ -10,7 +10,7 @@ log4js.configure({
   appenders: {
     access: {
       type: 'dateFile',
-      filename: path.join(__dirname, '..', 'logs/access.log'),
+      filename: path.join(loggerDir, 'access.log'),
       pattern: 'yyyy-MM-dd',
       numBackups: 2,
       timezoneOffset: '1m',
@@ -18,7 +18,7 @@ log4js.configure({
     },
     errorFile: {
       type: 'dateFile',
-      filename: path.join(__dirname, '..', 'logs/error.log'),
+      filename: path.join(loggerDir, 'error.log'),
       pattern: 'yyyy-MM-dd',
       numBackups: 2,
       timezoneOffset: '1m',

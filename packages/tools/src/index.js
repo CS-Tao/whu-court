@@ -7,8 +7,6 @@ function run() {
   const args = argv._
   const command = args[0]
 
-  process.env.FORCE_COLOR = '1'
-
   if (!command) {
     console.error(chalk.red('No command specified'))
     process.exit(1)
@@ -24,6 +22,9 @@ function run() {
     case 'release-version': {
       require(path.join(scriptsDir, 'releaseVersion'))({ cwd: argv.c || process.cwd() })
       break
+    }
+    case 'replace-publish-fields': {
+      require(path.join(scriptsDir, 'replacePublishFields'))({ cwd: argv.c || process.cwd() })
     }
   }
 }

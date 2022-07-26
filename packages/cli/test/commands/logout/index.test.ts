@@ -5,6 +5,6 @@ describe('logout', () => {
     .stdout()
     .command(['logout'])
     .it('runs logout cmd', (ctx) => {
-      expect(ctx.stdout).to.contain('成功')
+      expect(ctx.stdout).to.contain('完成')
     })
 })

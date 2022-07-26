@@ -4,8 +4,7 @@ import inquirer from 'inquirer'
 import Listr from 'listr'
 import { loverGitHubName } from '@whu-court/env'
 import githubAuthManager from '@whu-court/github-auth'
-import logger from '@whu-court/logger'
-import { ErrorNoNeedReport } from '@whu-court/logger/dist/errors'
+import logger, { Logger } from '@whu-court/logger'
 import { askGitHubToken } from '../../utils/ask'
 import {
   printInBlackListInfo,
@@ -66,7 +65,7 @@ export default class Setup extends Command {
         task: async () => {
           await githubAuthManager.checkConfig()
           if (!githubAuthManager.appConfig.available) {
-            throw new ErrorNoNeedReport(printNotAvailableInfo(true))
+            throw new Logger.Errors.ErrorNoNeedReport(printNotAvailableInfo(true))
           }
         },
       },
@@ -80,11 +79,11 @@ export default class Setup extends Command {
           }
           if (!githubAuthManager.checkIfInWhiteList()) {
             githubAuthManager.clearUserInfos()
-            throw new ErrorNoNeedReport(printNotInWhiteListInfo(true))
+            throw new Logger.Errors.ErrorNoNeedReport(printNotInWhiteListInfo(true))
           }
           if (githubAuthManager.checkIfInBlackList()) {
             githubAuthManager.clearUserInfos()
-            throw new ErrorNoNeedReport(printInBlackListInfo(true))
+            throw new Logger.Errors.ErrorNoNeedReport(printInBlackListInfo(true))
           }
         },
       },
@@ -93,7 +92,7 @@ export default class Setup extends Command {
         task: async () => {
           if (!(await githubAuthManager.checkIfStared(githubToken))) {
             githubAuthManager.clearUserInfos()
-            throw new ErrorNoNeedReport(
+            throw new Logger.Errors.ErrorNoNeedReport(
               [chalk.red('为了方便管理员统计使用量，请先 star 应用:'), chalk.gray(githubAuthManager.repoLink)].join(
                 ' ',
               ),

@@ -1,8 +1,40 @@
 /* eslint-disable no-console */
 import chalk from 'chalk'
+import log4js from 'log4js'
 import { environment } from '@whu-court/env'
 import Reporter from '@whu-court/report'
 import { ErrorNoNeedReport } from './errors'
+
+log4js.configure({
+  appenders: {
+    access: {
+      type: 'dateFile',
+      filename: 'logs/access.log',
+      pattern: 'yyyy-MM-dd',
+      numBackups: 2,
+      timezoneOffset: '1m',
+      keepFileExt: true,
+    },
+    errorFile: {
+      type: 'dateFile',
+      filename: 'logs/error.log',
+      pattern: 'yyyy-MM-dd',
+      numBackups: 2,
+      timezoneOffset: '1m',
+      keepFileExt: true,
+    },
+    error: {
+      type: 'logLevelFilter',
+      level: 'ERROR',
+      appender: 'errorFile',
+    },
+  },
+  categories: {
+    default: { appenders: ['access', 'error'], level: 'DEBUG' },
+  },
+})
+
+const fileLogger = log4js.getLogger()
 
 interface Options {
   report?: boolean
@@ -23,8 +55,9 @@ class Logger {
     return new Logger(options)
   }
 
-  public warn(...data: any[]): void {
-    console.warn(...data)
+  public warn(message: string, ...data: any[]): void {
+    console.warn(message, ...data)
+    fileLogger.warn(message, ...data)
   }
 
   public error(error: string | Error, ...data: string[]): void {
@@ -35,6 +68,11 @@ class Logger {
     }
     if (this.options.report && !(error instanceof Logger.Errors.ErrorNoNeedReport)) {
       Reporter.report(typeof error === 'string' ? new Error([error, ...data].join('\n')) : error)
+    }
+    if (typeof error === 'string') {
+      fileLogger.error(error, ...data)
+    } else {
+      fileLogger.trace(error, ...data)
     }
   }
 
@@ -54,14 +92,16 @@ class Logger {
     console.info(...data)
   }
 
-  public log(...data: any[]): void {
-    console.log(...data)
+  public log(message: string, ...data: any[]): void {
+    console.log(message, ...data)
+    fileLogger.info(message, ...data)
   }
 
-  public debug(...data: any[]): void {
+  public debug(message: string, ...data: any[]): void {
     if (process.env.DEBUG) {
-      console.debug(...data)
+      console.debug(message, ...data)
     }
+    fileLogger.debug(message, ...data)
   }
 }
 

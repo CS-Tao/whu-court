@@ -188,12 +188,17 @@ class BaseManager {
     return [...firstPageData, ...secondPageData]
   }
 
-  protected async getFieldDetail(placeId: string, fieldId: string, fieldNum: string): Promise<CourtDetail> {
+  protected async getFieldDetail(
+    placeId: string,
+    fieldId: string,
+    fieldNum: string,
+    reserveDate: string,
+  ): Promise<CourtDetail> {
     const courtDetail = await this.apis.queryReservePlaceDetail({
       uid: this.config.token,
       placeId,
       typeId: this.badmintonTypeId,
-      reserveDate: getTodayDate(),
+      reserveDate,
       fieldId,
       fieldNum,
     })
@@ -209,7 +214,7 @@ class BaseManager {
   }
 
   protected async reserveField(data: RequestData.CreateOrderData, useFallback = false) {
-    const detail = await this.getFieldDetail(data.placeId, data.fieldId, data.fieldNum)
+    const detail = await this.getFieldDetail(data.placeId, data.fieldId, data.fieldNum, data.appointmentDate)
     const cantReserveCourtsFromDetail = detail.reserveTimeInfoList.filter((each) => each.canReserve === '1')
 
     const timeList = data.period.split(',').map((each) => {

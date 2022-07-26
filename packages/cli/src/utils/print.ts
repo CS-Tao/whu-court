@@ -26,25 +26,25 @@ export const printNotAvailableInfo = (noLog = false) => {
     chalk.red('软件暂不可用'),
     prohibitMsg ? `${chalk.gray(githubAuthManager.appConfig.prohibitMsg)}` : '',
   ]
-  !noLog && logger.log(...msgs)
+  !noLog && logger.info(...msgs)
   return msgs.join(' ')
 }
 
 export const printInBlackListInfo = (noLog = false) => {
   const msgs = ['🚫', chalk.red(`你在 wcr 软件黑名单中，请运行 ${chalk.green('wcr feedback')} 联系管理员`)]
-  !noLog && logger.log(...msgs)
+  !noLog && logger.info(...msgs)
   return msgs.join(' ')
 }
 
 export const printNotInWhiteListInfo = (noLog = false) => {
   const msgs = ['🚫', chalk.red(`你未在 wcr 软件白名单中，请运行 ${chalk.green('wcr feedback')} 联系管理员`)]
-  !noLog && logger.log(...msgs)
+  !noLog && logger.info(...msgs)
   return msgs.join(' ')
 }
 
 export const printNotAuthedInfo = (noLog = false) => {
   const msgs = [chalk.gray(`你尚未完成授权，运行 ${chalk.green('wcr setup')} 以继续`)]
-  !noLog && logger.log(...msgs)
+  !noLog && logger.info(...msgs)
   return msgs.join(' ')
 }
 

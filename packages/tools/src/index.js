@@ -1,6 +1,6 @@
-import chalk from 'chalk'
-import minimist from 'minimist'
-import path from 'path'
+const chalk = require('chalk')
+const minimist = require('minimist')
+const path = require('path')
 
 function run() {
   const argv = minimist(process.argv.slice(2))

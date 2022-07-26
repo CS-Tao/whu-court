@@ -12,9 +12,10 @@
     "start:prod-mock": "ENABLE_MOCK=true ./node_modules/@whu-court/cli/bin/run",
     "clean": "lerna run --no-private --stream clean",
     "build": "lerna run --no-private --stream build",
+    "wcrt": "./node_modules/.bin/wcrt",
     "eslint-all": "eslint packages/ --ext .js,.ts,.tsx",
     "eslint-all:fix": "yarn eslint-all --fix",
-    "process-commit-msg": "wcrt process-commit-msg -c $(pwd) -f",
+    "process-commit-msg": "yarn wcrt process-commit-msg -c $(pwd) -f",
     "test": "lerna run --stream test",
     "test:changed": "yarn test --since $(bash ./scripts/get-remote-ref.sh)",
     "husky:prepare": "is-ci || husky install .config/.husky",
@@ -27,7 +28,7 @@
     "cd:test": "is-ci && yarn test",
     "cd:eslint": "is-ci && yarn eslint-all",
     "cd:check": "is-ci && npm-run-all -p -l cd:eslint cd:test",
-    "cd:release": "is-ci && wcrt release-version -c $(pwd)",
+    "cd:release": "is-ci && yarn wcrt release-version -c $(pwd)",
     "version": "yarn install --no-immutable && git add yarn.lock"
   },
   "devDependencies": {
@@ -35,7 +36,6 @@
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
     "@types/node": "^17.0.41",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
-    "@whu-court/tools": "./packages/tools",
     "check-node-version": "^4.2.1",
     "commitizen": "^4.2.4",
     "commitlint": "^17.0.2",

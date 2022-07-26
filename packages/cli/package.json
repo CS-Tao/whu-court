@@ -63,26 +63,26 @@
   "oclif": {
     "bin": "wcr",
     "dirname": "wcr",
-    "commands": "./dist/commands",
+    "commands": "./src/commands",
     "additionalHelpFlags": [
       "-h"
     ],
     "additionalVersionFlags": [
       "-v"
     ],
-    "helpClass": "./dist/lib/help",
+    "helpClass": "./src/lib/help",
     "hooks": {
       "init": [
-        "./dist/hooks/init/printLogo"
+        "./src/hooks/init/printLogo"
       ],
       "prerun": [
-        "./dist/hooks/prerun/check",
-        "./dist/hooks/prerun/report"
+        "./src/hooks/prerun/check",
+        "./src/hooks/prerun/report"
       ],
       "postrun": [
-        "./dist/hooks/postrun/goodbye",
-        "./dist/hooks/postrun/update",
-        "./dist/hooks/postrun/report"
+        "./src/hooks/postrun/goodbye",
+        "./src/hooks/postrun/update",
+        "./src/hooks/postrun/report"
       ]
     },
     "plugins": [

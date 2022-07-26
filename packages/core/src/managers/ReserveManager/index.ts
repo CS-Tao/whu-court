@@ -198,7 +198,7 @@ class ReserveManager extends BaseManager {
     const fieldDetailMap: Record<string, CourtDetail> = {}
     for (const idx in allFields) {
       const f = allFields[idx]
-      const fieldDetail = await this.getFieldDetail(courtId, f.id, f.number)
+      const fieldDetail = await this.getFieldDetail(courtId, f.id, f.number, getTodayDate())
       fieldDetailMap[f.id] = fieldDetail
     }
 

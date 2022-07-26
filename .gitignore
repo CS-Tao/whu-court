@@ -17,3 +17,4 @@ tsconfig.tsbuildinfo
 !.yarn/versions
 
 .DS_store
+logs/

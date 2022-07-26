@@ -36,7 +36,7 @@ if (process.env.https_proxy) {
     if (error instanceof Error) {
       Reporter.report(error)
     }
-    logger.log(chalk.gray('[HTTPS PROXY]'), chalk.red('invalid https_proxy: ' + process.env.https_proxy))
+    logger.info(chalk.gray('[HTTPS PROXY]'), chalk.red('invalid https_proxy: ' + process.env.https_proxy))
   }
 }
 

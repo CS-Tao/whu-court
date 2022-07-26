@@ -38,7 +38,7 @@ export default class Setup extends Command {
     if (clearToken) {
       githubAuthManager.clearUserInfos()
       printLogo(false)
-      return logger.log(chalk.gray('完成'))
+      return logger.info(chalk.gray('完成'))
     }
 
     printServiceItem()
@@ -51,11 +51,11 @@ export default class Setup extends Command {
     })
 
     if (!agree) {
-      logger.log(chalk.red('🙁 配置失败。你未同意以上服务条款'))
+      logger.info(chalk.red('🙁 配置失败。你未同意以上服务条款'))
       return
     }
 
-    logger.log(chalk.green('你已同意以上服务条款'))
+    logger.info(chalk.green('你已同意以上服务条款'))
 
     const githubToken = flags['github-token'] || (await askGitHubToken())
 
@@ -112,18 +112,18 @@ export default class Setup extends Command {
 
       if (githubAuthManager.userInfo) {
         printLogo(true)
-        return logger.log(
+        return logger.info(
           chalk.green('🎉 配置成功'),
           'GitHub:',
           chalk.gray(githubAuthManager.userInfo.nickName || githubAuthManager.userInfo.name),
         )
       }
-      logger.log(chalk.red('🙁 配置失败'))
+      logger.info(chalk.red('🙁 配置失败'))
     } catch (error) {
       if (error instanceof Error) {
         githubAuthManager.clearUserInfos()
         printLogo(false)
-        logger.log(chalk.red('🙁 配置失败'))
+        logger.info(chalk.red('🙁 配置失败'))
       }
       throw error
     }

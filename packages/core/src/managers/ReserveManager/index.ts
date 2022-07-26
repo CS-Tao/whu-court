@@ -155,12 +155,6 @@ class ReserveManager extends BaseManager {
               .filter((each) => !filedIds.includes(each))
               .filter((each) => backupFieldChoices.some((f) => f.value === each)),
             choices: backupFieldChoices,
-            validate: (value) => {
-              if (value.length > 4) {
-                return '最多只能选择四个备用场地'
-              }
-              return true
-            },
           },
         ])
       ).backupFieldIds

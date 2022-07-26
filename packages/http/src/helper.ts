@@ -1,11 +1,14 @@
 import { AxiosInstance } from 'axios'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
+import logger from '@whu-court/logger'
 import { sleep } from '@whu-court/utils'
 
 const beforeEnterCourtAppWaitTime = 1000
 const afterEnterCourtAppWaitTime = 2000
 
 export const enterCourtApp = async (http: AxiosInstance): Promise<void> => {
+  const time = Date.now()
+  logger.debug('enterCourtApp start')
   await sleep(beforeEnterCourtAppWaitTime)
   await http.post(
     '/v1.0.0/application/checkUserByAppAuth',
@@ -29,4 +32,5 @@ export const enterCourtApp = async (http: AxiosInstance): Promise<void> => {
     uid: configManager.get(ConfigKey.courtToken),
   })
   await sleep(afterEnterCourtAppWaitTime)
+  logger.debug('enterCourtApp end', Date.now() - time)
 }

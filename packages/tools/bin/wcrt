@@ -1,28 +1,7 @@
-#!/usr/bin/env node
+#!/usr/bin/env ts-node
 
-const chalk = require('chalk')
 const path = require('path')
-const argv = require('minimist')(process.argv.slice(2))
+const project = path.join(__dirname, '..', 'tsconfig.json')
+require('ts-node').register({ project })
 
-const args = argv._
-const command = args[0]
-
-process.env.FORCE_COLOR = 1
-
-if (!command) {
-  console.error(chalk.red('No command specified'))
-  process.exit(1)
-}
-
-const scriptsDir = path.resolve(__dirname, '../src/scripts')
-
-switch (command) {
-  case 'process-commit-msg': {
-    require(path.join(scriptsDir, 'processCommitMsg'))({ cwd: argv.c || process.cwd(), commitFilePathInRoot: argv.f })
-    break
-  }
-  case 'release-version': {
-    require(path.join(scriptsDir, 'releaseVersion'))({ cwd: argv.c || process.cwd() })
-    break
-  }
-}
+require('../src').run()

@@ -17,9 +17,8 @@ function prefixCommitMsg(type, msg) {
   return prefixMap[type] ? `${prefixMap[type]} ${msg}` : msg
 }
 
-function processCommitMsg() {
-  const root = process.argv[2]
-  const commitFilePathInRoot = process.argv[3]
+function processCommitMsg({ cwd, commitFilePathInRoot }) {
+  const root = cwd
   if (!root || !commitFilePathInRoot) {
     console.log(chalk.red('Commit msg file path is required.', chalk.gray('e.g. .git/COMMIT_EDITMSG')))
     process.exit(1)
@@ -32,4 +31,4 @@ function processCommitMsg() {
   fs.writeFileSync(commitFilePath, newMsg)
 }
 
-processCommitMsg()
+module.exports = processCommitMsg

@@ -12,13 +12,14 @@
     "start:prod-mock": "ENABLE_MOCK=true ./node_modules/@whu-court/cli/bin/run",
     "clean": "lerna run --no-private --stream clean",
     "build": "lerna run --no-private --stream build",
+    "wcrt": "./node_modules/.bin/wcrt",
     "eslint-all": "eslint packages/ --ext .js,.ts,.tsx",
     "eslint-all:fix": "yarn eslint-all --fix",
-    "process-commit-msg": "lerna run --scope @whu-court/tools processCommitMsg -- $(pwd)",
+    "process-commit-msg": "yarn wcrt process-commit-msg -c $(pwd) -f",
     "test": "lerna run --stream test",
-    "test:changed": "yarn test --since $(lerna run --scope @whu-court/tools getRemoteRef)",
+    "test:changed": "yarn test --since $(get-remote-ref)",
     "husky:prepare": "is-ci || husky install .config/.husky",
-    "check:node-version": "lerna run --scope @whu-court/tools check:node-version -- $(pwd)",
+    "check:node-version": "check-node-version --package",
     "prepare": "yarn check:node-version && yarn husky:prepare",
     "postinstall": "yarn prepare",
     "ci:test": "is-ci && git fetch origin master && yarn test --since origin/master",
@@ -27,7 +28,7 @@
     "cd:test": "is-ci && yarn test",
     "cd:eslint": "is-ci && yarn eslint-all",
     "cd:check": "is-ci && npm-run-all -p -l cd:eslint cd:test",
-    "cd:release": "is-ci && lerna run --scope @whu-court/tools releaseVersion -- $(pwd)",
+    "cd:release": "is-ci && wcrt release-version --cwd=$(pwd)",
     "version": "yarn install --no-immutable && git add yarn.lock"
   },
   "devDependencies": {
@@ -35,6 +36,7 @@
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
     "@types/node": "^17.0.41",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "check-node-version": "^4.2.1",
     "commitizen": "^4.2.4",
     "commitlint": "^17.0.2",
     "commitlint-config-cz": "^0.13.3",
@@ -109,7 +111,7 @@
     "importOrderSortSpecifiers": true
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "resolutions": {
     "mocha": "^9.2.2",

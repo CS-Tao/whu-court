@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import chalk from 'chalk'
-import { exec } from 'shelljs'
+const chalk = require('chalk')
+const { exec } = require('shelljs')
 
 const currentBranch = process.env.GITHUB_REF_NAME
 const normalizedCurrentBranch = (currentBranch || '').replace(/\//g, '-')
@@ -9,7 +9,7 @@ const mainBranch = 'master'
 
 const getCurrentWorkspaceVersionCommand = '$(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' lerna.json)'
 
-function releaseVersion(cwd: string, bumpType?: string, isManual?: boolean) {
+function releaseVersion(cwd, bumpType, isManual) {
   if ([currentBranch, currentCommitHash].some((each) => !each)) {
     console.log(chalk.red('releaseVersion: currentBranch or currentCommitHash is missing'))
     process.exit(1)
@@ -20,7 +20,7 @@ function releaseVersion(cwd: string, bumpType?: string, isManual?: boolean) {
   let bump
   let publishOptions
   let environment
-  let afterVersionCommands: string[] = []
+  let afterVersionCommands = []
   const isMainBranch = currentBranch === mainBranch
   if (isMainBranch) {
     const isLatest = bumpType && ['major', 'minor', 'patch'].includes(bumpType)
@@ -89,5 +89,4 @@ function releaseVersion(cwd: string, bumpType?: string, isManual?: boolean) {
   })
 }
 
-module.exports = ({ cwd }: { cwd: string }) =>
-  releaseVersion(cwd, process.env.MANUAL_RELEASE_TYPE, !!process.env.MANUAL_RELEASE_TYPE)
+module.exports = ({ cwd }) => releaseVersion(cwd, process.env.MANUAL_RELEASE_TYPE, !!process.env.MANUAL_RELEASE_TYPE)

@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
-import chalk from 'chalk'
-import fs from 'fs'
+const chalk = require('chalk')
+const fs = require('fs')
 
-function prefixCommitMsg(type: string, msg: string) {
-  const prefixMap: Record<string, string> = {
+function prefixCommitMsg(type, msg) {
+  const prefixMap = {
     WIP: '🚧',
     feat: '🎸',
     fix: '🐛',
@@ -17,7 +17,7 @@ function prefixCommitMsg(type: string, msg: string) {
   return prefixMap[type] ? `${prefixMap[type]} ${msg}` : msg
 }
 
-function processCommitMsg({ cwd, commitFilePathInRoot }: { cwd: string; commitFilePathInRoot: string }) {
+function processCommitMsg({ cwd, commitFilePathInRoot }) {
   const root = cwd
   if (!root || !commitFilePathInRoot || typeof commitFilePathInRoot !== 'string') {
     console.log(chalk.red('Commit msg file path is required.', chalk.gray('e.g. .git/COMMIT_EDITMSG')))

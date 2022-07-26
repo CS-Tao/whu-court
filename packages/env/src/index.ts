@@ -15,6 +15,7 @@ export interface Envs {
   adminEmail: string
   vips: string[]
   loverGitHubName: string
+  loggerDir: string
 }
 
 const version = pkg.version
@@ -36,7 +37,8 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
-const appRoot = path.join(__dirname, '..', '..', '..', '..')
+const appRoot =
+  environment === 'local' ? path.join(__dirname, '..', '..', '..') : path.join(__dirname, '..', '..', '..', '..')
 
 const description = '🏸 场地预约助手'
 
@@ -45,6 +47,8 @@ const mainPkg: Envs['mainPkg'] = {
   version,
   description,
 }
+
+const loggerDir = path.join(appRoot, 'logs')
 
 const adminEmail = 'sneer-innings.0u@icloud.com'
 const vips = ['lsq210', 'CS-Tao']
@@ -59,7 +63,8 @@ const envs: Envs = {
   vips,
   loverGitHubName,
   adminEmail,
+  loggerDir,
 }
 
-export { environment, version, prerelease, appRoot, mainPkg, vips, loverGitHubName, adminEmail }
+export { environment, version, prerelease, appRoot, mainPkg, vips, loverGitHubName, adminEmail, loggerDir }
 export default envs

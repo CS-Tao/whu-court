@@ -2845,16 +2845,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@whu-court/tools@file:./packages/tools::locator=whu-court%40workspace%3A.":
-  version: 0.1.5-beta.4
-  resolution: "@whu-court/tools@file:./packages/tools#./packages/tools::hash=2366e1&locator=whu-court%40workspace%3A."
-  bin:
-    get-remote-ref: ./bin/get-remote-ref
-    wcrt: ./bin/wcrt
-  checksum: 77747961a5fefb4c7d37a6619f04a1098dee62847ee4f2ff67bcddca102c9ff1e1c26cd1a27487e3e710cc05cf995b39551583c75f2274f291f6d46da0182e76
-  languageName: node
-  linkType: hard
-
 "@whu-court/tools@workspace:packages/tools":
   version: 0.0.0-use.local
   resolution: "@whu-court/tools@workspace:packages/tools"
@@ -12101,7 +12091,6 @@ __metadata:
     "@trivago/prettier-plugin-sort-imports": ^3.2.0
     "@types/node": ^17.0.41
     "@typescript-eslint/eslint-plugin": ^5.27.0
-    "@whu-court/tools": ./packages/tools
     check-node-version: ^4.2.1
     commitizen: ^4.2.4
     commitlint: ^17.0.2

@@ -17,7 +17,8 @@
     "!dist/**/*.map"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "main": "src/date.ts"
   },
   "dependencies": {
     "listr": "^0.14.3",

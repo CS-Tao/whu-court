@@ -1,3 +1,5 @@
+import isWsl from 'is-wsl'
+import os from 'os'
 import path from 'path'
 import { parse } from 'semver'
 import { uid } from 'uid'
@@ -18,6 +20,7 @@ export interface Envs {
   loverGitHubName: string
   loggerDir: string
   currentProcessUID: string
+  detailVersion: string
 }
 
 const version = pkg.version
@@ -52,6 +55,9 @@ const mainPkg: Envs['mainPkg'] = {
 
 const loggerDir = path.join(appRoot, 'logs')
 const currentProcessUID = uid()
+const detailVersion = `${mainPkg.version} ${isWsl ? 'wsl' : os.platform()}-${
+  os.arch() === 'ia32' ? 'x86' : os.arch()
+} node-${process.version}`
 
 const adminEmail = 'sneer-innings.0u@icloud.com'
 const vips = ['lsq210', 'CS-Tao']
@@ -68,6 +74,7 @@ const envs: Envs = {
   adminEmail,
   loggerDir,
   currentProcessUID,
+  detailVersion,
 }
 
 export {
@@ -81,5 +88,6 @@ export {
   adminEmail,
   loggerDir,
   currentProcessUID,
+  detailVersion,
 }
 export default envs

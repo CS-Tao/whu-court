@@ -1,6 +1,7 @@
 import { ConfigKey } from '@whu-court/config-manager'
 
 export const configs: Array<{
+  icon: string
   name: string
   key: ConfigKey
   desc: string
@@ -8,6 +9,7 @@ export const configs: Array<{
   deserialize: (value: string) => number | string | string[]
 }> = [
   {
+    icon: '🚦',
     name: 'checkOpenInterval',
     key: ConfigKey.checkOpenInterval,
     desc: '检查是否可以开始抢场地的时间间隔',
@@ -15,6 +17,7 @@ export const configs: Array<{
     deserialize: (value) => +value,
   },
   {
+    icon: '⏰',
     name: 'openTime',
     key: ConfigKey.openTime,
     desc: '开始抢场地的时间',
@@ -22,6 +25,7 @@ export const configs: Array<{
     deserialize: (value) => value,
   },
   {
+    icon: '🔑',
     name: 'statsKey',
     key: ConfigKey.statsKey,
     desc: '随机数据密钥，可自定义\n提供此 key 可协助管理员查日志',

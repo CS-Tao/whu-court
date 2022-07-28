@@ -4,7 +4,7 @@ import path from 'path'
 const logo = path.join(__dirname, '../assets/icon/logo.png')
 
 export default class Notify {
-  public static notify(title: string, message: string) {
+  public static notify(title: string, message: string, sound = false) {
     notifier.notify({
       title,
       message,
@@ -12,6 +12,7 @@ export default class Notify {
       contentImage: logo,
       wait: false,
       timeout: false,
+      sound,
     })
   }
 }

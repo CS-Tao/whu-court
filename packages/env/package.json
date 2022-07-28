@@ -19,7 +19,8 @@
     "access": "public"
   },
   "dependencies": {
-    "semver": "^7.3.7"
+    "semver": "^7.3.7",
+    "uid": "^2.0.0"
   },
   "devDependencies": {
     "@types/semver": "^7.3.9"

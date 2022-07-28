@@ -1,5 +1,6 @@
 import path from 'path'
 import { parse } from 'semver'
+import { uid } from 'uid'
 import pkg from '../package.json'
 
 export interface Envs {
@@ -16,6 +17,7 @@ export interface Envs {
   vips: string[]
   loverGitHubName: string
   loggerDir: string
+  currentProcessUID: string
 }
 
 const version = pkg.version
@@ -49,6 +51,7 @@ const mainPkg: Envs['mainPkg'] = {
 }
 
 const loggerDir = path.join(appRoot, 'logs')
+const currentProcessUID = uid()
 
 const adminEmail = 'sneer-innings.0u@icloud.com'
 const vips = ['lsq210', 'CS-Tao']
@@ -64,7 +67,19 @@ const envs: Envs = {
   loverGitHubName,
   adminEmail,
   loggerDir,
+  currentProcessUID,
 }
 
-export { environment, version, prerelease, appRoot, mainPkg, vips, loverGitHubName, adminEmail, loggerDir }
+export {
+  environment,
+  version,
+  prerelease,
+  appRoot,
+  mainPkg,
+  vips,
+  loverGitHubName,
+  adminEmail,
+  loggerDir,
+  currentProcessUID,
+}
 export default envs

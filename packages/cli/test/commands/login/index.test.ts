@@ -5,6 +5,6 @@ describe('login', () => {
     .stdout()
     .command(['login', '--token=foo', '--sid=bar', '--user-agent=baz'])
     .it('runs login cmd', (ctx) => {
-      expect(ctx.stdout).to.contain('🎉 登录成功 账号 520')
+      expect(ctx.stdout).to.contain('🎉 登录成功 账号 20180410-520')
     })
 })

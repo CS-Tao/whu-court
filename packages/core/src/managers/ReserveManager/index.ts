@@ -167,16 +167,24 @@ class ReserveManager extends BaseManager {
       .map((id) => court.fields.find((each) => each.id === id))
       .filter(Boolean) as CourtList[number]['fields']
 
-    const reserveTimeChoices = [8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20]
-      .map((each) => {
-        const nextHour = each + 1
-        const fill0 = (h: number) => (h < 10 ? '0' + h : h)
-        return {
-          name: `${fill0(each)}:00-${fill0(nextHour)}:00`,
-          value: `${fill0(each)}:00-${fill0(nextHour)}:00`,
-        }
-      })
-      .reverse()
+    const reserveTimeChoices = [8, 9, 10, 11, 14, 15, 16, 17, 18, 19, 20].map((each) => {
+      const nextHour = each + 1
+      const fill0 = (h: number) => (h < 10 ? '0' + h : h)
+      let icon = '🌕'
+      if (each < 10) {
+        icon = '🌥'
+      } else if (each < 11) {
+        icon = '🌤'
+      } else if (each < 16) {
+        icon = '🌞'
+      } else if (each < 18) {
+        icon = '🌤'
+      }
+      return {
+        name: `${fill0(each)}:00-${fill0(nextHour)}:00 ${icon}`,
+        value: `${fill0(each)}:00-${fill0(nextHour)}:00`,
+      }
+    })
 
     const { reserveTime } = await inquirer.prompt<{ reserveTime: string[] }>([
       {
@@ -184,7 +192,7 @@ class ReserveManager extends BaseManager {
         name: 'reserveTime',
         message: '选择时间',
         default: this.config.reserveTime.split(',').filter((each) => reserveTimeChoices.some((t) => t.value === each)),
-        choices: reserveTimeChoices,
+        choices: reserveTimeChoices.reverse(),
         loop: false,
         validate: (value) => {
           if (!value || value.length === 0) {
@@ -192,9 +200,10 @@ class ReserveManager extends BaseManager {
           }
           return true
         },
+        filter: (value) => value.reverse(),
       },
     ])
-    this.config.reserveTime = reserveTime.reverse().join(',')
+    this.config.reserveTime = reserveTime.join(',')
     configManager.set(ConfigKey.time, this.config.reserveTime)
 
     const loadDetailLoading = new Loading('生成预约信息').start()
@@ -278,7 +287,7 @@ class ReserveManager extends BaseManager {
       return false
     }
     await this.countdown(openTimeMs - FOUR_MINITES, '等待倒计时完成，完成后需要输入预约码')
-    Notify.notify('提示', '倒计时完成，请生成并输入预约码')
+    Notify.notify('提示', '倒计时完成，请生成并输入预约码', true)
     return true
   }
 

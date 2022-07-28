@@ -6,15 +6,6 @@ import { AuthManager } from '@whu-court/core'
 import http from '@whu-court/http'
 import { Loading } from '@whu-court/utils'
 
-const table = new Table({
-  head: ['Key', 'Value'],
-  wordWrap: true,
-  wrapOnWordBoundary: false,
-  style: {
-    head: ['green', 'bold'],
-  },
-})
-
 export default class Check extends Command {
   static description = 'Check login status.'
 
@@ -40,11 +31,24 @@ export default class Check extends Command {
 
     const showInPlainText = flags.show
 
-    table.push(['account', authManager.getAccount()])
-    table.push(['login time', moment(authManager.getLoginTime()).format('YYYY-MM-DD HH:mm:ss')])
-    table.push(['x-outh-token', authManager.getToken(showInPlainText)])
-    table.push(['x-outh-sid', authManager.getSid(showInPlainText)])
-    table.push(['user-agent', authManager.getUserAgent().slice(0, 20) + '...'])
+    const table = new Table({
+      head: [showInPlainText ? '👀' : '🫥', 'Key', 'Value'],
+      wordWrap: true,
+      wrapOnWordBoundary: false,
+      style: {
+        head: ['green', 'bold'],
+      },
+    })
+
+    table.push(['💻', 'account', authManager.getAccount()])
+    table.push(['🕰', 'login time', moment(authManager.getLoginTime()).format('YYYY-MM-DD HH:mm:ss')])
+    table.push(['🤐', 'x-outh-token', authManager.getToken(showInPlainText)])
+    table.push(['🪪', 'x-outh-sid', authManager.getSid(showInPlainText)])
+    table.push([
+      '📱',
+      'user-agent',
+      showInPlainText ? authManager.getUserAgent() : authManager.getUserAgent().slice(0, 20) + '...',
+    ])
 
     const status = await authManager.validate()
 

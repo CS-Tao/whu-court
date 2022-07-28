@@ -23,7 +23,7 @@ export default () => ({
         cancelTime: null,
         cancelChannel: null,
         status: 3,
-        creatorId: '520',
+        creatorId: '20180410-520',
         creatorIdentity: '2',
         placeType: 1,
         amount: 20.0,

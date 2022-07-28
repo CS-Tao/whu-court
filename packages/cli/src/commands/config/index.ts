@@ -5,7 +5,7 @@ import configManager from '@whu-court/config-manager'
 import { configs } from '../../const'
 
 const table = new Table({
-  head: ['Key', 'Value', 'Description'],
+  head: ['📝', 'Key', 'Value', 'Description'],
   wordWrap: true,
   wrapOnWordBoundary: false,
   style: {
@@ -54,8 +54,9 @@ export default class Config extends Command {
         }
       })
 
-      currentValues.forEach(({ name, value, previous, desc }) => {
+      currentValues.forEach(({ icon, name, value, previous, desc }) => {
         table.push([
+          icon,
           name,
           previous === value
             ? `${value} (${chalk.yellow('not changed')})`
@@ -67,10 +68,12 @@ export default class Config extends Command {
       return
     }
 
-    const showList = flags.list
+    const showList = !args.configName || flags.list
 
     if (showList) {
-      configs.forEach(({ name, key, desc, serialize }) => table.push([name, serialize(configManager.get(key)), desc]))
+      configs.forEach(({ icon, name, key, desc, serialize }) =>
+        table.push([icon, name, serialize(configManager.get(key)), desc]),
+      )
       this.log(table.toString())
       return
     }
@@ -90,7 +93,7 @@ export default class Config extends Command {
     }
 
     if (configName && !configValue) {
-      table.push([config.name, config.serialize(configManager.get(config.key)), config.desc])
+      table.push([config.icon, config.name, config.serialize(configManager.get(config.key)), config.desc])
       this.log(table.toString())
       return
     }
@@ -100,6 +103,7 @@ export default class Config extends Command {
       configManager.set(config.key, config.deserialize(configValue))
       const value = config.serialize(configManager.get(config.key))
       table.push([
+        config.icon,
         config.name,
         previous === value
           ? `${value} (${chalk.yellow('not changed')})`

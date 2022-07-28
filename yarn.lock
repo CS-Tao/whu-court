@@ -2772,6 +2772,7 @@ __metadata:
   resolution: "@whu-court/env@workspace:packages/env"
   dependencies:
     "@types/semver": ^7.3.9
+    is-wsl: ^2.2.0
     semver: ^7.3.7
     uid: ^2.0.0
   languageName: unknown

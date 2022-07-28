@@ -1,3 +1,3 @@
-export class ErrorNoNeddRetry extends Error {
-  name = 'ErrorNoNeddRetry'
+export class ErrorNoNeedRetry extends Error {
+  name = 'ErrorNoNeedRetry'
 }

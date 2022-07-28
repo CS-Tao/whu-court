@@ -1,13 +1,14 @@
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import moment from 'moment'
+import { uid } from 'uid'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
 import http from '@whu-court/http'
 import logger from '@whu-court/logger'
 import Reporter from '@whu-court/report'
 import { Loading, Notify, formatBracket, getCurrentTime, getTodayDate, getTomorrowDate, sleep } from '@whu-court/utils'
 import { getApiMap } from '../../apis'
-import { ErrorNoNeddRetry } from '../../consts'
+import { ErrorNoNeedRetry } from '../../consts'
 import { CourtDetail, ReserveSetting } from '../../types'
 import AuthManager from '../AuthManager'
 import BaseManager from '../BaseManager'
@@ -274,7 +275,7 @@ class ReserveManager extends BaseManager {
     if (!wait) {
       return false
     }
-    await this.countdown(openTimeMs - FOUR_MINITES, '等待倒计时完成，完成后需要输入具有时效性预约码')
+    await this.countdown(openTimeMs - FOUR_MINITES, '等待倒计时完成，完成后需要输入预约码')
     Notify.notify('提示', '倒计时完成，请生成并输入预约码')
     return true
   }
@@ -325,16 +326,18 @@ class ReserveManager extends BaseManager {
     const diffMs = openTimeMs - nowMs
     if (diffMs > FIVE_SECONDS) {
       await this.countdown(openTimeMs - FIVE_SECONDS, '等待场馆开放(提前 5 秒开始准备预约)')
+      logger.debug('waitOpen', '倒计时完成')
     }
   }
 
   private async checkOpen() {
     if (this.config.openTime === 'now') return
+    logger.debug('checkOpen', '检查场馆后台开放开始')
     const loading = new Loading(`等待场馆后台开放，检查第 ${chalk.green(1)} 次`).start()
 
     const errors = []
-    const checkTimeList: Array<{ count: number; duration: number }> = []
     let lastTimeWindow = Date.now()
+    let checkTimes = 0
     let failTimes = 0
     let isOpen = false
 
@@ -342,27 +345,21 @@ class ReserveManager extends BaseManager {
 
     while (!isOpen) {
       try {
-        // 等待 this.config.checkInterval * (0.8~1.2) 秒
-        await sleep(this.config.checkInterval * (Math.random() * 0.4 + 0.8))
         const startTime = Date.now()
+        // 等待 this.config.checkInterval * (0.8~1.2) 秒
+        checkTimes > 0 && (await sleep(this.config.checkInterval * (Math.random() * 0.4 + 0.8)))
+        const sleepTime = Date.now() - startTime
         isOpen = await this.checkFirstCourtIsOpen(this.options.reserveToday ? getTodayDate() : getTomorrowDate())
-        checkTimeList.push({
-          count: checkTimeList.length + 1,
-          duration: Date.now() - startTime,
-        })
+        checkTimes++
+        logger.debug(
+          'checkOpen',
+          `第 ${checkTimes} 次检查耗时 ${Date.now() - startTime} 毫秒，其中休眠 ${sleepTime} 毫秒`,
+        )
         isOpen
           ? loading.succeed(
-              `场馆后台已开放，共检查了 ${chalk.green(checkTimeList.length)} 次。` + chalk.gray(getCurrentTime(true)),
+              `场馆后台已开放，共检查了 ${chalk.green(checkTimes)} 次。` + chalk.gray(getCurrentTime(true)),
             )
-          : loading.setText(`等待场馆后台开放，检查第 ${chalk.green(checkTimeList.length)} 次`)
-        if (isOpen) {
-          checkTimeList.slice(checkTimeList.length - 5, checkTimeList.length).forEach(({ count, duration }) => {
-            logger.info(
-              chalk.gray('[INFO]'),
-              `第 ${count} 次检查耗时 ${duration} 毫秒。${chalk.gray(getCurrentTime(true))}`,
-            )
-          })
-        }
+          : loading.setText(`等待场馆后台开放，检查第 ${chalk.green(checkTimes)} 次`)
       } catch (error) {
         if (error instanceof Error) {
           Reporter.report(error)
@@ -372,12 +369,15 @@ class ReserveManager extends BaseManager {
           errors.length = 0
           failTimes = 0
           lastTimeWindow = Date.now()
+          logger.debug('checkOpen', '重置错误计数')
         }
 
         failTimes++
         errors.push(error)
+        logger.debug('checkOpen', '检查场馆后台开放失败', failTimes, error)
 
         if (failTimes > this.checkOpenAllowFailTimesPerMin) {
+          logger.debug('checkOpen', '检查场馆后台开放失败次数超过限制，放弃检查')
           loading.fail('等待场馆后台开放')
 
           logger.info(
@@ -396,9 +396,13 @@ class ReserveManager extends BaseManager {
         }
       }
     }
+
+    logger.debug('checkOpen', '检查场馆后台开放完成')
   }
 
   private async reserve() {
+    const reserveLogUid = uid()
+    logger.debug('reserve', '🟢 开始预约', reserveLogUid)
     const courtCount = this.reserveSetting.minRequests
     const promiseFactories = this.reserveSetting.requestDataList.map(
       (each) => (useReserveFallback: boolean) =>
@@ -412,7 +416,7 @@ class ReserveManager extends BaseManager {
       const isFirstBackup = +idx === courtCount
 
       if (isFirstBackup) {
-        logger.info(chalk.yellow(`有 ${failedList.length} 个场地预约失败，尝试预约备用场地`))
+        logger.log(chalk.yellow(`有 ${failedList.length} 个场地预约失败，尝试预约备用场地`))
       }
 
       const res = await promiseFactories[idx](isBackup)
@@ -437,11 +441,13 @@ class ReserveManager extends BaseManager {
 
       // 达到预约数量限制
       if (successedList.length >= courtCount) {
+        logger.debug('reserve', '预约数量达到限制，停止预约')
         break
       }
     }
 
     this.notifyResult(successedList, failedList)
+    logger.debug('reserve', '🔴 结束预约', reserveLogUid)
   }
 
   private async loopReverve(
@@ -470,7 +476,7 @@ class ReserveManager extends BaseManager {
       }
       if (
         tryTimes <= 1 ||
-        error instanceof ErrorNoNeddRetry ||
+        error instanceof ErrorNoNeedRetry ||
         (error instanceof Error && error.message.includes('已被预定'))
       ) {
         // no try
@@ -504,7 +510,7 @@ class ReserveManager extends BaseManager {
     if (fallbackList.length > 0) {
       logger.info()
       fallbackList.forEach((each) => {
-        logger.info(
+        logger.log(
           chalk.gray('[NOTICE]'),
           chalk.yellow(`${each.fieldNum} 号场地`) + ` 仅约了 ${chalk.yellow(each.period)} 时间段，其余时间段已被占用`,
         )
@@ -518,11 +524,11 @@ class ReserveManager extends BaseManager {
   }
 
   private notifySuccessReserved(name: string, fieldNums: string[]) {
-    logger.info(chalk.green(`🎉 ${formatBracket(name)} ${fieldNums.join(',')} 号场地预约成功`))
+    logger.log(chalk.green(`🎉 ${formatBracket(name)} ${fieldNums.join(',')} 号场地预约成功`))
   }
 
   private notifyFailedReserved(name: string, fieldNums: string[], errors: string[]) {
-    logger.info(
+    logger.log(
       chalk.red(`\n❗️ ${formatBracket(name)} ${fieldNums.join(',')} 号场地预约失败`),
       `\n\n详细错误信息：\n\n${errors.join('\n\n')}\n`,
     )

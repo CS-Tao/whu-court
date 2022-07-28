@@ -1,3 +1,5 @@
+const fill0 = (h: number) => (h < 10 ? '0' + h : h)
+
 export default () => ({
   errcode: 0,
   errmsg: null,
@@ -14,19 +16,17 @@ export default () => ({
     sportTypePrice: 5.0,
     reserveDate: '2022年06月01日',
     discountDuration: 0,
-    reserveTimeInfoList: [
-      {
-        canReserve: '0',
-        isReserve: null,
-        reserveBeginTime: '16:00',
-        reserveEndTime: '17:00',
-        timeAreaVal: '1',
-        fieldPrice: 5.0,
-        lightPrice: 0.0,
-        isSelfUseField: 'N',
-        isStudent: 0,
-      },
-    ],
+    reserveTimeInfoList: [8, 9, 10, 11, 14, 15, 16, 17, 18, 19, 20].map((each) => ({
+      canReserve: Math.random() > 0.15 ? '0' : '1',
+      isReserve: null,
+      reserveBeginTime: `${fill0(each)}:00`,
+      reserveEndTime: `${fill0(each + 1)}:00`,
+      timeAreaVal: '1',
+      fieldPrice: 5.0,
+      lightPrice: 0.0,
+      isSelfUseField: 'N',
+      isStudent: 0,
+    })),
   },
   hint: null,
 })

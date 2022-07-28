@@ -95,7 +95,7 @@ class Logger {
 
   public log(message: string, ...data: any[]): void {
     console.log(message, ...data)
-    fileLogger.info(message, ...data)
+    fileLogger.info(message.replace(/\n/g, '  '), ...data.map((each) => each.replace(/\n/g, '  ')))
   }
 
   public debug(message: string, ...data: any[]): void {

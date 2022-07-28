@@ -1,9 +1,10 @@
 import { AxiosInstance } from 'axios'
 import chalk from 'chalk'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
+import logger from '@whu-court/logger'
 import { mockAxios } from '@whu-court/mock'
 import { Loading, getCurrentTime, getTodayDate } from '@whu-court/utils'
-import { ErrorNoNeddRetry } from '../../consts'
+import { ErrorNoNeedRetry } from '../../consts'
 import { API_MAP, Config, CourtDetail, CourtList, CourtType, RequestData, ResponseData } from '../../types'
 
 class BaseManager {
@@ -214,8 +215,30 @@ class BaseManager {
   }
 
   protected async reserveField(data: RequestData.CreateOrderData, useFallback = false) {
+    logger.debug(
+      'reserveField',
+      'start',
+      '场馆',
+      data.placeName,
+      '场地',
+      data.fieldNum,
+      '日期',
+      data.appointmentDate,
+      '时间',
+      data.period,
+      '是否使用接受备用时间',
+      useFallback,
+    )
     const detail = await this.getFieldDetail(data.placeId, data.fieldId, data.fieldNum, data.appointmentDate)
     const cantReserveCourtsFromDetail = detail.reserveTimeInfoList.filter((each) => each.canReserve === '1')
+
+    logger.debug(
+      'reserveField',
+      '场馆详情',
+      detail.reserveTimeInfoList
+        .map((each) => `${each.reserveBeginTime}-${each.reserveEndTime}` + (each.canReserve === '1' ? '(❌)' : '(✅)'))
+        .join(', '),
+    )
 
     const timeList = data.period.split(',').map((each) => {
       return {
@@ -225,8 +248,13 @@ class BaseManager {
     })
 
     const checkList = await Promise.all(
-      timeList.map((each) => {
-        if (cantReserveCourtsFromDetail.some((time) => time.reserveBeginTime === each.beginTime)) {
+      timeList.map(async (each) => {
+        if (
+          cantReserveCourtsFromDetail.some(
+            (time) => time.reserveBeginTime === each.beginTime && time.reserveEndTime === each.endTime,
+          )
+        ) {
+          logger.debug('reserveField', `${each.beginTime}-${each.endTime}`, '场馆详情标明不可预约')
           return false
         }
         const req: RequestData.UseSportFieldData = {
@@ -239,7 +267,13 @@ class BaseManager {
           isSelected: 'Y',
           reserveTimeList: [each],
         }
-        return this.apis.useSportField(req)
+        const res = await this.apis.useSportField(req)
+        logger.debug(
+          'reserveField',
+          `${each.beginTime}-${each.endTime}`,
+          `useSportField ${res ? '可预约' : '不可预约'}`,
+        )
+        return res
       }),
     )
 
@@ -250,16 +284,18 @@ class BaseManager {
     const isSomeCantReserve = checkList.some((each) => !each)
 
     if (!useFallback && isSomeCantReserve) {
-      throw new ErrorNoNeddRetry(
-        chalk.gray(
-          `${cantReserveList.join(',')} 时间段已被预定` +
-            (isEveryCantReserve ? '' : '(非备用场地不考虑空闲时间段)') +
-            `。${getCurrentTime(true)}`,
-        ),
+      const msg = chalk.gray(
+        `${cantReserveList.join(',')} 时间段已被预定` +
+          (isEveryCantReserve ? '' : '(非备用场地不考虑空闲时间段)') +
+          `。${getCurrentTime(true)}`,
       )
+      logger.debug('reserveField', 'throw ErrorNoNeedRetry', msg)
+      throw new ErrorNoNeedRetry(msg)
     }
     if (useFallback && isEveryCantReserve) {
-      throw new ErrorNoNeddRetry(`${cantReserveList.join(',')} 时间段已被预定` + `。${getCurrentTime(true)}`)
+      const msg = `${cantReserveList.join(',')} 时间段已被预定` + `。${getCurrentTime(true)}`
+      logger.debug('reserveField', 'throw ErrorNoNeedRetry', msg)
+      throw new ErrorNoNeedRetry(msg)
     }
 
     const period = timeList
@@ -267,10 +303,23 @@ class BaseManager {
       .map((each) => `${each.beginTime}-${each.endTime}`)
       .join(',')
 
+    logger.debug('reserveField', 'final period', period, 'isSomeCantReserve', isSomeCantReserve)
+
     const res = await this.apis.createOrder({
       ...data,
       period,
     })
+
+    logger.debug(
+      'reserveField',
+      'createOrder',
+      'orderNumber',
+      res.orderNumber,
+      'status',
+      res.status,
+      'isSomeCantReserve',
+      isSomeCantReserve,
+    )
 
     return {
       ...res,

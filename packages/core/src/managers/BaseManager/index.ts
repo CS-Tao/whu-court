@@ -218,15 +218,15 @@ class BaseManager {
     logger.debug(
       'reserveField',
       'start',
-      '场馆',
+      '[场馆]',
       data.placeName,
-      '场地',
+      '[场地]',
       data.fieldNum,
-      '日期',
+      '[日期]',
       data.appointmentDate,
-      '时间',
+      '[时间]',
       data.period,
-      '是否使用接受备用时间',
+      '[是否使用接受备用时间]',
       useFallback,
     )
     const detail = await this.getFieldDetail(data.placeId, data.fieldId, data.fieldNum, data.appointmentDate)
@@ -234,7 +234,7 @@ class BaseManager {
 
     logger.debug(
       'reserveField',
-      '场馆详情',
+      '[场馆详情]',
       detail.reserveTimeInfoList
         .map((each) => `${each.reserveBeginTime}-${each.reserveEndTime}` + (each.canReserve === '1' ? '(❌)' : '(✅)'))
         .join(', '),
@@ -303,7 +303,7 @@ class BaseManager {
       .map((each) => `${each.beginTime}-${each.endTime}`)
       .join(',')
 
-    logger.debug('reserveField', 'final period', period, 'isSomeCantReserve', isSomeCantReserve)
+    logger.debug('reserveField', '[final period]', period, '[isSomeCantReserve]', isSomeCantReserve)
 
     const res = await this.apis.createOrder({
       ...data,
@@ -313,11 +313,11 @@ class BaseManager {
     logger.debug(
       'reserveField',
       'createOrder',
-      'orderNumber',
+      '[orderNumber]',
       res.orderNumber,
-      'status',
+      '[status]',
       res.status,
-      'isSomeCantReserve',
+      '[isSomeCantReserve]',
       isSomeCantReserve,
     )
 

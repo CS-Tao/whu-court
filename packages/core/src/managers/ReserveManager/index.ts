@@ -9,7 +9,7 @@ import Reporter from '@whu-court/report'
 import { Loading, Notify, formatBracket, getCurrentTime, getTodayDate, getTomorrowDate, sleep } from '@whu-court/utils'
 import { getApiMap } from '../../apis'
 import { ErrorNoNeedRetry } from '../../consts'
-import { CourtDetail, ReserveSetting } from '../../types'
+import { CourtDetail, CourtList, ReserveSetting } from '../../types'
 import AuthManager from '../AuthManager'
 import BaseManager from '../BaseManager'
 
@@ -163,7 +163,9 @@ class ReserveManager extends BaseManager {
     this.config.backupFields = backupFieldIds
     configManager.set(ConfigKey.backupFields, backupFieldIds)
 
-    const allFields = court.fields.filter((each) => [...filedIds, ...backupFieldIds].includes(each.id))
+    const allFields = [...filedIds, ...backupFieldIds]
+      .map((id) => court.fields.find((each) => each.id === id))
+      .filter(Boolean) as CourtList[number]['fields']
 
     const reserveTimeChoices = [8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20]
       .map((each) => {

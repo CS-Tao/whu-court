@@ -22,7 +22,7 @@ export default () => ({
         morningCanReserve: '0',
         afternoonCanReserve: '1',
         eveningCanReserve: '1',
-        canReserve: '0',
+        canReserve: Math.random() > 0.8 ? '0' : '1',
         canReserveTime: '18',
         sportTypeList: [
           {

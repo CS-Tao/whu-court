@@ -48,7 +48,6 @@ const http = Axios.create({
 })
 
 http.interceptors.request.use((config) => {
-  logger.debug(chalk.gray('[HTTP]'), 'Request:', config.method, config.url)
   config.headers = config.headers || {}
   const token = config.headers['x-outh-token'] || (configManager.get(ConfigKey.courtToken) as string)
   const sid = config.headers['x-outh-sid'] || (configManager.get(ConfigKey.courtSid) as string)
@@ -65,8 +64,11 @@ http.interceptors.request.use((config) => {
   // @ts-ignore
   config.metadata = {
     measureId,
+    requestTime: Date.now(),
   }
   Reporter.Measure.shared(measureId, 'court-api-request').start()
+
+  logger.debug('HTTP Request:', config.method, measureId)
 
   return config
 })
@@ -75,7 +77,10 @@ http.interceptors.response.use(
   async (response) => {
     // @ts-ignore
     const measureId = response.config.metadata?.measureId
+    // @ts-ignore
+    const requestTime = response.config.metadata?.requestTime
     measureId && Reporter.Measure.shared(measureId, 'court-api-request').end()
+    logger.debug('HTTP Response:', response.config.method, measureId, `${Date.now() - requestTime}ms`)
 
     if (!response.data) return response
 

@@ -6,7 +6,7 @@ const CHECK_INTERVAL = {
   ALWAYS: 1,
 }
 
-const DIST_TAG_MAP: Record<typeof environment, string> = {
+const DIST_TAG_MAP: Record<typeof environment, 'alpha' | 'beta' | 'latest'> = {
   local: 'alpha',
   staging: 'alpha',
   gray: 'beta',
@@ -35,6 +35,10 @@ export default class AutoUpdateManager {
   private notifier?: UpdateNotifier.UpdateNotifier
 
   notify() {
-    this.notifier?.notify()
+    this.notifier?.notify({
+      message: `Run \`npm i -g ${this.mainPkg?.name}${
+        DIST_TAG_MAP[environment] === 'latest' ? '' : `@${DIST_TAG_MAP[environment]}`
+      }\` to update.`,
+    })
   }
 }

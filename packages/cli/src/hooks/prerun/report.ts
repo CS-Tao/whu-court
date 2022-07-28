@@ -4,7 +4,6 @@ import logger from '@whu-court/logger'
 import Reporter from '@whu-court/report'
 
 const hook: Hook<'prerun'> = async function (opts) {
-  logger.debug('🟢 '.repeat(40))
   logger.debug('运行命令: ' + opts.Command.id)
   Reporter.init({
     user: {

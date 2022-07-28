@@ -35,10 +35,6 @@ export default class AutoUpdateManager {
   private notifier?: UpdateNotifier.UpdateNotifier
 
   notify() {
-    this.notifier?.notify({
-      message: `Run \`npm i -g ${this.mainPkg?.name}${
-        DIST_TAG_MAP[environment] === 'latest' ? '' : `@${DIST_TAG_MAP[environment]}`
-      }\` to update.`,
-    })
+    this.notifier?.notify()
   }
 }

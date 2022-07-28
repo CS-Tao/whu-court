@@ -10,7 +10,7 @@ module.exports = {
     },
     {
       value: 'fix',
-      name: '🐛  fix:      A bug fix',
+      name: '🐞  fix:      A bug fix',
     },
     {
       value: 'chore',

@@ -2754,6 +2754,7 @@ __metadata:
   dependencies:
     "@types/inquirer": ^8.2.1
     "@whu-court/config-manager": 0.1.5-beta.4
+    "@whu-court/env": 0.1.5-beta.4
     "@whu-court/http": 0.1.5-beta.4
     "@whu-court/logger": 0.1.5-beta.4
     "@whu-court/mock": 0.1.5-beta.4

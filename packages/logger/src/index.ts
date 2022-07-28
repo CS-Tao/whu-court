@@ -2,7 +2,7 @@
 import chalk from 'chalk'
 import log4js from 'log4js'
 import path from 'path'
-import { environment, loggerDir } from '@whu-court/env'
+import { currentProcessUID, environment, loggerDir } from '@whu-court/env'
 import Reporter from '@whu-court/report'
 import { ErrorNoNeedReport } from './errors'
 
@@ -71,9 +71,9 @@ class Logger {
       Reporter.report(typeof error === 'string' ? new Error([error, ...data].join('\n')) : error)
     }
     if (typeof error === 'string') {
-      fileLogger.error(error, ...data)
+      fileLogger.error(`[${currentProcessUID}]`, error, ...data)
     } else {
-      fileLogger.trace(error, ...data)
+      fileLogger.trace(`[${currentProcessUID}]`, error, ...data)
     }
   }
 
@@ -95,14 +95,18 @@ class Logger {
 
   public log(message: string, ...data: any[]): void {
     console.log(message, ...data)
-    fileLogger.info(message.replace(/\n/g, '  '), ...data.map((each) => each.replace(/\n/g, '  ')))
+    fileLogger.info(
+      `[${currentProcessUID}]`,
+      message.replace(/\n/g, '  '),
+      ...data.map((each) => each.replace(/\n/g, '  ')),
+    )
   }
 
   public debug(message: string, ...data: any[]): void {
     if (process.env.DEBUG) {
       console.debug(message, ...data)
     }
-    fileLogger.debug(message, ...data)
+    fileLogger.debug(`[${currentProcessUID}]`, message, ...data)
   }
 }
 

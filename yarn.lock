@@ -2773,6 +2773,7 @@ __metadata:
   dependencies:
     "@types/semver": ^7.3.9
     semver: ^7.3.7
+    uid: ^2.0.0
   languageName: unknown
   linkType: soft
 

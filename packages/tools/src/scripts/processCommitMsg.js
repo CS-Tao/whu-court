@@ -6,7 +6,7 @@ function prefixCommitMsg(type, msg) {
   const prefixMap = {
     WIP: '🚧',
     feat: '🎸',
-    fix: '🐛',
+    fix: '🐞',
     chore: '📦',
     refactor: '🧰',
     docs: '📚',

@@ -6,7 +6,16 @@ import configManager, { ConfigKey } from '@whu-court/config-manager'
 import http from '@whu-court/http'
 import logger from '@whu-court/logger'
 import Reporter from '@whu-court/report'
-import { Loading, Notify, formatBracket, getCurrentTime, getTodayDate, getTomorrowDate, sleep } from '@whu-court/utils'
+import {
+  Loading,
+  Notify,
+  fill0,
+  formatBracket,
+  getCurrentTime,
+  getTodayDate,
+  getTomorrowDate,
+  sleep,
+} from '@whu-court/utils'
 import { getApiMap } from '../../apis'
 import { ErrorNoNeedRetry } from '../../consts'
 import { CourtDetail, CourtList, ReserveSetting } from '../../types'
@@ -167,9 +176,8 @@ class ReserveManager extends BaseManager {
       .map((id) => court.fields.find((each) => each.id === id))
       .filter(Boolean) as CourtList[number]['fields']
 
-    const reserveTimeChoices = [8, 9, 10, 11, 14, 15, 16, 17, 18, 19, 20].map((each) => {
+    const reserveTimeChoices = this.allowedTimes.map((each) => {
       const nextHour = each + 1
-      const fill0 = (h: number) => (h < 10 ? '0' + h : h)
       let icon = '🌕'
       if (each < 10) {
         icon = '🌥'
@@ -458,6 +466,11 @@ class ReserveManager extends BaseManager {
     }
 
     this.notifyResult(successedList, failedList)
+
+    const fieldsStatusTable = this.fieldsStatusTable
+    if (fieldsStatusTable) {
+      logger.debug('reserve', this.fieldsStatusTable)
+    }
     logger.debug('reserve', '🔴 结束预约', reserveLogUid)
   }
 

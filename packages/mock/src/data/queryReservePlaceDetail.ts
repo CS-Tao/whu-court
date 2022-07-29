@@ -1,4 +1,4 @@
-const fill0 = (h: number) => (h < 10 ? '0' + h : h)
+import { fill0 } from '@whu-court/utils'
 
 export default () => ({
   errcode: 0,

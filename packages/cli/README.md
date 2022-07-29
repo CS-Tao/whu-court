@@ -157,7 +157,7 @@ EXAMPLES
 
   $ wcr config time
 
-  $ wcr config time 15-17,18-21,!8-12
+  $ wcr config checkOpenInterval 100
 ```
 
 ## `wcr reset`

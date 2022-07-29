@@ -4,7 +4,7 @@ import configManager, { ConfigKey } from '@whu-court/config-manager'
 import { environment } from '@whu-court/env'
 import logger from '@whu-court/logger'
 import { mockAxios } from '@whu-court/mock'
-import { Loading, getCurrentTime, getTodayDate } from '@whu-court/utils'
+import { Loading, fill0, getCurrentTime, getTodayDate } from '@whu-court/utils'
 import { ErrorNoNeedRetry } from '../../consts'
 import { API_MAP, Config, CourtDetail, CourtList, CourtType, RequestData, ResponseData } from '../../types'
 
@@ -19,6 +19,8 @@ class BaseManager {
 
   protected http: AxiosInstance
   protected apis: API_MAP
+  protected allowedTimes = [8, 9, 10, 11, 14, 15, 16, 17, 18, 19, 20]
+  protected countStatus?: { name: string; date: string; fieldsStatus: Record<string, Record<string, boolean>> }
   protected config: Config = {
     openTime: configManager.get(ConfigKey.openTime) as string,
     token: configManager.get(ConfigKey.courtToken) as string,
@@ -39,6 +41,24 @@ class BaseManager {
       throw Error('数据异常 typeIdMap is empty')
     }
     return this.typeIdMap[typeList.find((each) => each.includes('羽毛球')) || typeList[0]]
+  }
+
+  protected get fieldsStatusTable() {
+    if (!this.countStatus) {
+      return ''
+    }
+    const table: string[][] = []
+    Object.keys(this.countStatus.fieldsStatus).forEach((fieldNum) => {
+      const fieldStatus = this.countStatus!.fieldsStatus[fieldNum]
+      table.push([
+        `[🏸 ${fill0(+fieldNum)} 号场地]`,
+        ...Object.keys(fieldStatus).map((each) => each + (fieldStatus[each] ? '(✅)' : '(❌)')),
+      ])
+    })
+    return (
+      `[${this.countStatus.date}] ${this.countStatus.name}各场地详情\n` +
+      table.map((each) => each.join('\t')).join('\n')
+    )
   }
 
   private getCourtToken() {
@@ -240,6 +260,15 @@ class BaseManager {
         .map((each) => `${each.reserveBeginTime}-${each.reserveEndTime}` + (each.canReserve === '1' ? '(❌)' : '(✅)'))
         .join(', '),
     )
+
+    if (!this.countStatus) {
+      this.countStatus = { name: data.placeName, date: data.appointmentDate, fieldsStatus: {} }
+    }
+
+    this.countStatus!.fieldsStatus[data.fieldNum] = detail.reserveTimeInfoList.reduce((acc, cur) => {
+      acc[`${cur.reserveBeginTime}-${cur.reserveEndTime}`] = cur.canReserve === '0'
+      return acc
+    }, {} as Record<string, boolean>)
 
     const timeList = data.period.split(',').map((each) => {
       return {

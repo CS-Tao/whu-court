@@ -16,7 +16,7 @@ const table = new Table({
 export default class Config extends Command {
   static description = 'Manage court configs.'
 
-  static examples = ['$ wcr config -l', '$ wcr config time', '$ wcr config time 15-17,18-21,!8-12']
+  static examples = ['$ wcr config -l', '$ wcr config time', '$ wcr config checkOpenInterval 100']
 
   static flags = {
     list: Flags.boolean({

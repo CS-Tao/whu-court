@@ -333,23 +333,23 @@ class BaseManager {
       .map((each) => `${each.beginTime}-${each.endTime}`)
       .join(',')
 
-    logger.debug('reserveField', '[final period]', period, '[isSomeCantReserve]', isSomeCantReserve)
+    logger.debug(
+      'reserveField',
+      '创建订单',
+      '[场地]',
+      data.fieldNum,
+      '[预约时间段]',
+      period,
+      '[时间段是否有遗漏]',
+      isSomeCantReserve,
+    )
 
     const res = await this.apis.createOrder({
       ...data,
       period,
     })
 
-    logger.debug(
-      'reserveField',
-      'createOrder',
-      '[orderNumber]',
-      res.orderNumber,
-      '[status]',
-      res.status,
-      '[isSomeCantReserve]',
-      isSomeCantReserve,
-    )
+    logger.debug('reserveField', '创建订单-结果', '[订单号]', res.orderNumber, '[状态码]', res.status)
 
     return {
       ...res,

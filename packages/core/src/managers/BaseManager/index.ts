@@ -251,7 +251,7 @@ class BaseManager {
       useFallback,
     )
     const detail = await this.getFieldDetail(data.placeId, data.fieldId, data.fieldNum, data.appointmentDate)
-    const cantReserveCourtsFromDetail = detail.reserveTimeInfoList.filter((each) => each.canReserve === '1')
+    const canReserveCourtsFromDetail = detail.reserveTimeInfoList.filter((each) => each.canReserve === '0')
 
     logger.debug(
       'reserveField',
@@ -279,11 +279,7 @@ class BaseManager {
 
     const checkList = await Promise.all(
       timeList.map(async (each) => {
-        if (
-          cantReserveCourtsFromDetail.some(
-            (time) => time.reserveBeginTime === each.beginTime && time.reserveEndTime === each.endTime,
-          )
-        ) {
+        if (canReserveCourtsFromDetail.every((time) => time.reserveBeginTime !== each.beginTime)) {
           logger.debug('reserveField', `${each.beginTime}-${each.endTime}`, '场馆详情标明不可预约')
           return false
         }

@@ -360,8 +360,6 @@ class ReserveManager extends BaseManager {
     let failTimes = 0
     let isOpen = false
 
-    await this.fetchTypeIdAndPlaceId()
-
     while (!isOpen) {
       try {
         const startTime = Date.now()

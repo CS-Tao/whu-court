@@ -2815,12 +2815,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@whu-court/auto-update@0.1.5-beta.8, @whu-court/auto-update@workspace:packages/auto-update":
+"@whu-court/auto-update@0.1.5-beta.9, @whu-court/auto-update@workspace:packages/auto-update":
   version: 0.0.0-use.local
   resolution: "@whu-court/auto-update@workspace:packages/auto-update"
   dependencies:
     "@types/update-notifier": ^5.1.0
-    "@whu-court/env": 0.1.5-beta.8
+    "@whu-court/env": 0.1.5-beta.9
     update-notifier: ^5.1.0
   languageName: unknown
   linkType: soft
@@ -2838,15 +2838,15 @@ __metadata:
     "@types/mocha": ^9.0.0
     "@types/node": ^16.9.4
     "@types/node-notifier": ^8.0.2
-    "@whu-court/auto-update": 0.1.5-beta.8
-    "@whu-court/config-manager": 0.1.5-beta.8
-    "@whu-court/core": 0.1.5-beta.8
-    "@whu-court/env": 0.1.5-beta.8
-    "@whu-court/github-auth": 0.1.5-beta.8
-    "@whu-court/http": 0.1.5-beta.8
-    "@whu-court/logger": 0.1.5-beta.8
-    "@whu-court/report": 0.1.5-beta.8
-    "@whu-court/utils": 0.1.5-beta.8
+    "@whu-court/auto-update": 0.1.5-beta.9
+    "@whu-court/config-manager": 0.1.5-beta.9
+    "@whu-court/core": 0.1.5-beta.9
+    "@whu-court/env": 0.1.5-beta.9
+    "@whu-court/github-auth": 0.1.5-beta.9
+    "@whu-court/http": 0.1.5-beta.9
+    "@whu-court/logger": 0.1.5-beta.9
+    "@whu-court/report": 0.1.5-beta.9
+    "@whu-court/utils": 0.1.5-beta.9
     cfonts: ^3.1.0
     chai: ^4
     chalk: 4.1.2
@@ -2872,27 +2872,27 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@whu-court/config-manager@0.1.5-beta.8, @whu-court/config-manager@workspace:packages/config-manager":
+"@whu-court/config-manager@0.1.5-beta.9, @whu-court/config-manager@workspace:packages/config-manager":
   version: 0.0.0-use.local
   resolution: "@whu-court/config-manager@workspace:packages/config-manager"
   dependencies:
-    "@whu-court/env": 0.1.5-beta.8
+    "@whu-court/env": 0.1.5-beta.9
     conf: ^10.1.2
   languageName: unknown
   linkType: soft
 
-"@whu-court/core@0.1.5-beta.8, @whu-court/core@workspace:packages/core":
+"@whu-court/core@0.1.5-beta.9, @whu-court/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@whu-court/core@workspace:packages/core"
   dependencies:
     "@types/inquirer": ^8.2.1
-    "@whu-court/config-manager": 0.1.5-beta.8
-    "@whu-court/env": 0.1.5-beta.8
-    "@whu-court/http": 0.1.5-beta.8
-    "@whu-court/logger": 0.1.5-beta.8
-    "@whu-court/mock": 0.1.5-beta.8
-    "@whu-court/report": 0.1.5-beta.8
-    "@whu-court/utils": 0.1.5-beta.8
+    "@whu-court/config-manager": 0.1.5-beta.9
+    "@whu-court/env": 0.1.5-beta.9
+    "@whu-court/http": 0.1.5-beta.9
+    "@whu-court/logger": 0.1.5-beta.9
+    "@whu-court/mock": 0.1.5-beta.9
+    "@whu-court/report": 0.1.5-beta.9
+    "@whu-court/utils": 0.1.5-beta.9
     axios: ^0.27.2
     chalk: 4.1.2
     inquirer: ^8.2.3
@@ -2901,7 +2901,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@whu-court/env@0.1.5-beta.8, @whu-court/env@workspace:packages/env":
+"@whu-court/env@0.1.5-beta.9, @whu-court/env@workspace:packages/env":
   version: 0.0.0-use.local
   resolution: "@whu-court/env@workspace:packages/env"
   dependencies:
@@ -2912,57 +2912,57 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@whu-court/github-auth@0.1.5-beta.8, @whu-court/github-auth@workspace:packages/github-auth":
+"@whu-court/github-auth@0.1.5-beta.9, @whu-court/github-auth@workspace:packages/github-auth":
   version: 0.0.0-use.local
   resolution: "@whu-court/github-auth@workspace:packages/github-auth"
   dependencies:
-    "@whu-court/config-manager": 0.1.5-beta.8
-    "@whu-court/logger": 0.1.5-beta.8
-    "@whu-court/report": 0.1.5-beta.8
+    "@whu-court/config-manager": 0.1.5-beta.9
+    "@whu-court/logger": 0.1.5-beta.9
+    "@whu-court/report": 0.1.5-beta.9
     axios: ^0.27.2
     uid: ^2.0.0
   languageName: unknown
   linkType: soft
 
-"@whu-court/http@0.1.5-beta.8, @whu-court/http@workspace:packages/http":
+"@whu-court/http@0.1.5-beta.9, @whu-court/http@workspace:packages/http":
   version: 0.0.0-use.local
   resolution: "@whu-court/http@workspace:packages/http"
   dependencies:
-    "@whu-court/config-manager": 0.1.5-beta.8
-    "@whu-court/env": 0.1.5-beta.8
-    "@whu-court/logger": 0.1.5-beta.8
-    "@whu-court/report": 0.1.5-beta.8
-    "@whu-court/utils": 0.1.5-beta.8
+    "@whu-court/config-manager": 0.1.5-beta.9
+    "@whu-court/env": 0.1.5-beta.9
+    "@whu-court/logger": 0.1.5-beta.9
+    "@whu-court/report": 0.1.5-beta.9
+    "@whu-court/utils": 0.1.5-beta.9
     axios: ^0.27.2
     chalk: 4.1.2
     uid: ^2.0.0
   languageName: unknown
   linkType: soft
 
-"@whu-court/logger@0.1.5-beta.8, @whu-court/logger@workspace:packages/logger":
+"@whu-court/logger@0.1.5-beta.9, @whu-court/logger@workspace:packages/logger":
   version: 0.0.0-use.local
   resolution: "@whu-court/logger@workspace:packages/logger"
   dependencies:
-    "@whu-court/env": 0.1.5-beta.8
-    "@whu-court/report": 0.1.5-beta.8
+    "@whu-court/env": 0.1.5-beta.9
+    "@whu-court/report": 0.1.5-beta.9
     chalk: 4.1.2
     log4js: ^6.6.1
   languageName: unknown
   linkType: soft
 
-"@whu-court/mock@0.1.5-beta.8, @whu-court/mock@workspace:packages/mock":
+"@whu-court/mock@0.1.5-beta.9, @whu-court/mock@workspace:packages/mock":
   version: 0.0.0-use.local
   resolution: "@whu-court/mock@workspace:packages/mock"
   dependencies:
-    "@whu-court/logger": 0.1.5-beta.8
-    "@whu-court/utils": 0.1.5-beta.8
+    "@whu-court/logger": 0.1.5-beta.9
+    "@whu-court/utils": 0.1.5-beta.9
     axios: ^0.27.2
     axios-mock-adapter: ^1.21.1
     chalk: 4.1.2
   languageName: unknown
   linkType: soft
 
-"@whu-court/report@0.1.5-beta.8, @whu-court/report@workspace:packages/report":
+"@whu-court/report@0.1.5-beta.9, @whu-court/report@workspace:packages/report":
   version: 0.0.0-use.local
   resolution: "@whu-court/report@workspace:packages/report"
   dependencies:
@@ -2970,8 +2970,8 @@ __metadata:
     "@sentry/node": ^7.1.1
     "@sentry/tracing": ^7.1.1
     "@types/md5": ^2.3.2
-    "@whu-court/config-manager": 0.1.5-beta.8
-    "@whu-court/env": 0.1.5-beta.8
+    "@whu-court/config-manager": 0.1.5-beta.9
+    "@whu-court/env": 0.1.5-beta.9
     address: ^1.2.0
     chalk: 4.1.2
     md5: ^2.3.0
@@ -3003,7 +3003,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@whu-court/utils@0.1.5-beta.8, @whu-court/utils@workspace:packages/utils":
+"@whu-court/utils@0.1.5-beta.9, @whu-court/utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@whu-court/utils@workspace:packages/utils"
   dependencies:

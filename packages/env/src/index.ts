@@ -25,6 +25,7 @@ export interface Envs {
 
 const version = pkg.version
 const semverVersion = parse(version, {
+  // @ts-expect-error
   includePrerelease: true,
   loose: true,
 })

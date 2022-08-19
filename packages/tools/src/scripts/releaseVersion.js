@@ -24,7 +24,7 @@ function releaseVersion(cwd, bumpType, isManual) {
   const isMainBranch = currentBranch === mainBranch
   if (isMainBranch) {
     const isLatest = bumpType && ['major', 'minor', 'patch'].includes(bumpType)
-    preid = 'beta'
+    preid = isLatest ? '' : 'beta'
     options = '--no-commit-hooks --exact' + (isManual ? ' --force-publish=.' : '')
     bump = bumpType || 'prerelease'
     publishOptions = isLatest ? '--dist-tag=latest' : '--dist-tag=beta'
@@ -61,8 +61,10 @@ function releaseVersion(cwd, bumpType, isManual) {
     `sentry-cli releases --org cs-tao deploys whu-court@v${getCurrentWorkspaceVersionCommand} new -e ${environment}`,
   ]
 
+  const preidOptions = preid ? `--preid ${preid} ` : ''
+
   const commands = [
-    `yarn lerna version ${bump} --preid ${preid} ${options} --yes`,
+    `yarn lerna version ${bump} ${preidOptions}${options} --yes`,
     ...afterVersionCommands,
     `yarn lerna publish from-git --registry https://registry.npmjs.org/ ${publishOptions} --no-git-tag-version --no-push --no-verify-access --yes`,
     ...releaseSentryCommands,

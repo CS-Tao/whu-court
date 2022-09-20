@@ -9,8 +9,9 @@ import { getCurrentTime } from '@whu-court/utils'
 import { enterCourtApp } from './helper'
 import { ServerData } from './types'
 
-const lastEnterAppApiMap: Record<string, number> = {}
-const ONE_MINUTE = 60 * 1000
+const lastEnterAppApiMap: Record<string, { timestamp: number; times: number }> = {}
+const RETRY_TIME_WINDOW = 10 * 1000
+const RETRY_TIMES_PER_TIME_WINDOW = 3
 
 const commonHeaders = {
   Host: 'miniapp.whu.edu.cn',
@@ -92,10 +93,22 @@ http.interceptors.response.use(
     if (
       data.errmsg?.includes('系统繁忙') &&
       url &&
-      (!lastEnterAppApiMap[url] || Date.now() - lastEnterAppApiMap[url] > ONE_MINUTE)
+      (!lastEnterAppApiMap[url] ||
+        (lastEnterAppApiMap[url].times <= RETRY_TIMES_PER_TIME_WINDOW &&
+          Date.now() - lastEnterAppApiMap[url].timestamp < RETRY_TIME_WINDOW) ||
+        (lastEnterAppApiMap[url].times > RETRY_TIMES_PER_TIME_WINDOW &&
+          Date.now() - lastEnterAppApiMap[url].timestamp > RETRY_TIME_WINDOW))
     ) {
       await enterCourtApp(http)
-      lastEnterAppApiMap[url] = Date.now()
+      if (lastEnterAppApiMap[url] && Date.now() - lastEnterAppApiMap[url].timestamp < RETRY_TIME_WINDOW) {
+        lastEnterAppApiMap[url].times++
+        lastEnterAppApiMap[url].timestamp = Date.now()
+      } else {
+        lastEnterAppApiMap[url] = {
+          times: 1,
+          timestamp: Date.now(),
+        }
+      }
       return await http(response.config)
     }
 

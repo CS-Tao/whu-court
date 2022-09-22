@@ -1,11 +1,13 @@
 import Axios from 'axios'
 import chalk from 'chalk'
+import md5 from 'md5'
 import { uid } from 'uid'
 import { URL } from 'url'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
 import logger from '@whu-court/logger'
 import Reporter from '@whu-court/report'
 import { getCurrentTime } from '@whu-court/utils'
+import { getCache, setCache } from './cache'
 import { enterCourtApp } from './helper'
 import { ServerData } from './types'
 
@@ -41,6 +43,8 @@ if (process.env.https_proxy) {
   }
 }
 
+const CANCEL_TOKEN = Axios.CancelToken
+
 const http = Axios.create({
   baseURL: 'https://miniapp.whu.edu.cn/wisdomapi',
   timeout: 10000,
@@ -71,6 +75,12 @@ http.interceptors.request.use((config) => {
 
   logger.debug('HTTP Request:', config.method, measureId)
 
+  if (config.url && getCache(config.url)) {
+    const source = CANCEL_TOKEN.source()
+    config.cancelToken = source.token
+    source.cancel(getCache(config.url) as any)
+  }
+
   return config
 })
 
@@ -90,26 +100,36 @@ http.interceptors.response.use(
     const rawData = data.data
 
     // 模拟重新进入应用
-    if (
-      data.errmsg?.includes('系统繁忙') &&
-      url &&
-      (!lastEnterAppApiMap[url] ||
-        (lastEnterAppApiMap[url].times <= RETRY_TIMES_PER_TIME_WINDOW &&
-          Date.now() - lastEnterAppApiMap[url].timestamp < RETRY_TIME_WINDOW) ||
-        (lastEnterAppApiMap[url].times > RETRY_TIMES_PER_TIME_WINDOW &&
-          Date.now() - lastEnterAppApiMap[url].timestamp > RETRY_TIME_WINDOW))
-    ) {
-      await enterCourtApp(http)
-      if (lastEnterAppApiMap[url] && Date.now() - lastEnterAppApiMap[url].timestamp < RETRY_TIME_WINDOW) {
-        lastEnterAppApiMap[url].times++
-        lastEnterAppApiMap[url].timestamp = Date.now()
-      } else {
-        lastEnterAppApiMap[url] = {
-          times: 1,
-          timestamp: Date.now(),
+    if (data.errmsg?.includes('系统繁忙')) {
+      const lastEnterAppApiMapKey =
+        url &&
+        `${url}?query=${md5(JSON.stringify(response.config.params || ''))}data=${md5(
+          JSON.stringify(response.config.data || ''),
+        )}`
+      if (
+        lastEnterAppApiMapKey &&
+        (!lastEnterAppApiMap[lastEnterAppApiMapKey] ||
+          (lastEnterAppApiMap[lastEnterAppApiMapKey].times <= RETRY_TIMES_PER_TIME_WINDOW &&
+            Date.now() - lastEnterAppApiMap[lastEnterAppApiMapKey].timestamp < RETRY_TIME_WINDOW) ||
+          (lastEnterAppApiMap[lastEnterAppApiMapKey].times > RETRY_TIMES_PER_TIME_WINDOW &&
+            Date.now() - lastEnterAppApiMap[lastEnterAppApiMapKey].timestamp > RETRY_TIME_WINDOW))
+      ) {
+        await enterCourtApp(http)
+        if (
+          lastEnterAppApiMap[lastEnterAppApiMapKey] &&
+          Date.now() - lastEnterAppApiMap[lastEnterAppApiMapKey].timestamp < RETRY_TIME_WINDOW
+        ) {
+          lastEnterAppApiMap[lastEnterAppApiMapKey].times++
+          lastEnterAppApiMap[lastEnterAppApiMapKey].timestamp = Date.now()
+        } else {
+          lastEnterAppApiMap[lastEnterAppApiMapKey] = {
+            times: 1,
+            timestamp: Date.now(),
+          }
         }
+        logger.debug('Retry request', lastEnterAppApiMapKey)
+        return await http(response.config)
       }
-      return await http(response.config)
     }
 
     if (response.data.errcode !== 0) {
@@ -130,9 +150,16 @@ http.interceptors.response.use(
       logger.info('hint from server:', chalk.green(data.hint))
     }
 
+    if (url) {
+      setCache(url, rawData)
+    }
+
     return rawData
   },
   (error) => {
+    if (Axios.isCancel(error) && ![null, undefined].includes(error?.message)) {
+      return Promise.resolve(error.message)
+    }
     logger.error(error.message)
     return Promise.reject(error)
   },

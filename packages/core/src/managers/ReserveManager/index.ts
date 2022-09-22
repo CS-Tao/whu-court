@@ -25,7 +25,8 @@ import BaseManager from '../BaseManager'
 const ONE_MINITE = 60 * 1000
 const FOUR_MINITES = 4 * ONE_MINITE
 const TEN_MINITES = 10 * ONE_MINITE
-const FIVE_SECONDS = 10 * 1000
+// FIXME: 不提前启动
+const WAIT_UNTIL_SECONDS = 0
 
 const formatCountdown = (until: number) => {
   const h = moment.duration(until - moment().valueOf()).hours()
@@ -79,8 +80,8 @@ class ReserveManager extends BaseManager {
     // 等待接近场馆开放时间
     await this.waitOpen()
 
-    // 检查场馆是否开放
-    await this.checkOpen()
+    // 检查场馆是否开放。FIXME: 检查是否开放太慢，暂时关闭
+    // await this.checkOpen()
 
     // 开始抢场地
     await this.reserve()
@@ -343,8 +344,8 @@ class ReserveManager extends BaseManager {
     const openTimeMs = moment(this.config.openTime, 'HH:mm:ss').valueOf()
     const nowMs = moment().valueOf()
     const diffMs = openTimeMs - nowMs
-    if (diffMs > FIVE_SECONDS) {
-      await this.countdown(openTimeMs - FIVE_SECONDS, '等待场馆开放(提前 5 秒开始准备预约)')
+    if (diffMs > WAIT_UNTIL_SECONDS) {
+      await this.countdown(openTimeMs - WAIT_UNTIL_SECONDS, '等待场馆开放')
       logger.debug('waitOpen', '倒计时完成')
     }
   }

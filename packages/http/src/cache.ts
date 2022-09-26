@@ -3,7 +3,9 @@ import logger from '@whu-court/logger'
 
 const cache = new NodeCache()
 
-const list: Array<RegExp | string> = [/queryPlaceListByTypeId/g]
+// TODO: 目前不需要缓存
+// const list: Array<RegExp | string> = [/queryPlaceListByTypeId/g]
+const list: Array<RegExp | string> = []
 
 export const getCache = (url: string): unknown => {
   return cache.get(url)

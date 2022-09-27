@@ -42,7 +42,7 @@ Run app to reserve.
 
 ```
 USAGE
-  $ wcr run [-y] [-o <value>] [--today]
+  $ wcr run [-o <value>] [--today]
 
 FLAGS
   -o, --open-time=<value>  Court system open time. e.g. "18:00:00" | "now"

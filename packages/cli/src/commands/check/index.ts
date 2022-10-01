@@ -17,6 +17,10 @@ export default class Check extends Command {
       description: 'show current token and session id in plain text',
       required: false,
     }),
+    'dry-run': Flags.boolean({
+      description: 'do not call the api',
+      required: false,
+    }),
   }
 
   async run(): Promise<void> {
@@ -30,6 +34,7 @@ export default class Check extends Command {
     const { flags } = await this.parse(Check)
 
     const showInPlainText = flags.show
+    const drayRun = flags['dry-run']
 
     const table = new Table({
       head: [showInPlainText ? '👀' : '🫥', 'Key', 'Value'],
@@ -50,11 +55,13 @@ export default class Check extends Command {
       showInPlainText ? authManager.getUserAgent() : authManager.getUserAgent().slice(0, 20) + '...',
     ])
 
-    const status = await authManager.validate()
+    const status = !drayRun && (await authManager.validate())
 
     loading.stop()
 
     this.log(table.toString())
+
+    if (drayRun) return
 
     if (!status || !authManager.userInfo?.account) {
       return this.log(chalk.red(`🙁 登录信息已失效，请运行 ${chalk.green('wcr login')} 重新登录`))

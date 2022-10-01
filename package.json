@@ -14,7 +14,7 @@
     "eslint-all": "eslint packages/ --ext .js,.ts,.tsx",
     "eslint-all:fix": "yarn eslint-all --fix",
     "process-commit-msg": "yarn wcrt process-commit-msg -c $(pwd) -f",
-    "test": "lerna run --stream test",
+    "test": "NODE_ENV=test lerna run --stream test",
     "test:changed": "yarn test --since $(bash ./scripts/get-remote-ref.sh)",
     "husky:prepare": "is-ci || husky install .config/.husky",
     "check:node-version": "check-node-version --package",

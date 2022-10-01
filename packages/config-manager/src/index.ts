@@ -8,7 +8,7 @@ type ErrMsg = string | void
 // prettier-ignore
 class ConfigManager implements Iterable<[keyof ConfigTypes, ConfigTypes[keyof ConfigTypes]]> {
   constructor() {
-    const configName = process.env.NODE_ENV === 'development' ? `${mainPkg.name}-development` : mainPkg.name
+    const configName = `${mainPkg.name}-${process.env.NODE_ENV || 'production'}`
     this.conf = new Conf<ConfigTypes>({
       configName,
       projectName: configName,

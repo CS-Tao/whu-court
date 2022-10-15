@@ -21,15 +21,17 @@ class BaseManager {
   protected apis: API_MAP
   protected allowedTimes = [8, 9, 10, 11, 14, 15, 16, 17, 18, 19, 20]
   protected countStatus?: { name: string; date: string; fieldsStatus: Record<string, Record<string, boolean>> }
-  protected config: Config = {
-    openTime: configManager.get(ConfigKey.openTime) as string,
-    token: configManager.get(ConfigKey.courtToken) as string,
-    sid: configManager.get(ConfigKey.courtSid) as string,
-    checkInterval: configManager.get(ConfigKey.checkOpenInterval) as number,
-    courts: configManager.get(ConfigKey.courts) as string[],
-    fields: configManager.get(ConfigKey.fields) as string[],
-    backupFields: configManager.get(ConfigKey.backupFields) as string[],
-    reserveTime: configManager.get(ConfigKey.time) as string,
+  protected get config(): Config {
+    return {
+      openTime: configManager.get(ConfigKey.openTime) as string,
+      token: configManager.get(ConfigKey.courtToken) as string,
+      sid: configManager.get(ConfigKey.courtSid) as string,
+      checkInterval: configManager.get(ConfigKey.checkOpenInterval) as number,
+      courts: configManager.get(ConfigKey.courts) as string[],
+      fields: configManager.get(ConfigKey.fields) as string[],
+      backupFields: configManager.get(ConfigKey.backupFields) as string[],
+      reserveTime: configManager.get(ConfigKey.time) as string,
+    }
   }
 
   private placeIdMap: Record<string, string> = {}

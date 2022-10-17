@@ -2,7 +2,7 @@
   "name": "@whu-court/scratch",
   "description": "WHU-Court Scratch Package Demo",
   "private": true,
-  "version": "0.1.8",
+  "version": "0.1.9-beta.0",
   "author": "cstao.cn@icloud.com",
   "main": "src/index.ts",
   "types": "src/index.ts",

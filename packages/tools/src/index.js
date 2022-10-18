@@ -25,6 +25,13 @@ function run() {
     }
     case 'replace-publish-fields': {
       require(path.join(scriptsDir, 'replacePublishFields'))({ cwd: argv.c || process.cwd() })
+      break
+    }
+    case 'get-last-tag-name': {
+      return require(path.join(scriptsDir, 'getLastTagName'))({ cwd: argv.c || process.cwd() })
+    }
+    default: {
+      throw Error('No command match')
     }
   }
 }

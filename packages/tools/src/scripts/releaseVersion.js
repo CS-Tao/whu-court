@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const chalk = require('chalk')
 const { exec } = require('shelljs')
-const { describeRefSync } = require('@lerna/describe-ref')
+const getLastTagName = require('./getLastTagName')
 
 const currentBranch = process.env.GITHUB_REF_NAME
 const normalizedCurrentBranch = (currentBranch || '').replace(/\//g, '-')
@@ -12,7 +12,7 @@ const getCurrentWorkspaceVersionCommand =
   '$(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' packages/cli/package.json)'
 
 function releaseVersion(cwd, bumpType, isManual) {
-  const { lastTagName } = describeRefSync({ cwd })
+  const lastTagName = getLastTagName({ cwd, silent: true })
   if ([currentBranch, currentCommitHash].some((each) => !each)) {
     console.log(chalk.red('releaseVersion: currentBranch or currentCommitHash is missing'))
     process.exit(1)

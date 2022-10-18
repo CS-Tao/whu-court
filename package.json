@@ -28,7 +28,7 @@
     "cd:check": "is-ci && npm-run-all -p -l cd:eslint cd:test",
     "cd:release": "is-ci && yarn wcrt release-version -c $(pwd)",
     "version": "yarn install --no-immutable && git add yarn.lock",
-    "prepublishOnly": "FORCE_COLOR=1 lerna exec --no-private --parallel -- \\$LERNA_ROOT_PATH/node_modules/.bin/wcrt replace-publish-fields -c \\$PWD"
+    "prepublishOnly": "FORCE_COLOR=1 lerna exec --since $(yarn wcrt get-last-tag-name) --no-private --parallel -- \\$LERNA_ROOT_PATH/node_modules/.bin/wcrt replace-publish-fields -c \\$PWD"
   },
   "devDependencies": {
     "@sentry/cli": "^2.1.0",

@@ -8,10 +8,6 @@ let fields = ['main']
 const typesField = 'types'
 
 function replacePublishFields({ cwd }) {
-  if (!fs.existsSync(`${cwd}/dist`)) {
-    console.log(chalk.gray('no dist dir, skip replace'))
-    return
-  }
   const pkg = require(`${cwd}/package.json`)
   const publishDist = (pkg.wcrt && pkg.wcrt.publishDist) || []
   fields = [...fields, ...publishDist]

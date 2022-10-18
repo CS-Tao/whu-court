@@ -96,7 +96,8 @@ class ReserveManager extends BaseManager {
         (court.tag ? chalk.gray(` [${court.tag}]`) : '') +
         (court.isOpen ? '' : chalk.red('[已闭馆]')),
       value: court.id,
-      disabled: !court.isOpen,
+      // FIXME: 确认是否需要注释
+      // disabled: !court.isOpen,
     }))
     loadCourtsListLoading.succeed('加载场馆列表')
     const { courtId } = await inquirer.prompt<{ courtId: string }>([
@@ -497,6 +498,9 @@ class ReserveManager extends BaseManager {
       if (error instanceof Error) {
         Reporter.report(error)
       }
+      // FIXME:
+      // eslint-disable-next-line no-console
+      console.log('error', error)
       if (
         tryTimes <= 1 ||
         error instanceof ErrorNoNeedRetry ||

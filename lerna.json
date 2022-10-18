@@ -4,7 +4,7 @@
   "useWorkspaces": true,
   "command": {
     "publish": {
-      "message": "📦 chore: publish %s\n\n[ci skip]"
+      "message": "📦 chore: publish packages\n\n[ci skip]"
     }
   },
   "packages": ["packages/*"]

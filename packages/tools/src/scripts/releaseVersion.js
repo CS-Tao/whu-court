@@ -50,7 +50,7 @@ function releaseVersion(cwd, bumpType, isManual) {
 
     afterVersionCommands = [
       'git add .',
-      'git commit -m "📦 chore: release version (will not be pushed)"',
+      'git commit --no-verify -m "📦 chore: release version (will not be pushed)"',
       `git tag -a v${getCurrentWorkspaceVersionCommand} -m v${getCurrentWorkspaceVersionCommand}`,
     ]
   }

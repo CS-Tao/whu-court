@@ -32,7 +32,11 @@ class AuthManager extends BaseManager {
 
   async logout() {
     const keys = [
-      (this.tokenConfigKey, this.sidConfigKey, this.userAgentConfigKey, this.accountConfigKey, this.loginTimeKey),
+      this.tokenConfigKey,
+      this.sidConfigKey,
+      this.userAgentConfigKey,
+      this.accountConfigKey,
+      this.loginTimeKey,
     ]
     this.userInfo = null
     keys.forEach((key) => configManager.delete(key))

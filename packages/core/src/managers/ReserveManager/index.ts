@@ -96,7 +96,6 @@ class ReserveManager extends BaseManager {
         (court.tag ? chalk.gray(` [${court.tag}]`) : '') +
         (court.isOpen ? '' : chalk.red('[闭馆]')),
       value: court.id,
-      // FIXME: 确认是否需要注释
       // disabled: !court.isOpen,
     }))
     loadCourtsListLoading.succeed('加载场馆列表')

@@ -96,7 +96,7 @@ class ReserveManager extends BaseManager {
         (court.tag ? chalk.gray(` [${court.tag}]`) : '') +
         (court.isOpen ? '' : chalk.red('[已闭馆]')),
       value: court.id,
-      disabled: !court.isOpen,
+      // disabled: !court.isOpen,
     }))
     loadCourtsListLoading.succeed('加载场馆列表')
     const { courtId } = await inquirer.prompt<{ courtId: string }>([

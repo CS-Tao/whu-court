@@ -94,7 +94,7 @@ class ReserveManager extends BaseManager {
       name:
         formatBracket(court.name) +
         (court.tag ? chalk.gray(` [${court.tag}]`) : '') +
-        (court.isOpen ? '' : chalk.red('[已闭馆]')),
+        (court.isOpen ? '' : chalk.red('[闭馆]')),
       value: court.id,
       // FIXME: 确认是否需要注释
       // disabled: !court.isOpen,

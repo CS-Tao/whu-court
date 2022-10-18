@@ -1,15 +1,18 @@
 /* eslint-disable no-console */
 const chalk = require('chalk')
 const { exec } = require('shelljs')
+const { describeRefSync } = require('@lerna/describe-ref')
 
 const currentBranch = process.env.GITHUB_REF_NAME
 const normalizedCurrentBranch = (currentBranch || '').replace(/\//g, '-')
 const currentCommitHash = process.env.GITHUB_SHA || ''
 const mainBranch = 'master'
 
-const getCurrentWorkspaceVersionCommand = '$(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' lerna.json)'
+const getCurrentWorkspaceVersionCommand =
+  '$(awk \'/version/{gsub(/("|",)/,"",$2);print $2}\' packages/cli/package.json)'
 
 function releaseVersion(cwd, bumpType, isManual) {
+  const { lastTagName } = describeRefSync({ cwd })
   if ([currentBranch, currentCommitHash].some((each) => !each)) {
     console.log(chalk.red('releaseVersion: currentBranch or currentCommitHash is missing'))
     process.exit(1)
@@ -56,8 +59,8 @@ function releaseVersion(cwd, bumpType, isManual) {
 
   const releaseSentryCommands = [
     `sentry-cli releases new "whu-court@v${getCurrentWorkspaceVersionCommand}" --org cs-tao --project whu-court`,
-    `yarn lerna exec --ignore ${mainPackage} sentry-cli -- releases --org cs-tao --project whu-court files "whu-court@v${getCurrentWorkspaceVersionCommand}" upload-sourcemaps ./dist/ --url-prefix '\\~/node_modules/$LERNA_PACKAGE_NAME/dist'`,
-    `yarn lerna exec --scope ${mainPackage} sentry-cli -- releases --org cs-tao --project whu-court files "whu-court@v${getCurrentWorkspaceVersionCommand}" upload-sourcemaps ./dist/ --url-prefix '\\~/dist'`,
+    `yarn lerna exec --since ${lastTagName} --ignore ${mainPackage} sentry-cli -- releases --org cs-tao --project whu-court files "whu-court@v${getCurrentWorkspaceVersionCommand}" upload-sourcemaps ./dist/ --url-prefix '\\~/node_modules/$LERNA_PACKAGE_NAME/dist'`,
+    `yarn lerna exec --since ${lastTagName} --scope ${mainPackage} sentry-cli -- releases --org cs-tao --project whu-court files "whu-court@v${getCurrentWorkspaceVersionCommand}" upload-sourcemaps ./dist/ --url-prefix '\\~/dist'`,
     `sentry-cli releases --org cs-tao deploys whu-court@v${getCurrentWorkspaceVersionCommand} new -e ${environment}`,
   ]
 

@@ -890,7 +890,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lerna/describe-ref@npm:5.6.2":
+"@lerna/describe-ref@npm:5.6.2, @lerna/describe-ref@npm:^5.0.0":
   version: 5.6.2
   resolution: "@lerna/describe-ref@npm:5.6.2"
   dependencies:
@@ -2906,7 +2906,7 @@ __metadata:
     "@types/node-notifier": ^8.0.2
     "@whu-court/auto-update": 0.1.9-beta.0
     "@whu-court/config-manager": 0.1.9-beta.0
-    "@whu-court/core": 0.1.9-beta.0
+    "@whu-court/core": 0.1.9-beta.1
     "@whu-court/env": 0.1.9-beta.0
     "@whu-court/github-auth": 0.1.9-beta.0
     "@whu-court/http": 0.1.9-beta.0
@@ -2947,7 +2947,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@whu-court/core@0.1.9-beta.0, @whu-court/core@workspace:packages/core":
+"@whu-court/core@0.1.9-beta.1, @whu-court/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@whu-court/core@workspace:packages/core"
   dependencies:
@@ -3056,6 +3056,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@whu-court/tools@workspace:packages/tools"
   dependencies:
+    "@lerna/describe-ref": ^5.0.0
     "@sentry/cli": ^2.1.0
     "@types/shelljs": ^0.8.11
     chalk: 4.1.2

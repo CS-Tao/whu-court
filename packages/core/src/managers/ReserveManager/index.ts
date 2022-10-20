@@ -52,7 +52,7 @@ export interface ReserveManagerOptions {
 class ReserveManager extends BaseManager {
   constructor(private options: ReserveManagerOptions) {
     super(http, getApiMap(http))
-    this.config.openTime = options.openTime || this.config.openTime
+    this.openTime = options.openTime || this.config.openTime
   }
 
   /**
@@ -60,6 +60,7 @@ class ReserveManager extends BaseManager {
    */
   private checkOpenAllowFailTimesPerMin = 5
   private reserveSetting: ReserveSetting = { minRequests: 0, requestDataList: [] }
+  private openTime: string | 'now'
 
   async run() {
     // 检查登录状态
@@ -94,7 +95,7 @@ class ReserveManager extends BaseManager {
       name:
         formatBracket(court.name) +
         (court.tag ? chalk.gray(` [${court.tag}]`) : '') +
-        (court.isOpen ? '' : chalk.red('[闭馆]')),
+        (court.isOpen ? '' : chalk.yellow('[可能闭馆]')),
       value: court.id,
       // disabled: !court.isOpen,
     }))
@@ -119,9 +120,12 @@ class ReserveManager extends BaseManager {
     }
 
     const fieldsChoices = court.fields.map((field) => ({
-      name: field.name + (field.tag ? chalk.gray(` [${field.tag}]`) : '') + (field.isOpen ? '' : chalk.red('[被占用]')),
+      name:
+        field.name +
+        (field.tag ? chalk.gray(` [${field.tag}]`) : '') +
+        (field.isOpen ? '' : chalk.yellow('[可能被占用]')),
       value: field.id,
-      disabled: !field.isOpen,
+      // disabled: !field.isOpen,
     }))
 
     const { filedIds } = await inquirer.prompt<{ filedIds: string[] }>([
@@ -149,9 +153,11 @@ class ReserveManager extends BaseManager {
       .filter((each) => !filedIds.includes(each.id))
       .map((field) => ({
         name:
-          field.name + (field.tag ? chalk.gray(` [${field.tag}]`) : '') + (field.isOpen ? '' : chalk.red('[被占用]')),
+          field.name +
+          (field.tag ? chalk.gray(` [${field.tag}]`) : '') +
+          (field.isOpen ? '' : chalk.yellow('[可能被占用]')),
         value: field.id,
-        disabled: !field.isOpen,
+        // disabled: !field.isOpen,
       }))
 
     let backupFieldIds: string[] = []
@@ -272,8 +278,8 @@ class ReserveManager extends BaseManager {
   }
 
   private async checkCanRun(): Promise<boolean> {
-    if (this.config.openTime === 'now') return true
-    const openTimeMs = moment(this.config.openTime, 'HH:mm:ss').valueOf()
+    if (this.openTime === 'now') return true
+    const openTimeMs = moment(this.openTime, 'HH:mm:ss').valueOf()
     const nowMs = moment().valueOf()
     const diffMs = openTimeMs - nowMs
     if (diffMs < FOUR_MINITES) {
@@ -340,8 +346,8 @@ class ReserveManager extends BaseManager {
   }
 
   private async waitOpen() {
-    if (this.config.openTime === 'now') return
-    const openTimeMs = moment(this.config.openTime, 'HH:mm:ss').valueOf()
+    if (this.openTime === 'now') return
+    const openTimeMs = moment(this.openTime, 'HH:mm:ss').valueOf()
     const nowMs = moment().valueOf()
     const diffMs = openTimeMs - nowMs
     if (diffMs > WAIT_UNTIL_SECONDS) {
@@ -351,7 +357,7 @@ class ReserveManager extends BaseManager {
   }
 
   private async checkOpen() {
-    if (this.config.openTime === 'now') return
+    if (this.openTime === 'now') return
     logger.debug('checkOpen', '检查场馆后台开放开始')
     const loading = new Loading(`等待场馆后台开放，检查第 ${chalk.green(1)} 次`).start()
 
@@ -496,10 +502,12 @@ class ReserveManager extends BaseManager {
     } catch (error) {
       if (error instanceof Error) {
         Reporter.report(error)
+      } else {
+        try {
+          logger.error(error as any)
+          Reporter.report(error as any)
+        } catch {}
       }
-      // FIXME:
-      // eslint-disable-next-line no-console
-      console.log('error', error)
       if (
         tryTimes <= 1 ||
         error instanceof ErrorNoNeedRetry ||

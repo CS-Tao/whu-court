@@ -4,7 +4,7 @@ import '@sentry/tracing'
 import address from 'address'
 import md5 from 'md5'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
-import { appRoot, environment, version } from '@whu-court/env'
+import { allowedProcessEnv, appRoot, environment, version } from '@whu-court/env'
 import Measure from './measure'
 
 interface User {
@@ -54,7 +54,7 @@ class Reporter {
       sendClientReports: false,
     })
     const user = {
-      ...(process.env.NODE_ENV === 'development' && testUser),
+      ...(allowedProcessEnv.NODE_ENV === 'development' && testUser),
       ...scope.user,
       ip_address: address.ip(),
     }

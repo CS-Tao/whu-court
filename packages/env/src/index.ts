@@ -1,3 +1,4 @@
+/* eslint-disable no-process-env */
 import isWsl from 'is-wsl'
 import os from 'os'
 import path from 'path'
@@ -5,7 +6,15 @@ import { parse } from 'semver'
 import { uid } from 'uid'
 import pkg from '../package.json'
 
-export interface Envs {
+type AllowedProcessEnvs =
+  | 'NODE_ENV' // node
+  | 'ENABLE_MOCK' // 是否开启数据 mock
+  | 'DEBUG_UPDATE_NOTIFIER' // 开发时是否提示升级
+  | 'https_proxy' // axios 中间代理
+  | 'DEBUG' // 调试模式
+  | 'WCR_CONFIG_NAME'
+
+export type Envs = {
   environment: 'local' | 'staging' | 'gray' | 'production'
   version: string
   prerelease?: 'alpha' | 'beta' | string
@@ -21,6 +30,9 @@ export interface Envs {
   loggerDir: string
   currentProcessUID: string
   detailVersion: string
+  allowedProcessEnv: {
+    [key in AllowedProcessEnvs]?: string
+  }
 }
 
 const version = pkg.version
@@ -64,6 +76,18 @@ const adminEmail = 'sneer-innings.0u@icloud.com'
 const vips = ['lsq210', 'CS-Tao']
 const loverGitHubName = 'lsq210'
 
+const allowedProcessEnvSet: Set<AllowedProcessEnvs> = new Set([
+  'NODE_ENV',
+  'ENABLE_MOCK',
+  'DEBUG_UPDATE_NOTIFIER',
+  'https_proxy',
+  'DEBUG',
+])
+const allowedProcessEnv = Array.from(allowedProcessEnvSet).reduce<Envs['allowedProcessEnv']>(
+  (acc, cur) => ({ ...acc, [cur]: process.env[cur] }),
+  {} as Envs['allowedProcessEnv'],
+)
+
 const envs: Envs = {
   environment,
   version,
@@ -76,6 +100,7 @@ const envs: Envs = {
   loggerDir,
   currentProcessUID,
   detailVersion,
+  allowedProcessEnv,
 }
 
 export {
@@ -90,5 +115,6 @@ export {
   loggerDir,
   currentProcessUID,
   detailVersion,
+  allowedProcessEnv,
 }
 export default envs

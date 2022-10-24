@@ -1,6 +1,7 @@
 import { AxiosInstance } from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import chalk from 'chalk'
+import { allowedProcessEnv } from '@whu-court/env'
 import logger from '@whu-court/logger'
 import apis from './apis'
 import { MockData } from './type'
@@ -12,7 +13,7 @@ export const mockAxios = (axios: AxiosInstance) => {
 
   mockMap.add(axios)
 
-  process.env.NODE_ENV !== 'development' &&
+  allowedProcessEnv.NODE_ENV !== 'development' &&
     logger.warn(chalk.gray('[MOCK]'), chalk.yellow(`Mock axios enabled for ${apis.length} apis`))
   const mock = new MockAdapter(axios, { delayResponse: 200 })
   apis.forEach((each) => {

@@ -2,7 +2,7 @@
 import chalk from 'chalk'
 import log4js from 'log4js'
 import path from 'path'
-import { currentProcessUID, environment, loggerDir } from '@whu-court/env'
+import { allowedProcessEnv, currentProcessUID, environment, loggerDir } from '@whu-court/env'
 import Reporter from '@whu-court/report'
 import { ErrorNoNeedReport } from './errors'
 
@@ -103,7 +103,7 @@ class Logger {
   }
 
   public debug(message: string, ...data: any[]): void {
-    if (process.env.DEBUG) {
+    if (allowedProcessEnv.DEBUG) {
       console.debug(message, ...data)
     }
     fileLogger.debug(`[${currentProcessUID}]`, message, ...data)

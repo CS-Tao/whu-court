@@ -1,5 +1,7 @@
+import chalk from 'chalk'
 import Conf from 'conf'
-import { mainPkg } from '@whu-court/env'
+import { allowedProcessEnv, mainPkg } from '@whu-court/env'
+import logger from '@whu-court/logger'
 import { defaultValues, rules } from './const'
 import { ConfigKey, ConfigTypes } from './types'
 
@@ -8,7 +10,11 @@ type ErrMsg = string | void
 // prettier-ignore
 class ConfigManager implements Iterable<[keyof ConfigTypes, ConfigTypes[keyof ConfigTypes]]> {
   constructor() {
-    const configName = `${mainPkg.name}-${process.env.NODE_ENV || 'production'}`
+    if (allowedProcessEnv.WCR_CONFIG_NAME) {
+      logger.info(chalk.gray('[CONFIG]'), 'using config name', chalk.green(allowedProcessEnv.WCR_CONFIG_NAME))
+    }
+    const configName = `${mainPkg.name}-${allowedProcessEnv.NODE_ENV || 'production'}-${allowedProcessEnv.WCR_CONFIG_NAME || 'default'}`
+
     this.conf = new Conf<ConfigTypes>({
       configName,
       projectName: configName,

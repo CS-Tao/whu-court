@@ -1,5 +1,5 @@
 import UpdateNotifier from 'update-notifier'
-import { environment, mainPkg } from '@whu-court/env'
+import { allowedProcessEnv, environment, mainPkg } from '@whu-court/env'
 
 const CHECK_INTERVAL = {
   ONE_DAY: 1000 * 60 * 60 * 24,
@@ -23,7 +23,7 @@ export default class AutoUpdateManager {
       pkg: this.mainPkg,
       updateCheckInterval: environment === 'production' ? CHECK_INTERVAL.ONE_DAY : CHECK_INTERVAL.ALWAYS,
       distTag: DIST_TAG_MAP[environment],
-      shouldNotifyInNpmScript: Boolean(process.env.DEBUG_UPDATE_NOTIFIER),
+      shouldNotifyInNpmScript: Boolean(allowedProcessEnv.DEBUG_UPDATE_NOTIFIER),
     })
     AutoUpdateManager.instance = this
     return AutoUpdateManager.instance

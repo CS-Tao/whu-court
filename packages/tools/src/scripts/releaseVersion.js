@@ -1,3 +1,4 @@
+/* eslint-disable no-process-env */
 /* eslint-disable no-console */
 const chalk = require('chalk')
 const { exec } = require('shelljs')

@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios'
 import chalk from 'chalk'
 import moment from 'moment'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
-import { environment } from '@whu-court/env'
+import { allowedProcessEnv, environment } from '@whu-court/env'
 import logger from '@whu-court/logger'
 import { mockAxios } from '@whu-court/mock'
 import { Loading, fill0, getCurrentTime, getTodayDate } from '@whu-court/utils'
@@ -13,7 +13,7 @@ class BaseManager {
   public constructor(http: AxiosInstance, apis: API_MAP) {
     this.http = http
     this.apis = apis
-    if (process.env.ENABLE_MOCK && !['gray', 'production'].includes(environment)) {
+    if (allowedProcessEnv.ENABLE_MOCK && !['gray', 'production'].includes(environment)) {
       mockAxios(http)
     }
   }

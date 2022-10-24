@@ -19,6 +19,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@whu-court/env": "0.1.9",
     "@whu-court/logger": "0.1.9",
     "@whu-court/utils": "0.1.9",
     "axios": "^0.27.2",

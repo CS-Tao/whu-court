@@ -4,6 +4,7 @@ import md5 from 'md5'
 import { uid } from 'uid'
 import { URL } from 'url'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
+import { allowedProcessEnv } from '@whu-court/env'
 import logger from '@whu-court/logger'
 import Reporter from '@whu-court/report'
 import { getCurrentTime } from '@whu-court/utils'
@@ -25,21 +26,25 @@ const commonHeaders = {
 
 let proxyConfig: { proxy: { host: string; port: number } } | null = null
 
-if (process.env.https_proxy) {
+if (allowedProcessEnv.https_proxy) {
   try {
-    const httpsProxy = new URL(process.env.https_proxy)
+    const httpsProxy = new URL(allowedProcessEnv.https_proxy)
     proxyConfig = {
       proxy: {
         host: httpsProxy.hostname,
         port: +httpsProxy.port,
       },
     }
-    logger.info(chalk.gray('[HTTPS PROXY]'), 'use', chalk.yellow(`https://${httpsProxy.hostname}:${+httpsProxy.port}`))
+    logger.info(
+      chalk.gray('[HTTPS PROXY]'),
+      'using',
+      chalk.yellow(`https://${httpsProxy.hostname}:${+httpsProxy.port}`),
+    )
   } catch (error) {
     if (error instanceof Error) {
       Reporter.report(error)
     }
-    logger.info(chalk.gray('[HTTPS PROXY]'), chalk.red('invalid https_proxy: ' + process.env.https_proxy))
+    logger.info(chalk.gray('[HTTPS PROXY]'), chalk.red('invalid https_proxy: ' + allowedProcessEnv.https_proxy))
   }
 }
 

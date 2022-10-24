@@ -38,5 +38,6 @@ module.exports = {
       },
     ],
     'generator-star-spacing': 0,
+    'no-process-env': ['error'],
   },
 }

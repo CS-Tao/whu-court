@@ -35,6 +35,16 @@ export type Envs = {
   }
 }
 
+// 内部初始化时使用非空类型，确保无丢失
+const allowedProcessEnv: { [key in NonNullable<keyof Envs['allowedProcessEnv']>]: string } = {
+  NODE_ENV: process.env.NODE_ENV!,
+  ENABLE_MOCK: process.env.ENABLE_MOCK!,
+  DEBUG_UPDATE_NOTIFIER: process.env.DEBUG_UPDATE_NOTIFIER!,
+  https_proxy: process.env.https_proxy!,
+  DEBUG: process.env.DEBUG!,
+  WCR_CONFIG_NAME: process.env.WCR_CONFIG_NAME!,
+}
+
 const version = pkg.version
 const semverVersion = parse(version, {
   // @ts-expect-error
@@ -66,7 +76,7 @@ const mainPkg: Envs['mainPkg'] = {
   description,
 }
 
-const loggerDir = path.join(appRoot, 'logs')
+const loggerDir = path.join(appRoot, 'logs', allowedProcessEnv.WCR_CONFIG_NAME || 'default')
 const currentProcessUID = uid()
 const detailVersion = `${mainPkg.version} ${isWsl ? 'wsl' : os.platform()}-${
   os.arch() === 'ia32' ? 'x86' : os.arch()
@@ -75,16 +85,6 @@ const detailVersion = `${mainPkg.version} ${isWsl ? 'wsl' : os.platform()}-${
 const adminEmail = 'sneer-innings.0u@icloud.com'
 const vips = ['lsq210', 'CS-Tao']
 const loverGitHubName = 'lsq210'
-
-// 内部初始化时使用非空类型，确保无丢失
-const allowedProcessEnv: { [key in NonNullable<keyof Envs['allowedProcessEnv']>]: string } = {
-  NODE_ENV: process.env.NODE_ENV!,
-  ENABLE_MOCK: process.env.ENABLE_MOCK!,
-  DEBUG_UPDATE_NOTIFIER: process.env.DEBUG_UPDATE_NOTIFIER!,
-  https_proxy: process.env.https_proxy!,
-  DEBUG: process.env.DEBUG!,
-  WCR_CONFIG_NAME: process.env.WCR_CONFIG_NAME!,
-}
 
 const envs: Envs = {
   environment,

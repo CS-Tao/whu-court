@@ -76,17 +76,15 @@ const adminEmail = 'sneer-innings.0u@icloud.com'
 const vips = ['lsq210', 'CS-Tao']
 const loverGitHubName = 'lsq210'
 
-const allowedProcessEnvSet: Set<AllowedProcessEnvs> = new Set([
-  'NODE_ENV',
-  'ENABLE_MOCK',
-  'DEBUG_UPDATE_NOTIFIER',
-  'https_proxy',
-  'DEBUG',
-])
-const allowedProcessEnv = Array.from(allowedProcessEnvSet).reduce<Envs['allowedProcessEnv']>(
-  (acc, cur) => ({ ...acc, [cur]: process.env[cur] }),
-  {} as Envs['allowedProcessEnv'],
-)
+// 内部初始化时使用非空类型，确保无丢失
+const allowedProcessEnv: { [key in NonNullable<keyof Envs['allowedProcessEnv']>]: string } = {
+  NODE_ENV: process.env.NODE_ENV!,
+  ENABLE_MOCK: process.env.ENABLE_MOCK!,
+  DEBUG_UPDATE_NOTIFIER: process.env.DEBUG_UPDATE_NOTIFIER!,
+  https_proxy: process.env.https_proxy!,
+  DEBUG: process.env.DEBUG!,
+  WCR_CONFIG_NAME: process.env.WCR_CONFIG_NAME!,
+}
 
 const envs: Envs = {
   environment,

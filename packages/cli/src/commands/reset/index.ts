@@ -23,17 +23,10 @@ export default class Reset extends Command {
       return
     }
 
-    configManager.clear()
+    configManager.reset()
 
     printLogo(false)
     this.log(chalk.green('✔'), '重置完成\n')
-    this.log(chalk.gray('如需卸载本软件，可运行: '))
-    this.log(
-      chalk.gray(
-        `使用 npm: ${chalk.green('npm uninstall -g ' + mainPkg.name)}\n使用 yarn: ${chalk.green(
-          'yarn global remove ' + mainPkg.name,
-        )}`,
-      ),
-    )
+    this.log(chalk.gray(`如需卸载本软件，请运行: ${chalk.green('npm uninstall -g ' + mainPkg.name)}`))
   }
 }

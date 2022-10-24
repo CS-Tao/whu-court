@@ -75,6 +75,7 @@ export default class Config extends Command {
         table.push([icon, name, serialize(configManager.get(key)), desc]),
       )
       this.log(table.toString())
+      this.log(`🎚 你可以通过更改环境变量(${chalk.green('WCR_CONFIG_NAME')})切换不同的配置`)
       return
     }
 

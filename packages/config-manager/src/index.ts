@@ -2,7 +2,6 @@ import chalk from 'chalk'
 import Conf from 'conf'
 import fs from 'fs-extra'
 import { allowedProcessEnv, mainPkg } from '@whu-court/env'
-import logger from '@whu-court/logger'
 import { defaultValues, rules } from './const'
 import { ConfigKey, ConfigTypes } from './types'
 
@@ -12,7 +11,8 @@ type ErrMsg = string | void
 class ConfigManager implements Iterable<[keyof ConfigTypes, ConfigTypes[keyof ConfigTypes]]> {
   constructor() {
     if (allowedProcessEnv.WCR_CONFIG_NAME) {
-      logger.info(chalk.gray('[CONFIG]'), 'using config name', chalk.green(allowedProcessEnv.WCR_CONFIG_NAME))
+      // eslint-disable-next-line no-console
+      console.info(chalk.gray('[CONFIG]'), 'using config', chalk.green(allowedProcessEnv.WCR_CONFIG_NAME))
     }
     const configName = `${allowedProcessEnv.NODE_ENV || 'production'}/${allowedProcessEnv.WCR_CONFIG_NAME || 'default'}`
 

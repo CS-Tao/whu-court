@@ -12,7 +12,7 @@ type AllowedProcessEnvs =
   | 'DEBUG_UPDATE_NOTIFIER' // 开发时是否提示升级
   | 'https_proxy' // axios 中间代理
   | 'DEBUG' // 调试模式
-  | 'WCR_CONFIG_NAME'
+  | 'WCR_CONFIG_NAME' // 使用指定配置
 
 export type Envs = {
   environment: 'local' | 'staging' | 'gray' | 'production'

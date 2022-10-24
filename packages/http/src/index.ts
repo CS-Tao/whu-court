@@ -71,7 +71,7 @@ http.interceptors.request.use((config) => {
   config.headers['User-Agent'] = userAgent
 
   const measureId = `${config.url}(${uid()})`
-  // @ts-ignore
+  // @ts-expect-error
   config.metadata = {
     measureId,
     requestTime: Date.now(),
@@ -91,9 +91,9 @@ http.interceptors.request.use((config) => {
 
 http.interceptors.response.use(
   async (response) => {
-    // @ts-ignore
+    // @ts-expect-error
     const measureId = response.config.metadata?.measureId
-    // @ts-ignore
+    // @ts-expect-error
     const requestTime = response.config.metadata?.requestTime
     measureId && Reporter.Measure.shared(measureId, 'court-api-request').end()
     logger.debug('HTTP Response:', response.config.method, measureId, `${Date.now() - requestTime}ms`)

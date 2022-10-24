@@ -17,7 +17,7 @@ class GitHubService {
 
     this.githubApiService.interceptors.request.use((config) => {
       const measureId = `${config.url}(${uid()})`
-      // @ts-ignore
+      // @ts-expect-error
       config.metadata = {
         measureId,
       }
@@ -27,7 +27,7 @@ class GitHubService {
 
     this.githubApiService.interceptors.response.use(
       (response) => {
-        // @ts-ignore
+        // @ts-expect-error
         const measureId = response.config.metadata?.measureId
         measureId && Reporter.Measure.shared(measureId, 'github-graph-api-request').end()
         return response
@@ -51,7 +51,7 @@ class GitHubService {
     })
     this.githubContentService.interceptors.request.use((config) => {
       const measureId = `${config.url}(${uid()})`
-      // @ts-ignore
+      // @ts-expect-error
       config.metadata = {
         measureId,
       }
@@ -59,7 +59,7 @@ class GitHubService {
       return config
     })
     this.githubApiService.interceptors.response.use((response) => {
-      // @ts-ignore
+      // @ts-expect-error
       const measureId = response.config.metadata?.measureId
       measureId && Reporter.Measure.shared(measureId, 'github-content-api-request').end()
       return response

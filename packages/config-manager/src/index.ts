@@ -1,5 +1,6 @@
 import chalk from 'chalk'
 import Conf from 'conf'
+import fs from 'fs-extra'
 import { allowedProcessEnv, mainPkg } from '@whu-court/env'
 import logger from '@whu-court/logger'
 import { defaultValues, rules } from './const'
@@ -13,16 +14,18 @@ class ConfigManager implements Iterable<[keyof ConfigTypes, ConfigTypes[keyof Co
     if (allowedProcessEnv.WCR_CONFIG_NAME) {
       logger.info(chalk.gray('[CONFIG]'), 'using config name', chalk.green(allowedProcessEnv.WCR_CONFIG_NAME))
     }
-    const configName = `${mainPkg.name}-${allowedProcessEnv.NODE_ENV || 'production'}-${allowedProcessEnv.WCR_CONFIG_NAME || 'default'}`
+    const configName = `${allowedProcessEnv.NODE_ENV || 'production'}/${allowedProcessEnv.WCR_CONFIG_NAME || 'default'}`
 
     this.conf = new Conf<ConfigTypes>({
       configName,
-      projectName: configName,
+      projectName: mainPkg.name,
       projectVersion: mainPkg.version,
     })
+    this.configDir = this.conf.path.replace(`/${configName}.json`, '')
   }
 
   private conf: Conf<ConfigTypes>;
+  private configDir: string;
 
   *[Symbol.iterator](): IterableIterator<[keyof ConfigTypes, ConfigTypes[keyof ConfigTypes]]> {
     for (const [key, value] of Object.entries(this.conf.store)) {
@@ -47,7 +50,6 @@ class ConfigManager implements Iterable<[keyof ConfigTypes, ConfigTypes[keyof Co
   }
 
   validate<Key extends ConfigKey>(key: Key, value: ConfigTypes[Key]): ErrMsg {
-    // @ts-ignore
     return rules[key](value)
   }
 
@@ -61,6 +63,11 @@ class ConfigManager implements Iterable<[keyof ConfigTypes, ConfigTypes[keyof Co
 
   clear() {
     this.conf.clear()
+  }
+
+  reset() {
+    this.clear()
+    fs.removeSync(this.configDir)
   }
 }
 

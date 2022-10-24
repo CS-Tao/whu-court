@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error
 import cfonts from 'cfonts'
 import chalk from 'chalk'
 import githubAuthManager from '@whu-court/github-auth'

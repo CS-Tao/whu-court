@@ -1,5 +1,6 @@
 import { AxiosInstance } from 'axios'
 import chalk from 'chalk'
+import moment from 'moment'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
 import { environment } from '@whu-court/env'
 import logger from '@whu-court/logger'
@@ -282,7 +283,7 @@ class BaseManager {
     const checkList = await Promise.all(
       timeList.map(async (each) => {
         if (canReserveCourtsFromDetail.every((time) => time.reserveBeginTime !== each.beginTime)) {
-          logger.debug('reserveField', `${each.beginTime}-${each.endTime}`, '场馆详情标明不可预约')
+          logger.debug('reserveField', `${each.beginTime}-${each.endTime}`, chalk.red('场馆详情标明不可预约'))
           return false
         }
         const req: RequestData.UseSportFieldData = {
@@ -299,7 +300,10 @@ class BaseManager {
         logger.debug(
           'reserveField',
           `${each.beginTime}-${each.endTime}`,
-          `useSportField ${res ? '可预约' : '不可预约'}`,
+          `useSportField ${res ? '可预约' : chalk.red('不可预约')}`,
+          res
+            ? `(${chalk.green(data.fieldNum)} 号场地锁单场地时间: ${chalk.green(moment().format('HH:mm:ss.SSS'))})`
+            : '',
         )
         return res
       }),

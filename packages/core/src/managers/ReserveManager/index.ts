@@ -106,7 +106,7 @@ class ReserveManager extends BaseManager {
         name: 'courtId',
         message: '场馆',
         default: courtsChoices.some((each) => each.value === this.config.courts[0]) ? this.config.courts[0] : undefined,
-        choices: courtsChoices,
+        choices: courtsChoices.sort((court) => (court.value === this.config.courts[0] ? -1 : 1)),
         validate: (value) => (value ? true : '请选择场馆'),
       },
     ])
@@ -134,7 +134,10 @@ class ReserveManager extends BaseManager {
         name: 'filedIds',
         message: '选择场地',
         default: this.config.fields.filter((field) => fieldsChoices.some((f) => f.value === field)),
-        choices: fieldsChoices,
+        choices: [
+          ...fieldsChoices.filter((field) => this.config.fields.includes(field.value)),
+          ...fieldsChoices.filter((field) => !this.config.fields.includes(field.value)),
+        ],
         validate: (value) => {
           if (!value || value.length === 0) {
             return '请选择场地'
@@ -171,7 +174,10 @@ class ReserveManager extends BaseManager {
             default: this.config.backupFields
               .filter((each) => !filedIds.includes(each))
               .filter((each) => backupFieldChoices.some((f) => f.value === each)),
-            choices: backupFieldChoices,
+            choices: [
+              ...backupFieldChoices.filter((field) => this.config.backupFields.includes(field.value)),
+              ...backupFieldChoices.filter((field) => !this.config.backupFields.includes(field.value)),
+            ],
           },
         ])
       ).backupFieldIds

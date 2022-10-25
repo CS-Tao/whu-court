@@ -50,6 +50,7 @@ class ConfigManager implements Iterable<[keyof ConfigTypes, ConfigTypes[keyof Co
   }
 
   validate<Key extends ConfigKey>(key: Key, value: ConfigTypes[Key]): ErrMsg {
+    // @ts-ignore
     return rules[key](value)
   }
 

@@ -224,8 +224,8 @@ class ReserveManager extends BaseManager {
         filter: (value) => value.reverse(),
       },
     ])
-    this.config.reserveTime = reserveTime.join(',')
-    configManager.set(ConfigKey.time, this.config.reserveTime)
+    const period = reserveTime.join(',')
+    configManager.set(ConfigKey.time, period)
 
     const loadDetailLoading = new Loading('生成预约信息').start()
     const fieldDetailMap: Record<string, CourtDetail> = {}
@@ -243,7 +243,7 @@ class ReserveManager extends BaseManager {
           appointmentDate: this.options.reserveToday ? getTodayDate() : getTomorrowDate(),
           creatorId: this.config.token,
           placeType: 1,
-          period: this.config.reserveTime,
+          period,
           fieldId: field.id,
           motionTypeId: this.badmintonTypeId,
           placeId: court.id,

@@ -1,7 +1,7 @@
 {
   "name": "@whu-court/core",
   "description": "WHU-Court Runtime",
-  "version": "0.1.14",
+  "version": "0.1.15-beta.0",
   "author": "cstao.cn@icloud.com",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -21,7 +21,7 @@
   "dependencies": {
     "@whu-court/config-manager": "0.1.11",
     "@whu-court/env": "0.1.10",
-    "@whu-court/http": "0.1.11",
+    "@whu-court/http": "0.1.12-beta.0",
     "@whu-court/logger": "0.1.11",
     "@whu-court/mock": "0.1.11",
     "@whu-court/report": "0.1.11",

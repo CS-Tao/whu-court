@@ -2987,10 +2987,10 @@ __metadata:
     "@types/node-notifier": ^8.0.2
     "@whu-court/auto-update": 0.1.10
     "@whu-court/config-manager": 0.1.11
-    "@whu-court/core": 0.1.14
+    "@whu-court/core": 0.1.15-beta.0
     "@whu-court/env": 0.1.10
     "@whu-court/github-auth": 0.1.11
-    "@whu-court/http": 0.1.11
+    "@whu-court/http": 0.1.12-beta.0
     "@whu-court/logger": 0.1.11
     "@whu-court/report": 0.1.11
     "@whu-court/utils": 0.1.9
@@ -3031,14 +3031,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@whu-court/core@0.1.14, @whu-court/core@workspace:packages/core":
+"@whu-court/core@0.1.15-beta.0, @whu-court/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@whu-court/core@workspace:packages/core"
   dependencies:
     "@types/inquirer": ^8.2.1
     "@whu-court/config-manager": 0.1.11
     "@whu-court/env": 0.1.10
-    "@whu-court/http": 0.1.11
+    "@whu-court/http": 0.1.12-beta.0
     "@whu-court/logger": 0.1.11
     "@whu-court/mock": 0.1.11
     "@whu-court/report": 0.1.11
@@ -3076,7 +3076,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@whu-court/http@0.1.11, @whu-court/http@workspace:packages/http":
+"@whu-court/http@0.1.12-beta.0, @whu-court/http@workspace:packages/http":
   version: 0.0.0-use.local
   resolution: "@whu-court/http@workspace:packages/http"
   dependencies:

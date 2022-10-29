@@ -52,7 +52,7 @@ const CANCEL_TOKEN = Axios.CancelToken
 
 const http = Axios.create({
   baseURL: 'https://miniapp.whu.edu.cn/wisdomapi',
-  timeout: 10000,
+  timeout: 20000,
   headers: commonHeaders,
   ...proxyConfig,
 })
@@ -165,7 +165,7 @@ http.interceptors.response.use(
     if (Axios.isCancel(error) && ![null, undefined].includes(error?.message)) {
       return Promise.resolve(error.message)
     }
-    logger.error(error.message)
+    logger.error(error)
     return Promise.reject(error)
   },
 )

@@ -111,7 +111,7 @@ class ReserveManager extends BaseManager {
   private async showInform() {
     const loading = new Loading('加载最新公告').start()
     const infoList = await this.apis.getInformList({
-      uid: this.config.sid,
+      uid: this.config.token,
     })
 
     if (!infoList?.length) {

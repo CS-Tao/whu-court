@@ -19,6 +19,8 @@ export const defaultValues: Partial<ConfigTypes> = {
   [ConfigKey.courts]: [],
   [ConfigKey.fields]: [],
   [ConfigKey.backupFields]: [],
+
+  [ConfigKey.informHash]: '',
 }
 
 // TODO:
@@ -131,4 +133,5 @@ export const rules: { [key in ConfigKey]: (value: ConfigTypes[key]) => string | 
       return '备用场地列表不能有重复项'
     }
   },
+  [ConfigKey.informHash]: () => {},
 }

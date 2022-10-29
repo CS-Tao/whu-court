@@ -131,6 +131,13 @@ export namespace RequestData {
      */
     uid: string
   }
+
+  export interface GetInformListData {
+    /**
+     * x-outh-token
+     */
+    uid: string
+  }
 }
 
 export namespace ResponseData {
@@ -514,6 +521,24 @@ export namespace ResponseData {
     inBlackNameListReason: null
     lastContractBreachTime: null
   }
+
+  export type GetInformListData = null | Array<{
+    id: string
+    title: string
+    object: '0' | unknown
+    pictureUrl: null | string
+    content: string
+    /**
+     * @example '2022-05-31 21:37:32'
+     */
+    createTime: string
+    status: '1' | unknown
+    creator: string
+    /**
+     * @example '2022-05-31 21:37:32'
+     */
+    releaseTime: string
+  }>
 }
 
 export interface API_MAP {
@@ -552,4 +577,9 @@ export interface API_MAP {
     data: RequestData.QueryHomeBookingInfoData,
     config?: AxiosRequestConfig,
   ) => Promise<ResponseData.QueryHomeBookingInfoData>
+
+  getInformList: (
+    data: RequestData.GetInformListData,
+    config?: AxiosRequestConfig,
+  ) => Promise<ResponseData.GetInformListData>
 }

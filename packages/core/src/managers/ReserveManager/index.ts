@@ -1,5 +1,7 @@
 import chalk from 'chalk'
+import Table from 'cli-table3'
 import inquirer from 'inquirer'
+import md5 from 'md5'
 import moment from 'moment'
 import { uid } from 'uid'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
@@ -35,6 +37,21 @@ const formatCountdown = (until: number) => {
   return (h > 9 ? h : `0${h}`) + ':' + (m > 9 ? m : `0${m}`) + ':' + (s > 9 ? s : `0${s}`)
 }
 
+const insertReturn = (str: string, insertPerPosition: number) => {
+  let result = ''
+  let idx = 0
+  for (let i = 0, len = str.length; i < len; i++) {
+    result += str[i]
+    const isChinese = escape(str[i]).indexOf('%u') >= 0
+    if ((isChinese && idx > 1 ? [0, 1] : [0]).includes((idx + 1) % insertPerPosition)) {
+      result += '\n'
+    }
+    idx++
+    if (isChinese) idx++
+  }
+  return result
+}
+
 type FailedList = Array<{ placeName: string; fieldNum: string; error: string; isBackup: boolean }>
 type SuccessedList = Array<{
   placeName: string
@@ -66,6 +83,9 @@ class ReserveManager extends BaseManager {
     // 检查登录状态
     if (!(await this.checkLoginStatus())) return
 
+    // 显示公告
+    await this.showInform()
+
     // 拉取基础信息
     await this.fetchTypeIdAndPlaceId(true)
 
@@ -86,6 +106,43 @@ class ReserveManager extends BaseManager {
 
     // 开始抢场地
     await this.reserve()
+  }
+
+  private async showInform() {
+    const loading = new Loading('加载最新公告').start()
+    const infoList = await this.apis.getInformList({
+      uid: this.config.sid,
+    })
+
+    if (!infoList?.length) {
+      loading.succeed(`加载最新公告 ${chalk.gray('无公告')}`)
+      return
+    }
+
+    const info = infoList[0]
+    const md5Str = md5(info.content)
+
+    if (md5Str === this.config.informHash) {
+      loading.succeed(`加载最新公告 ${chalk.gray('无新公告')}`)
+      return
+    }
+
+    const table = new Table({
+      head: [`${chalk.gray(`[${info.releaseTime.split(' ')[0]}]`)} ${insertReturn(info.title, 36)}`],
+      wordWrap: true,
+      wrapOnWordBoundary: false,
+      style: {
+        head: ['green', 'bold'],
+      },
+    })
+
+    table.push([insertReturn(info.content, 50)])
+
+    loading.succeed('加载最新公告 📢')
+
+    logger.info(table.toString())
+
+    configManager.set(ConfigKey.informHash, md5Str)
   }
 
   private async generateReserveSetting() {

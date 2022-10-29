@@ -32,6 +32,7 @@ class BaseManager {
       fields: configManager.get(ConfigKey.fields) as string[],
       backupFields: configManager.get(ConfigKey.backupFields) as string[],
       reserveTime: configManager.get(ConfigKey.time) as string,
+      informHash: configManager.get(ConfigKey.informHash) as string,
     }
   }
 

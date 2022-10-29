@@ -1,6 +1,7 @@
 import cancelOrder from './cancelOrder'
 import createOrder from './createOrder'
 import getBookingDay from './getBookingDay'
+import getInformList from './getInformList'
 import getOrderDetail from './getOrderDetail'
 import myOrder from './myOrder'
 import queryBookingQueryInfo from './queryBookingQueryInfo'
@@ -18,4 +19,5 @@ export default [
   queryPlaceListByTypeId,
   queryReservePlaceDetail,
   useSportField,
+  getInformList,
 ]

@@ -11,6 +11,7 @@ export interface Config {
   fields: string[]
   backupFields: string[]
   reserveTime: string
+  informHash: string
 }
 
 export type CourtType = '羽毛球' | string

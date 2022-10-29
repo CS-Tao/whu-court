@@ -105,6 +105,11 @@ export enum ConfigKey {
    * 备用预约的场地 id 列表
    */
   backupFields = 'backupFields',
+
+  /**
+   * 公告 hash
+   */
+  informHash = 'informHash',
 }
 
 export interface ConfigTypes {
@@ -134,4 +139,6 @@ export interface ConfigTypes {
   [ConfigKey.courts]: string[]
   [ConfigKey.fields]: string[]
   [ConfigKey.backupFields]: string[]
+
+  [ConfigKey.informHash]: string
 }

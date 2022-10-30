@@ -31,7 +31,7 @@ function retryIf<T, K = (...args: unknown[]) => Promise<T>>(
     }
     if (error) throw error
     return res as T
-  }) as K
+  }) as unknown as K
 }
 
 export default retryIf

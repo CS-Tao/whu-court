@@ -22,7 +22,7 @@ function retryIf<T, K = (...args: unknown[]) => Promise<T>>(
     while (retry === 0 || (retry <= options.limit && condition(res, error))) {
       try {
         if (retry > 0 && options.wait) await sleep(options.wait)
-        res = await (func as (...args: unknown[]) => Promise<T>)(...args)
+        res = await (func as unknown as (...args: unknown[]) => Promise<T>)(...args)
         error = undefined
       } catch (err) {
         error = err as Error

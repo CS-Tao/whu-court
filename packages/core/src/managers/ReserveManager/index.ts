@@ -16,6 +16,8 @@ import {
   getCurrentTime,
   getTodayDate,
   getTomorrowDate,
+  insertReturn,
+  retryIf,
   sleep,
 } from '@whu-court/utils'
 import { getApiMap } from '../../apis'
@@ -35,21 +37,6 @@ const formatCountdown = (until: number) => {
   const m = moment.duration(until - moment().valueOf()).minutes()
   const s = moment.duration(until - moment().valueOf()).seconds()
   return (h > 9 ? h : `0${h}`) + ':' + (m > 9 ? m : `0${m}`) + ':' + (s > 9 ? s : `0${s}`)
-}
-
-const insertReturn = (str: string, insertPerPosition: number) => {
-  let result = ''
-  let idx = 0
-  for (let i = 0, len = str.length; i < len; i++) {
-    result += str[i]
-    const isChinese = escape(str[i]).indexOf('%u') >= 0
-    if ((isChinese && idx > 1 ? [0, 1] : [0]).includes((idx + 1) % insertPerPosition)) {
-      result += '\n'
-    }
-    idx++
-    if (isChinese) idx++
-  }
-  return result
 }
 
 type FailedList = Array<{ placeName: string; fieldNum: string; error: string; isBackup: boolean }>
@@ -204,6 +191,10 @@ class ReserveManager extends BaseManager {
           }
           return true
         },
+        filter: (value) =>
+          value.sort((a: any, b: any) => {
+            return fieldsChoices.findIndex((v) => a === v.value) - fieldsChoices.findIndex((v) => b === v.value)
+          }),
       },
     ])
     this.config.fields = filedIds
@@ -235,6 +226,10 @@ class ReserveManager extends BaseManager {
               ...backupFieldChoices.filter((field) => this.config.backupFields.includes(field.value)),
               ...backupFieldChoices.filter((field) => !this.config.backupFields.includes(field.value)),
             ],
+            filter: (value) =>
+              value.sort((a: any, b: any) => {
+                return fieldsChoices.findIndex((v) => a === v.value) - fieldsChoices.findIndex((v) => b === v.value)
+              }),
           },
         ])
       ).backupFieldIds
@@ -286,9 +281,28 @@ class ReserveManager extends BaseManager {
 
     const loadDetailLoading = new Loading('生成预约信息').start()
     const fieldDetailMap: Record<string, CourtDetail> = {}
+    let hasRetry = false
     for (const idx in allFields) {
       const f = allFields[idx]
-      const fieldDetail = await this.getFieldDetail(courtId, f.id, f.number, getTodayDate())
+      loadDetailLoading.setText(`生成预约信息 ${chalk.gray(f.number + ' 号场地')}`)
+      await sleep(400)
+      const getFieldDetailWithRetry = retryIf(
+        this.getFieldDetail.bind(this),
+        (_, error) => {
+          if (!error) return false
+          const retry = error?.message?.includes('404')
+          if (retry) {
+            hasRetry = true
+            loadDetailLoading.setText(`生成预约信息 ${chalk.gray(`${f.number} 号场地(重试)`)}`)
+          }
+          return retry
+        },
+        {
+          limit: 5,
+          wait: 400,
+        },
+      )
+      const fieldDetail = await getFieldDetailWithRetry(courtId, f.id, f.number, getTodayDate())
       fieldDetailMap[f.id] = fieldDetail
     }
 
@@ -315,7 +329,7 @@ class ReserveManager extends BaseManager {
         }
       }),
     }
-    loadDetailLoading.succeed('生成预约信息')
+    loadDetailLoading.succeed('生成预约信息' + (hasRetry ? ` ${chalk.green('重试成功')}` : ''))
   }
 
   private async promptWxCodes(): Promise<void> {

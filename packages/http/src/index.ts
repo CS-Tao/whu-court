@@ -7,7 +7,7 @@ import configManager, { ConfigKey } from '@whu-court/config-manager'
 import { allowedProcessEnv } from '@whu-court/env'
 import logger from '@whu-court/logger'
 import Reporter from '@whu-court/report'
-import { getCurrentTime } from '@whu-court/utils'
+import { getCurrentTime, sleep } from '@whu-court/utils'
 import { getCache, setCache } from './cache'
 import { enterCourtApp } from './helper'
 import { ServerData } from './types'
@@ -105,7 +105,8 @@ http.interceptors.response.use(
     const rawData = data.data
 
     // 模拟重新进入应用
-    if (data.errmsg?.includes('系统繁忙')) {
+    const retryInSecReg = /[^1-9]{1}([1-9]{1})秒后重试/
+    if (data.errmsg && (data.errmsg.includes('系统繁忙') || retryInSecReg.test(data.errmsg))) {
       const lastEnterAppApiMapKey =
         url &&
         `${url}?query=${md5(JSON.stringify(response.config.params || ''))}data=${md5(
@@ -119,6 +120,16 @@ http.interceptors.response.use(
           (lastEnterAppApiMap[lastEnterAppApiMapKey].times > RETRY_TIMES_PER_TIME_WINDOW &&
             Date.now() - lastEnterAppApiMap[lastEnterAppApiMapKey].timestamp > RETRY_TIME_WINDOW))
       ) {
+        if (retryInSecReg.test(data.errmsg)) {
+          logger.debug('HTTP start sleep: ' + data.errmsg)
+          try {
+            const sleepSec = data.errmsg.match(retryInSecReg)?.[1]
+            sleepSec && (await sleep(+sleepSec * 1000))
+            !sleepSec && logger.error('sleepSec is nil')
+          } catch (error) {
+            logger.error(error as Error)
+          }
+        }
         await enterCourtApp(http)
         if (
           lastEnterAppApiMap[lastEnterAppApiMapKey] &&

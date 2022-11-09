@@ -21,6 +21,8 @@ export const defaultValues: Partial<ConfigTypes> = {
   [ConfigKey.backupFields]: [],
 
   [ConfigKey.informHash]: '',
+
+  [ConfigKey.apiCacheMap]: {},
 }
 
 // TODO:
@@ -134,4 +136,5 @@ export const rules: { [key in ConfigKey]: (value: ConfigTypes[key]) => string | 
     }
   },
   [ConfigKey.informHash]: () => {},
+  [ConfigKey.apiCacheMap]: () => {},
 }

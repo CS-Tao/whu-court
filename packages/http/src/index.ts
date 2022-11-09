@@ -1,6 +1,5 @@
 import Axios from 'axios'
 import chalk from 'chalk'
-import md5 from 'md5'
 import { uid } from 'uid'
 import { URL } from 'url'
 import configManager, { ConfigKey } from '@whu-court/config-manager'
@@ -9,8 +8,8 @@ import logger from '@whu-court/logger'
 import Reporter from '@whu-court/report'
 import { getCurrentTime, sleep } from '@whu-court/utils'
 import { getCache, setCache } from './cache'
-import { enterCourtApp } from './helper'
-import { ServerData } from './types'
+import { enterCourtApp, getRequestUniqueKey } from './helper'
+import { HttpConfig, ServerData } from './types'
 
 const lastEnterAppApiMap: Record<string, { timestamp: number; times: number }> = {}
 const RETRY_TIME_WINDOW = 10 * 1000
@@ -57,7 +56,7 @@ const http = Axios.create({
   ...proxyConfig,
 })
 
-http.interceptors.request.use((config) => {
+http.interceptors.request.use((config: HttpConfig) => {
   config.headers = config.headers || {}
   const token = config.headers['x-outh-token'] || (configManager.get(ConfigKey.courtToken) as string)
   const sid = config.headers['x-outh-sid'] || (configManager.get(ConfigKey.courtSid) as string)
@@ -71,7 +70,6 @@ http.interceptors.request.use((config) => {
   config.headers['User-Agent'] = userAgent
 
   const measureId = `${config.url}(${uid()})`
-  // @ts-expect-error
   config.metadata = {
     measureId,
     requestTime: Date.now(),
@@ -80,10 +78,15 @@ http.interceptors.request.use((config) => {
 
   logger.debug('HTTP Request:', config.method, measureId)
 
-  if (config.url && getCache(config.url)) {
-    const source = CANCEL_TOKEN.source()
-    config.cancelToken = source.token
-    source.cancel(getCache(config.url) as any)
+  // 优先使用离线缓存
+  if (config.url && config.cache === 'prefer-offline') {
+    const cacheData = getCache(config.url, config)
+    if (cacheData) {
+      logger.debug(`use prefer-offline cache for ${config.url}`)
+      const source = CANCEL_TOKEN.source()
+      config.cancelToken = source.token
+      source.cancel(cacheData as any)
+    }
   }
 
   return config
@@ -91,12 +94,11 @@ http.interceptors.request.use((config) => {
 
 http.interceptors.response.use(
   async (response) => {
-    // @ts-expect-error
-    const measureId = response.config.metadata?.measureId
-    // @ts-expect-error
-    const requestTime = response.config.metadata?.requestTime
+    const config = response.config as HttpConfig
+    const measureId = config.metadata?.measureId
+    const requestTime = config.metadata?.requestTime
     measureId && Reporter.Measure.shared(measureId, 'court-api-request').end()
-    logger.debug('HTTP Response:', response.config.method, measureId, `${Date.now() - requestTime}ms`)
+    logger.debug('HTTP Response:', response.config.method, measureId, `${Date.now() - (requestTime || Date.now())}ms`)
 
     if (!response.data) return response
 
@@ -107,11 +109,7 @@ http.interceptors.response.use(
     // 模拟重新进入应用
     const retryInSecReg = /[^1-9]{1}([1-9]{1})秒后重试/
     if (data.errmsg && (data.errmsg.includes('系统繁忙') || retryInSecReg.test(data.errmsg))) {
-      const lastEnterAppApiMapKey =
-        url &&
-        `${url}?query=${md5(JSON.stringify(response.config.params || ''))}data=${md5(
-          JSON.stringify(response.config.data || ''),
-        )}`
+      const lastEnterAppApiMapKey = url && getRequestUniqueKey(url, response.config)
       if (
         lastEnterAppApiMapKey &&
         (!lastEnterAppApiMap[lastEnterAppApiMapKey] ||
@@ -159,26 +157,39 @@ http.interceptors.response.use(
         (acc, cur) => (data[cur[0]] ? `${acc}${cur[1]}: ${data[cur[0]]}\n` : acc),
         '\n',
       )}`
-      throw new Error(`数据请求失败\n${errorMsg}时间: ${getCurrentTime(true)}`)
+      const errorOption = `数据请求失败\n${errorMsg}时间: ${getCurrentTime(true)}`
+      // 使用缓存
+      if (url && config.cache === 'prefer-online') {
+        const cacheData = getCache(url, response.config)
+        if (cacheData) {
+          logger.debug(`use prefer-online cache for ${url}:`, errorOption)
+          return cacheData
+        }
+      }
+      throw new Error(errorOption)
     }
 
     if (data.hint && typeof data.hint === 'string') {
       logger.info('hint from server:', chalk.green(data.hint))
     }
 
-    if (url) {
-      setCache(url, rawData)
+    if (url && config.cache) {
+      logger.debug(`set cache for ${url}`)
+      setCache(url, response.config, rawData)
     }
 
     return rawData
   },
   (error) => {
     if (Axios.isCancel(error) && ![null, undefined].includes(error?.message)) {
+      logger.debug('http request canceled with nonullable message')
       return Promise.resolve(error.message)
     }
     logger.error(error)
     return Promise.reject(error)
   },
 )
+
+export * from './types'
 
 export default http

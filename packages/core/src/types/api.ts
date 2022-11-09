@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios'
+import { HttpConfig } from '@whu-court/http'
 
 export namespace RouterPathParams {
   export interface CancelOrderParams {
@@ -542,44 +542,38 @@ export namespace ResponseData {
 }
 
 export interface API_MAP {
-  getBookingDay: (config?: AxiosRequestConfig) => Promise<ResponseData.GetBookingDayData>
+  getBookingDay: (config?: HttpConfig) => Promise<ResponseData.GetBookingDayData>
 
   queryPlaceListByTypeId: (
     data: RequestData.QueryPlaceListByTypeIdData,
-    config?: AxiosRequestConfig,
+    config?: HttpConfig,
   ) => Promise<ResponseData.QueryPlaceListByTypeIdData>
 
   queryReservePlaceDetail: (
     data: RequestData.QueryReservePlaceDetailData,
-    config?: AxiosRequestConfig,
+    config?: HttpConfig,
   ) => Promise<ResponseData.QueryReservePlaceDetailData>
 
-  useSportField: (
-    data: RequestData.UseSportFieldData,
-    config?: AxiosRequestConfig,
-  ) => Promise<ResponseData.UseSportFieldData>
+  useSportField: (data: RequestData.UseSportFieldData, config?: HttpConfig) => Promise<ResponseData.UseSportFieldData>
 
   cancelOrder: (
     params: RouterPathParams.CancelOrderParams,
-    config?: AxiosRequestConfig,
+    config?: HttpConfig,
   ) => Promise<ResponseData.CancelOrderData>
 
   getOrderDetails: (
     params: RouterPathParams.GetOrderDetailsParams,
-    config?: AxiosRequestConfig,
+    config?: HttpConfig,
   ) => Promise<ResponseData.GetOrderDetailsData>
 
-  createOrder: (data: RequestData.CreateOrderData, config?: AxiosRequestConfig) => Promise<ResponseData.CreateOrderData>
+  createOrder: (data: RequestData.CreateOrderData, config?: HttpConfig) => Promise<ResponseData.CreateOrderData>
 
-  myOrder: (params: RequestData.MyOrderData, config?: AxiosRequestConfig) => Promise<ResponseData.MyOrderData>
+  myOrder: (params: RequestData.MyOrderData, config?: HttpConfig) => Promise<ResponseData.MyOrderData>
 
   queryBookingQueryInfo: (
     data: RequestData.QueryHomeBookingInfoData,
-    config?: AxiosRequestConfig,
+    config?: HttpConfig,
   ) => Promise<ResponseData.QueryHomeBookingInfoData>
 
-  getInformList: (
-    data: RequestData.GetInformListData,
-    config?: AxiosRequestConfig,
-  ) => Promise<ResponseData.GetInformListData>
+  getInformList: (data: RequestData.GetInformListData, config?: HttpConfig) => Promise<ResponseData.GetInformListData>
 }

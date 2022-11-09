@@ -5,7 +5,7 @@ import configManager, { ConfigKey } from '@whu-court/config-manager'
 import { allowedProcessEnv, environment } from '@whu-court/env'
 import logger from '@whu-court/logger'
 import { mockAxios } from '@whu-court/mock'
-import { Loading, fill0, getCurrentTime, getTodayDate } from '@whu-court/utils'
+import { Loading, fill0, getCurrentTime } from '@whu-court/utils'
 import { ErrorNoNeedRetry } from '../../consts'
 import { API_MAP, Config, CourtDetail, CourtList, CourtType, RequestData, ResponseData } from '../../types'
 
@@ -71,19 +71,7 @@ class BaseManager {
 
   private async checkUserAgent() {
     await this.fetchTypeIdAndPlaceId(false)
-    const courtInPage = await this.apis.queryPlaceListByTypeId(
-      {
-        typeId: this.badmintonTypeId,
-        reserveDate: getTodayDate(),
-        uid: this.getCourtToken(),
-        pageSize: 4,
-        currentPage: 1,
-      },
-      {
-        timeout: 20000,
-      },
-    )
-    return !!courtInPage
+    return !!this.badmintonTypeId
   }
 
   protected async checkAuth(): Promise<string | false> {
@@ -175,7 +163,7 @@ class BaseManager {
         pageSize: 4,
         currentPage: page,
       },
-      { timeout: 20000 },
+      { timeout: 20000, cache: 'prefer-online', cacheIgnoreKeys: ['reserveDate'] },
     )
     return courtInPage.pageData.map((court) => {
       return {

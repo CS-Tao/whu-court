@@ -5,7 +5,7 @@ export const configs: Array<{
   name: string
   key: ConfigKey
   desc: string
-  serialize: (value: number | string | string[] | boolean) => string | number
+  serialize: (value: number | string | string[] | boolean | Record<string, unknown>) => string | number
   deserialize: (value: string) => number | string | string[]
 }> = [
   {

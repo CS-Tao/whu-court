@@ -110,6 +110,8 @@ export enum ConfigKey {
    * 公告 hash
    */
   informHash = 'informHash',
+
+  apiCacheMap = 'apiCacheMap',
 }
 
 export interface ConfigTypes {
@@ -141,4 +143,6 @@ export interface ConfigTypes {
   [ConfigKey.backupFields]: string[]
 
   [ConfigKey.informHash]: string
+
+  [ConfigKey.apiCacheMap]: Record<string, unknown>
 }

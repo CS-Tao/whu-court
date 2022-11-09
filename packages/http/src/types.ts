@@ -10,3 +10,12 @@ export interface ServerData {
   hint: null | string
   data: null | string | Record<string, any>
 }
+
+export type HttpConfig<T = any> = AxiosRequestConfig<T> & {
+  cache?: 'prefer-online' | 'prefer-offline'
+  cacheIgnoreKeys?: string[]
+  metadata?: {
+    measureId: string
+    requestTime: number
+  }
+}

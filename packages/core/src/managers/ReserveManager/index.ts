@@ -285,7 +285,7 @@ class ReserveManager extends BaseManager {
     for (const idx in allFields) {
       const f = allFields[idx]
       loadDetailLoading.setText(`生成预约信息 ${chalk.gray(f.number + ' 号场地')}`)
-      await sleep(400)
+      await sleep(1000)
       const getFieldDetailWithRetry = retryIf(
         this.getFieldDetail.bind(this),
         (_, error) => {

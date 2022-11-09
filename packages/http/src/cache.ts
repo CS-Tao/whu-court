@@ -1,20 +1,19 @@
-import NodeCache from 'node-cache'
+import configManager, { ConfigKey } from '@whu-court/config-manager'
 import logger from '@whu-court/logger'
+import { getRequestUniqueKey } from './helper'
+import { HttpConfig } from './types'
 
-const cache = new NodeCache()
+const caches: Record<string, unknown> = configManager.get(ConfigKey.apiCacheMap) as Record<string, unknown>
 
-// TODO: 目前不需要缓存
-// const list: Array<RegExp | string> = [/queryPlaceListByTypeId/g]
-const list: Array<RegExp | string> = []
-
-export const getCache = (url: string): unknown => {
-  return cache.get(url)
+export const getCache = (url: string, config: HttpConfig): unknown => {
+  return caches[getRequestUniqueKey(url, config)]
 }
 
-export const setCache = (url: string, data: unknown): void => {
-  if (list.every((each) => (typeof each === 'string' ? each !== url : !each.test(url)))) {
-    return
-  }
-  logger.debug('use cache data for', url)
-  cache.set(url, data, 5 * 1000)
+export const setCache = (url: string, config: HttpConfig, data: unknown): void => {
+  const key = getRequestUniqueKey(url, config)
+  logger.debug('use cache data for', key)
+  caches[key] = data
+  setTimeout(() => {
+    configManager.set(ConfigKey.apiCacheMap, caches)
+  })
 }

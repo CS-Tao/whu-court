@@ -1,7 +1,7 @@
 {
   "name": "@whu-court/mock",
   "description": "WHU-Court Api Data Mock",
-  "version": "0.1.12",
+  "version": "0.1.13-beta.0",
   "author": "cstao.cn@icloud.com",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@whu-court/env": "0.1.10",
-    "@whu-court/logger": "0.1.11",
+    "@whu-court/logger": "0.1.12-beta.0",
     "@whu-court/utils": "0.1.10",
     "axios": "^0.27.2",
     "axios-mock-adapter": "^1.21.1",

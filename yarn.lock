@@ -2988,7 +2988,7 @@ __metadata:
     "@types/node-notifier": ^8.0.2
     "@whu-court/auto-update": 0.1.10
     "@whu-court/config-manager": 0.1.12-beta.0
-    "@whu-court/core": 0.1.16-beta.1
+    "@whu-court/core": 0.1.16-beta.2
     "@whu-court/env": 0.1.10
     "@whu-court/github-auth": 0.1.12-beta.0
     "@whu-court/http": 0.1.13-beta.1
@@ -3032,7 +3032,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@whu-court/core@0.1.16-beta.1, @whu-court/core@workspace:packages/core":
+"@whu-court/core@0.1.16-beta.2, @whu-court/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@whu-court/core@workspace:packages/core"
   dependencies:

@@ -507,7 +507,7 @@ class ReserveManager extends BaseManager {
     const courtCount = this.reserveSetting.minRequests
     const promiseFactories = this.reserveSetting.requestDataList.map(
       (each) => (useReserveFallback: boolean) =>
-        this.loopReverve(() => this.reserveField(each, useReserveFallback), 3, each.fieldNum + ' 号场'),
+        this.loopReverve(() => this.reserveField(each, useReserveFallback), 0, each.fieldNum + ' 号场'),
     )
     const failedList: FailedList = []
     const successedList: SuccessedList = []

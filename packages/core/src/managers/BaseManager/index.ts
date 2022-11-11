@@ -5,7 +5,7 @@ import configManager, { ConfigKey } from '@whu-court/config-manager'
 import { allowedProcessEnv, environment } from '@whu-court/env'
 import logger from '@whu-court/logger'
 import { mockAxios } from '@whu-court/mock'
-import { Loading, fill0, getCurrentTime } from '@whu-court/utils'
+import { Loading, fill0, getCurrentTime, sleep } from '@whu-court/utils'
 import { ErrorNoNeedRetry } from '../../consts'
 import { API_MAP, Config, CourtDetail, CourtList, CourtType, RequestData, ResponseData } from '../../types'
 
@@ -269,12 +269,15 @@ class BaseManager {
       }
     })
 
-    const checkList = await Promise.all(
-      timeList.map(async (each) => {
-        if (canReserveCourtsFromDetail.every((time) => time.reserveBeginTime !== each.beginTime)) {
-          logger.debug('reserveField', `${each.beginTime}-${each.endTime}`, chalk.red('场馆详情标明不可预约'))
-          return false
-        }
+    const checkList: boolean[] = []
+
+    for (let i = 0; i < timeList.length; i++) {
+      await sleep(400)
+      const each = timeList[i]
+      if (canReserveCourtsFromDetail.every((time) => time.reserveBeginTime !== each.beginTime)) {
+        logger.debug('reserveField', `${each.beginTime}-${each.endTime}`, chalk.red('场馆详情标明不可预约'))
+        checkList[i] = false
+      } else {
         const req: RequestData.UseSportFieldData = {
           uid: this.config.token,
           placeId: data.placeId,
@@ -294,9 +297,9 @@ class BaseManager {
             ? `(${chalk.green(data.fieldNum)} 号场地锁单场地时间: ${chalk.green(moment().format('HH:mm:ss.SSS'))})`
             : '',
         )
-        return res
-      }),
-    )
+        checkList[i] = res
+      }
+    }
 
     const cantReserveList = timeList
       .filter((_, idx) => !checkList[idx])

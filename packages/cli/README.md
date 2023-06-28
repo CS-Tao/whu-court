@@ -4,6 +4,8 @@
 [![oclif](https://img.shields.io/badge/🚀-oclif-%23016bb6.svg)](https://oclif.io)
 [![license](https://img.shields.io/badge/⚖️-none-%2300a851.svg)](#-版权声明)
 
+> 目前后端接口已下线，仅供学习研究用
+> 
 🏸 场地预约助手 CLI
 =================
 

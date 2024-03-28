@@ -11,6 +11,10 @@
 
 <img src="https://github.com/CS-Tao/github-content/raw/master/contents/github/whu-court/logo1.png" alt="logo.png" style="width: 360px;">
 
+|软件演示|
+| :---: |
+| ![软件演示]([https://home.cs-tao.cc/github-content/contents/github/whu-court/whu-court1.gif](https://home.cs-tao.cc/github-content/contents/github/whu-court/whu-court1.gif))|
+
 # 📗 使用方法
 
 ```sh-session

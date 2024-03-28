@@ -13,7 +13,7 @@
 
 |软件演示|
 | :---: |
-| ![软件演示]([https://home.cs-tao.cc/github-content/contents/github/whu-court/whu-court1.gif](https://home.cs-tao.cc/github-content/contents/github/whu-court/whu-court1.gif))|
+|![软件演示](https://home.cs-tao.cc/github-content/contents/github/whu-court/whu-court1.gif)|
 
 # 📗 使用方法
 
